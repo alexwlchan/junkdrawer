@@ -6,5 +6,5 @@ $(ROOT)/.docker/safari_stylesheet: $(SAFARI)/Dockerfile
 	mkdir -p $(ROOT)/.docker
 	touch $(ROOT)/.docker/safari_stylesheet
 
-$(SAFARI)/style.css: $(ROOT)/.docker/safari_stylesheet $(SAFARI)/%.less
-	docker run --volume $(SAFARI):/data safari_stylesheet
+$(SAFARI)/style.css: $(ROOT)/.docker/safari_stylesheet $(wildcard $(SAFARI)/*.scss)
+	docker run --volume $(SAFARI):/data safari_stylesheet style.scss style.css
