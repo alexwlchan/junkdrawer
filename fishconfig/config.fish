@@ -1,4 +1,5 @@
-set DIR (cd (dirname (status -f)); and pwd) 
+set DIR (cd (dirname (status -f)); and pwd)
+cd ~
 
 
 # Add a directory to the path, if it exists
