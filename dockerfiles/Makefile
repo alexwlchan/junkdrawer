@@ -1,7 +1,14 @@
 ROOT = $(shell git rev-parse --show-toplevel)
 DOCKERFILES = $(ROOT)/dockerfiles
 
-$(ROOT)/.docker/lessc: $(DOCKERFILES)/lessc.Dockerfile
-	docker build --tag alexwlchan/lessc --file $(DOCKERFILES)/lessc.Dockerfile $(DOCKERFILES)
+define build_image
+	docker build --tag alexwlchan/$(1) --file $(DOCKERFILES)/$(1).Dockerfile $(DOCKERFILES)
 	mkdir -p $(ROOT)/.docker
-	touch $(ROOT)/.docker/lessc
+	touch $(ROOT)/.docker/$(1)
+endef
+
+$(ROOT)/.docker/lessc: $(DOCKERFILES)/lessc.Dockerfile
+	$(call build_image,lessc)
+
+$(ROOT)/.docker/primitive: $(DOCKERFILES)/primitive.Dockerfile
+	$(call build_image,primitive)
