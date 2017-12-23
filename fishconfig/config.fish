@@ -1,4 +1,5 @@
-set DIR (cd (dirname (status -f)); and pwd)
+set -x DIR (cd (dirname (status -f)); and pwd)
+set -x ROOT (dirname $DIR)
 cd ~
 
 
@@ -46,11 +47,9 @@ eval (python2 -m virtualfish auto_activation) >> /dev/null 2>&1
 # Other fish config files
 ###############################################################################
 
-# Load my custom Fish prompt
 . $DIR/prompt.fish
-
-# Load my Git aliases
 . $DIR/git.fish
+. $DIR/dockerfiles.fish
 
 # Load macOS-specific utilities
 if [ (uname -s) = "Darwin" ]
