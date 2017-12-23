@@ -27,3 +27,7 @@ end
 function primitive
   __call_docker_image primitive $argv
 end
+
+function youtube-dl
+  __call_docker_image youtube_dl $argv
+end

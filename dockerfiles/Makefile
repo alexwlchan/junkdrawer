@@ -12,3 +12,6 @@ $(ROOT)/.docker/lessc: $(DOCKERFILES)/lessc.Dockerfile
 
 $(ROOT)/.docker/primitive: $(DOCKERFILES)/primitive.Dockerfile
 	$(call build_image,primitive)
+
+$(ROOT)/.docker/youtube_dl: $(DOCKERFILES)/youtube_dl.Dockerfile
+	$(call build_image,youtube_dl)
