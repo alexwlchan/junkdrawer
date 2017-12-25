@@ -1,6 +1,7 @@
 # -*- encoding: utf-8
 """
 Usage:  pince index <PATH> --date=<DATE> --subject=<SUBJECT> --from=<FROM>
+        pince report
         pince -h | --help
 """
 
@@ -9,6 +10,7 @@ import docopt
 
 from pince.core import Document
 from pince.indexer import index_document
+from pince.reporter import print_report
 
 
 def main():
@@ -28,3 +30,5 @@ def main():
         )
         index_document(path=path, document=document)
         print(f'Successfully indexed {path}!')
+    elif args['report']:
+        print_report()
