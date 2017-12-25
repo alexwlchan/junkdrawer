@@ -11,4 +11,4 @@ class Document:
     date = attr.ib()
     subject = attr.ib()
     sender = attr.ib()
-    date_scanned = attr.ib(default=lambda: dt.datetime.now())
+    date_scanned = attr.ib(default=dt.datetime.now())

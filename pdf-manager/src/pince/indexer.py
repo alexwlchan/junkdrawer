@@ -1,13 +1,24 @@
 # -*- encoding: utf-8
 """Index a document in the Pince database."""
 
+import datetime as dt
 import json
 import os
 import re
 
+import attr
 from unidecode import unidecode
 
 from pince.core import Document
+
+
+class EnhancedJSONEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, dt.datetime):
+            return obj.isoformat()
+        if isinstance(obj, Document):
+            return attr.asdict(obj)
+        return json.JSONEncoder.default(self, obj)
 
 
 def slugify(u):
@@ -32,5 +43,8 @@ def index_document(path, document):
     os.rename(path, document.path)
 
     data = json.load(open('documents.json'))
-    data.append(attr.asdict(document))
-    json.dump(data, open('documents.json', 'w'), indent=2, sort_keys=True)
+    data.append(document)
+    json_str = json.dumps(
+        data, indent=2, sort_keys=True, cls=EnhancedJSONEncoder
+    )
+    open('documents.json', 'w').write(json_str)
