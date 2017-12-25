@@ -14,7 +14,7 @@ from pince.core import Document
 
 class EnhancedJSONEncoder(json.JSONEncoder):
     def default(self, obj):
-        if isinstance(obj, dt.datetime):
+        if isinstance(obj, (dt.datetime, dt.date)):
             return obj.isoformat()
         if isinstance(obj, Document):
             return attr.asdict(obj)

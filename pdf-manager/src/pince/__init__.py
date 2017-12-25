@@ -18,7 +18,7 @@ def main():
 
     if args['index']:
         path = args['<PATH>']
-        date = dp.parse(args['--date'])
+        date = dp.parse(args['--date']).date()
         subject = args['--subject']
         sender = args['--from']
 
