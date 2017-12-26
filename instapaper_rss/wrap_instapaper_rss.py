@@ -55,8 +55,11 @@ for idx, it in enumerate(items):
 
 new_rss = b'<item>'.join(items)
 new_rss = new_rss.replace(
-    '<title>Instapaper: Unread</title>',
-    '<title>Instapaper</title>'
+    b'<title>Instapaper: Unread</title>',
+    b'<title>Instapaper</title>'
 )
 
-open('instapaper.rss', 'wb').write(new_rss)
+outdir = os.environ.get('OUTDIR', '')
+path = os.path.join(outdir, 'instapaper.rss')
+os.makedirs(os.path.dirname(path), exist_ok=True)
+open(path, 'wb').write(new_rss)
