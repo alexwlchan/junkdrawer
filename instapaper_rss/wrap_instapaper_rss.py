@@ -49,7 +49,7 @@ for idx, it in enumerate(items):
 
         items[idx] = it.replace(
             b'<title>Twitter</title>',
-            b'<title>Twitter: Tweet from @%s</title>' % username
+            b'<title>Tweet from @%s</title>' % username
         )
 
 
