@@ -44,6 +44,7 @@ setup(
     entry_points={
         'console_scripts': [
             'yaffle-index=yaffle:index_document',
+            'yaffle-reindex=yaffle:reindex_all',
         ],
     },
 )

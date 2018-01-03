@@ -6,8 +6,9 @@
 #
 attrs==17.3.0
 certifi==2017.11.5        # via requests
-chardet==3.0.4            # via requests
+chardet==3.0.4            # via pdfminer.six, requests
 docopt==0.6.2
+elasticsearch==6.0.0
 idna==2.6                 # via requests
 pdfminer.six==20170720
 pycryptodome==3.4.7       # via pdfminer.six
@@ -16,4 +17,4 @@ requests==2.18.4
 six==1.11.0               # via pdfminer.six, python-dateutil
 tabulate==0.8.2
 unidecode==0.4.21
-urllib3==1.22             # via requests
+urllib3==1.22             # via elasticsearch, requests

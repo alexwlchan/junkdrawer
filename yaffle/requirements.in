@@ -1,5 +1,6 @@
 attrs
 docopt
+elasticsearch
 pdfminer.six
 python-dateutil
 requests
