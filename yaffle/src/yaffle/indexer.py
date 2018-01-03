@@ -17,6 +17,7 @@ import dateutil.parser as dp
 import docopt
 from unidecode import unidecode
 
+from yaffle import db
 from yaffle.models import Document, YaffleJSONEncoder
 from yaffle.version import __version__
 
@@ -61,7 +62,7 @@ def index_document():
         slugify(sender),
         slugify(subject)
     ])
-    document = Document(
+    doc = Document(
         path=os.path.join(str(date.year), slug),
         date=date,
         subject=subject,
@@ -69,15 +70,12 @@ def index_document():
     )
 
     assert os.path.exists(path)
-    assert not os.path.exists(document.path)
+    assert not os.path.exists(doc.path)
 
-    data = json.load(open('yaffle_documents.json'))
-    assert slug not in data
-    data[slug] = document
-    json_str = json.dumps(
-        data, indent=2, sort_keys=True, cls=YaffleJSONEncoder
-    )
-    open('yaffle_documents.json', 'w').write(json_str)
+    documents = db.read_db()
+    assert slug not in documents
+    documents[slug] = doc
+    db.write_db(documents=documents)
 
-    os.makedirs(os.path.dirname(document.path), exist_ok=True)
-    os.rename(path, document.path)
+    os.makedirs(os.path.dirname(doc.path), exist_ok=True)
+    os.rename(path, doc.path)
