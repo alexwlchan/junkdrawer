@@ -1,5 +1,6 @@
 attrs
 docopt
+pdfminer
 python-dateutil
 tabulate
 unidecode

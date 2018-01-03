@@ -6,6 +6,7 @@
 #
 attrs==17.3.0
 docopt==0.6.2
+pdfminer==20140328
 python-dateutil==2.6.1
 six==1.11.0               # via python-dateutil
 tabulate==0.8.2

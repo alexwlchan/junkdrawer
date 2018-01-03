@@ -16,6 +16,7 @@ from unidecode import unidecode
 
 from yaffle import db
 from yaffle.models import Document
+from yaffle.pdfminer import convert_pdf_to_txt
 from yaffle.version import __version__
 
 
@@ -75,4 +76,10 @@ def index_document():
     db.write_db(documents=documents)
 
     os.makedirs(os.path.dirname(doc.path), exist_ok=True)
+
+    # Attempt to extract some text from the document, and store it alongside
+    # the file itself.
+    text = convert_pdf_to_txt(path)
+    open(doc.path + '.txt', 'x').write(text)
+
     os.rename(path, doc.path)
