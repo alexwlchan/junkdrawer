@@ -45,6 +45,7 @@ setup(
         'console_scripts': [
             'yaffle-index=yaffle:index_document',
             'yaffle-reindex=yaffle:reindex_all',
+            'yaffle-search=yaffle:search_documents'
         ],
     },
 )
