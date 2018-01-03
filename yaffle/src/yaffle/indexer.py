@@ -6,16 +6,19 @@ Usage: {PROG} <PATH> [--date=<DATE>] [--subject=<SUBJECT>] [--from=<FROM>]
        {PROG} --version
 """
 
+import json
 import os
 import re
 import sys
 
+import attr
 import dateutil.parser as dp
 import docopt
+import requests
 from unidecode import unidecode
 
 from yaffle import db
-from yaffle.models import Document
+from yaffle.models import Document, YaffleJSONEncoder
 from yaffle.pdfminer import convert_pdf_to_txt
 from yaffle.version import __version__
 
@@ -29,6 +32,22 @@ def slugify(u):
     a = a.replace(' ', '-')            # spaces to hyphens
     a = re.sub(r'-+', '-', a)          # condense repeated hyphens
     return a
+
+
+def _index_into_elasticsearch(doc_id, doc):
+    d = attr.asdict(doc)
+    d['text'] = doc.text()
+    resp = requests.put(
+        f'http://localhost:9200/yaffle/yaffle/{doc_id}',
+        data=json.dumps(doc, cls=YaffleJSONEncoder),
+        headers={'Content-Type': 'application/json'}
+    )
+    try:
+        resp.raise_for_status()
+    except requests.exceptions.HTTPError:
+        from pprint import pprint
+        pprint(resp.json())
+        raise
 
 
 def index_document():
@@ -71,7 +90,7 @@ def index_document():
     assert not os.path.exists(doc.path)
 
     documents = db.read_db()
-    assert slug not in documents
+    # assert slug not in documents
     documents[slug] = doc
     db.write_db(documents=documents)
 
@@ -79,6 +98,7 @@ def index_document():
 
     # Attempt to extract some text from the document, and store it alongside
     # the file itself.
-    text = convert_pdf_to_txt(path=path, outfile=(doc.path + '.txt'))
+    text = convert_pdf_to_txt(path=path, outfile=doc.text_path)
 
     os.rename(path, doc.path)
+    _index_into_elasticsearch(doc_id=slug, doc=doc)

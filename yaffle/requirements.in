@@ -1,6 +1,7 @@
 attrs
 docopt
-pdfminer
+pdfminer.six
 python-dateutil
+requests
 tabulate
 unidecode
