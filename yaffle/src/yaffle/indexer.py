@@ -6,19 +6,16 @@ Usage: {PROG} <PATH> [--date=<DATE>] [--subject=<SUBJECT>] [--from=<FROM>]
        {PROG} --version
 """
 
-import datetime as dt
-import json
 import os
 import re
 import sys
 
-import attr
 import dateutil.parser as dp
 import docopt
 from unidecode import unidecode
 
 from yaffle import db
-from yaffle.models import Document, YaffleJSONEncoder
+from yaffle.models import Document
 from yaffle.version import __version__
 
 
