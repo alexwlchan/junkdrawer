@@ -61,7 +61,7 @@ def index_document():
         slugify(subject)
     ])
     doc = Document(
-        path=os.path.join(str(date.year), slug),
+        path=os.path.join(str(date.year), slug) + '.pdf',
         date=date,
         subject=subject,
         sender=sender
@@ -79,7 +79,6 @@ def index_document():
 
     # Attempt to extract some text from the document, and store it alongside
     # the file itself.
-    text = convert_pdf_to_txt(path)
-    open(doc.path + '.txt', 'x').write(text)
+    text = convert_pdf_to_txt(path=path, outfile=(doc.path + '.txt'))
 
     os.rename(path, doc.path)
