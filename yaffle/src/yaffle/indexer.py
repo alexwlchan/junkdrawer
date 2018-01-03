@@ -83,7 +83,8 @@ def index_document():
         path=os.path.join(str(date.year), slug) + '.pdf',
         date=date,
         subject=subject,
-        sender=sender
+        sender=sender,
+        original_name=os.path.basename(path)
     )
 
     assert os.path.exists(path)

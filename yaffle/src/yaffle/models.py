@@ -12,6 +12,7 @@ class Document:
     date = attr.ib()
     subject = attr.ib()
     sender = attr.ib()
+    original_name = attr.ib()
     date_scanned = attr.ib(default=dt.datetime.now())
 
     @property
