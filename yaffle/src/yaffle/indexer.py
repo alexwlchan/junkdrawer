@@ -90,7 +90,7 @@ def index_document():
     assert not os.path.exists(doc.path)
 
     documents = db.read_db()
-    # assert slug not in documents
+    assert slug not in documents
     documents[slug] = doc
     db.write_db(documents=documents)
 
