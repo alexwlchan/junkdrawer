@@ -9,7 +9,7 @@ import re
 import attr
 from unidecode import unidecode
 
-from pince.core import Document
+from yaffle.core import Document
 
 
 class EnhancedJSONEncoder(json.JSONEncoder):

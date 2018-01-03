@@ -5,7 +5,7 @@ import json
 
 from tabulate import tabulate
 
-from pince.core import Document
+from yaffle.core import Document
 
 
 def print_report():

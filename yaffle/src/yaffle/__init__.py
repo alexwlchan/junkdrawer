@@ -1,8 +1,8 @@
 # -*- encoding: utf-8
 """
-Usage:  pince index <PATH> --date=<DATE> --subject=<SUBJECT> --from=<FROM>
-        pince report
-        pince -h | --help
+Usage: yaffle index <PATH> --date=<DATE> --subject=<SUBJECT> --from=<FROM>
+       yaffle report
+       yaffle -h | --help
 """
 
 import dateutil.parser as dp

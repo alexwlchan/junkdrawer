@@ -23,7 +23,7 @@ install_reqs = parse_requirements(
 
 
 setup(
-    name='pince',
+    name='yaffle',
     version='1.0.0',
     description='A tool for managing a library of PDF documents',
     long_description=long_description,
@@ -43,7 +43,7 @@ setup(
     install_requires=[str(ir.req) for ir in install_reqs],
     entry_points={
         'console_scripts': [
-            'pince=pince:main',
+            'yaffle=yaffle:main',
         ],
     },
 )
