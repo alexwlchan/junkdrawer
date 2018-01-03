@@ -5,7 +5,7 @@ import json
 
 from tabulate import tabulate
 
-from yaffle.core import Document
+from yaffle.models import Document
 
 
 def print_report():

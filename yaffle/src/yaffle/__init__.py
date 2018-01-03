@@ -1,6 +1,6 @@
 # -*- encoding: utf-8
 """
-Usage: yaffle index <PATH> --date=<DATE> --subject=<SUBJECT> --from=<FROM>
+Usage: yaffle index <PATH> [--date=<DATE>] [--subject=<SUBJECT>] [--from=<FROM>]
        yaffle report
        yaffle -h | --help
 """
@@ -8,9 +8,9 @@ Usage: yaffle index <PATH> --date=<DATE> --subject=<SUBJECT> --from=<FROM>
 import dateutil.parser as dp
 import docopt
 
-from pince.core import Document
-from pince.indexer import index_document
-from pince.reporter import print_report
+from yaffle.indexer import index_document
+from yaffle.models import Document
+from yaffle.reporter import print_report
 
 
 def main():

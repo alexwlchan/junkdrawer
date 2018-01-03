@@ -1,24 +1,24 @@
 # -*- encoding: utf-8
-"""Index a document in the Pince database."""
+"""Index a document in the Yaffle database.
+
+Usage: {PROG} <PATH> [--date=<DATE>] [--subject=<SUBJECT>] [--from=<FROM>]
+       {PROG} -h | --help
+       {PROG} --version
+"""
 
 import datetime as dt
 import json
 import os
 import re
+import sys
 
 import attr
+import dateutil.parser as dp
+import docopt
 from unidecode import unidecode
 
-from yaffle.core import Document
-
-
-class EnhancedJSONEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, (dt.datetime, dt.date)):
-            return obj.isoformat()
-        if isinstance(obj, Document):
-            return attr.asdict(obj)
-        return json.JSONEncoder.default(self, obj)
+from yaffle.models import Document, YaffleJSONEncoder
+from yaffle.version import __version__
 
 
 def slugify(u):
@@ -32,19 +32,52 @@ def slugify(u):
     return a
 
 
-def index_document(path, document):
-    assert os.path.exists(path)
-    document.path = os.path.join(
-        str(document.date.year),
-        document.date.strftime('%m-%d' + '_%s.pdf' % slugify(document.subject))
+def index_document():
+    args = docopt.docopt(
+        __doc__.format(PROG=os.path.basename(sys.argv[0])),
+        version=__version__
     )
+
+    path = args['<PATH>']
+
+    if args['--date']:
+        date_str = args['--date']
+    else:
+        date_str = input('\nWhen was this document sent?\n> ')
+    date = dp.parse(date_str).date()
+
+    if args['--subject']:
+        subject = args['--subject']
+    else:
+        subject = input('\nWhat is the subject of this document?\n> ')
+
+    if args['--from']:
+        sender = args['--from']
+    else:
+        sender = input('\nWho sent this document?\n> ')
+
+    slug = '__'.join([
+        date.strftime('%Y-%m-%d'),
+        slugify(sender),
+        slugify(subject)
+    ])
+    document = Document(
+        path=os.path.join(str(date.year), slug),
+        date=date,
+        subject=subject,
+        sender=sender
+    )
+
+    assert os.path.exists(path)
     assert not os.path.exists(document.path)
+
+    data = json.load(open('yaffle_documents.json'))
+    assert slug not in data
+    data[slug] = document
+    json_str = json.dumps(
+        data, indent=2, sort_keys=True, cls=YaffleJSONEncoder
+    )
+    open('yaffle_documents.json', 'w').write(json_str)
+
     os.makedirs(os.path.dirname(document.path), exist_ok=True)
     os.rename(path, document.path)
-
-    data = json.load(open('documents.json'))
-    data.append(document)
-    json_str = json.dumps(
-        data, indent=2, sort_keys=True, cls=EnhancedJSONEncoder
-    )
-    open('documents.json', 'w').write(json_str)
