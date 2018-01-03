@@ -43,7 +43,6 @@ setup(
     install_requires=[str(ir.req) for ir in install_reqs],
     entry_points={
         'console_scripts': [
-            'yaffle=yaffle:main',
             'yaffle-index=yaffle:index_document',
         ],
     },
