@@ -19,34 +19,6 @@ function parse_git_branch
 end
 
 
-function parse_svn_branch
-  which svn > /dev/null 2>&1
-  if [ $status = "0" ]
-    set branch (svn info 2> /dev/null | sed -n "/URL:/s/.*\///p")
-    if [ -n "$branch" ]
-      set_color normal
-      printf " on svn:"
-      set_color cyan
-      printf "$branch"
-    end
-  end
-end
-
-
-function parse_hg_branch
-  which hg > /dev/null 2>&1
-  if [ $status = "0" ]
-    set branch (hg branch 2> /dev/null | awk '{print $1}')
-    if [ -n "$branch" ]
-      set_color normal
-      printf " on hg:"
-      set_color cyan
-      printf "$branch"
-    end
-  end
-end
-
-
 function fish_prompt
   # A newline between new prompts for cleanliness
   echo ''
@@ -74,8 +46,6 @@ function fish_prompt
 
   # Add information about the current VCS
   parse_git_branch
-  parse_svn_branch
-  parse_hg_branch
 
   # Finally, print the shell prompt.  We have a slightly different prompt
   # for root users.
