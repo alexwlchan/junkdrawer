@@ -55,3 +55,7 @@ eval (python2 -m virtualfish auto_activation) >> /dev/null 2>&1
 if [ (uname -s) = "Darwin" ]
     . $DIR/macos.fish
 end
+
+if [ (hostname) = "Alexs-MacBook-2" ]
+  . $DIR/_macbook.fish
+end
