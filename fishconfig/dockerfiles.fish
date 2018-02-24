@@ -36,3 +36,12 @@ end
 function jq
   docker run --rm --interactive giantswarm/tiny-tools jq $argv
 end
+
+
+function aws
+  set -q AWS_PROFILE; or set AWS_PROFILE default
+  docker run --interactive --tty \
+    --volume ~/.aws:/root/.aws \
+    --env AWS_PROFILE="$AWS_PROFILE" \
+    mesosphere/aws-cli $argv
+end

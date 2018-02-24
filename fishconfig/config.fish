@@ -57,6 +57,6 @@ if [ (uname -s) = "Darwin" ]
     . $DIR/macos.fish
 end
 
-if [ (hostname) = "Alexs-MacBook-2" ]
+if [ (hostname) = "Alexs-MacBook-2" -o (hostname) = "Alexs-MacBook-2.local" ]
   . $DIR/_macbook.fish
 end
