@@ -31,3 +31,8 @@ end
 function youtube-dl
   __call_docker_image youtube_dl $argv
 end
+
+
+function jq
+  docker run --rm --interactive giantswarm/tiny-tools jq $argv
+end
