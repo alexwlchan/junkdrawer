@@ -1,0 +1,155 @@
+# Version 1.0 -- Generated content!
+fontName         = PragmataPro
+fontSize         = 15
+include          = {*,.tm_properties,.travis*,.github*,.gitignore}
+showInvisibles   = false
+showWrapColumn   = true
+softTabs         = true
+softWrap         = true
+tabSize          = 2
+theme            = A4299D9B-1DE5-4BC4-87F6-A757E71B1597
+wrapColumn       = 80
+
+[ *.md ]
+fileType         = text.html.markdown
+
+[ *.py ]
+fileType         = source.python
+
+[ *.rs ]
+fileType         = source.rust
+
+[ *.cfg ]
+fileType         = source.python
+
+[ *.ini ]
+fileType         = source.ini
+
+[ *.txt ]
+fileType         = text.plain
+
+[ *.cxml ]
+fileType         = text.xml
+
+[ *.fish ]
+fileType         = source.shell
+
+[ *.json ]
+fileType         = source.json
+
+[ *.scpt ]
+fileType         = source.applescript
+
+[ *.ipynb ]
+fileType         = source.json
+
+[ *.scala ]
+fileType         = source.scala
+
+[ managed_schema ]
+fileType         = text.xml
+
+[ source ]
+showInvisibles   = false
+softTabs         = true
+softWrap         = false
+tabSize          = 2
+
+[ source.css ]
+softWrap         = true
+tabSize          = 2
+
+[ source.css.less ]
+tabSize          = 2
+
+[ source.dockerfile ]
+softWrap         = false
+tabSize          = 2
+
+[ source.ini ]
+showInvisibles   = true
+softTabs         = true
+softWrap         = false
+
+[ source.js ]
+showInvisibles   = true
+softWrap         = true
+tabSize          = 2
+
+[ source.json ]
+softWrap         = true
+tabSize          = 2
+
+[ source.makefile ]
+softWrap         = false
+tabSize          = 4
+
+[ source.python ]
+showInvisibles   = false
+softWrap         = false
+
+[ source.python.django ]
+softWrap         = false
+tabSize          = 2
+
+[ source.rust ]
+tabSize          = 2
+
+[ source.scss ]
+tabSize          = 2
+
+[ source.shell ]
+showInvisibles   = false
+softWrap         = false
+tabSize          = 2
+
+[ source.terraform ]
+tabSize          = 2
+
+[ source.yaml ]
+showInvisibles   = false
+softTabs         = true
+tabSize          = 2
+
+[ text ]
+showInvisibles   = true
+softTabs         = true
+tabSize          = 4
+
+[ text.html ]
+showInvisibles   = true
+softTabs         = true
+softWrap         = true
+tabSize          = 2
+
+[ text.html.basic ]
+softWrap         = true
+
+[ text.html.markdown ]
+showInvisibles   = true
+softTabs         = true
+softWrap         = true
+tabSize          = 2
+
+[ text.plain ]
+showInvisibles   = false
+softWrap         = true
+tabSize          = 4
+
+[ text.restructuredtext ]
+softWrap         = true
+tabSize          = 3
+
+[ text.tex ]
+softWrap         = true
+tabSize          = 2
+
+[ text.tex.latex ]
+softWrap         = true
+tabSize          = 2
+
+[ text.xml ]
+softWrap         = true
+
+[ text.xml.plist ]
+softWrap         = true
