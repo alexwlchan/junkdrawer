@@ -1,0 +1,125 @@
+bundleid: com.alexwlchan.alfred-shortcuts
+
+createdby: Alex Chan
+version: 1.0.0
+
+icon: globe.png
+
+links:
+
+  # Links to the AWS console
+  - title:    CloudWatch
+    icon:     cloudwatch.png
+    shortcut: cloudwatch
+    url:      https://eu-west-1.console.aws.amazon.com/cloudwatch
+  - title:    DynamoDB
+    icon:     dynamodb.png
+    shortcut: dynamodb
+    url:      https://eu-west-1.console.aws.amazon.com/dynamodb
+  - title:    EC2
+    icon:     ec2.png
+    shortcut: ec2
+    url:      https://eu-west-1.console.aws.amazon.com/ec2
+  - title:    EC2 Container Registry
+    icon:     ecr.png
+    shortcut: ecr
+    url:      https://eu-west-1.console.aws.amazon.com/ecs/home?region=eu-west-1#/repositories
+  - title:    EC2 Container Service
+    icon:     ecs.png
+    shortcut: ecs
+    url:      https://eu-west-1.console.aws.amazon.com/ecs
+  - title:    Glacier
+    icon:     glacier.png
+    shortcut: glacier
+    url:      https://eu-west-1.console.aws.amazon.com/glacier
+  - title:    IAM
+    icon:     iam.png
+    shortcut: iam
+    url:      https://eu-west-1.console.aws.amazon.com/iam
+  - title:    AWS Lambda
+    icon:     lambda.png
+    shortcut: lambda
+    url:      https://eu-west-1.console.aws.amazon.com/lambda
+  - title:    S3
+    icon:     s3.png
+    shortcut: s3
+    url:      https://eu-west-1.console.aws.amazon.com/s3
+  - title:    SNS
+    icon:     sns.png
+    shortcut: sns
+    url:      https://eu-west-1.console.aws.amazon.com/sns
+  - title:    SQS
+    icon:     sqs.png
+    shortcut: sqs
+    url:      https://eu-west-1.console.aws.amazon.com/sqs
+  - title:    CloudFront
+    icon:     cloudfront.png
+    shortcut: cloudfront
+    url:      https://eu-west-1.console.aws.amazon.com/cloudfront
+
+  # Search software/package repositories
+  - title:    "Search PyPI for '{query}'"
+    icon:     pypi.png
+    shortcut: pypi
+    url:      https://pypi.org/search/?q={query}
+  - title:    "Search Rubygems for '{query}'"
+    icon:     rubygems.png
+    shortcut: gem
+    url:      https://rubygems.org/search?utf8=✓&query={query}
+  - title:    "Search npm for '{query}'"
+    icon:     npm.png
+    shortcut: npm
+    url:      https://www.npmjs.com/search?q={query}
+  - title:    "Search crates.io for '{query}'"
+    icon:     crates-io.png
+    shortcut: cargo
+    url:      https://crates.io/search?q={query}
+  - title:    "Search Docker Hub for '{query}'"
+    icon:     docker.png
+    shortcut: dock
+    url:      https://hub.docker.com/search/?q={query}
+  - title:    "Search Alpine package repos for '{query}'"
+    icon:     apk.png
+    shortcut: apk
+    url:      https://pkgs.alpinelinux.org/packages?name=*{query}*&repo=all&arch=x86_64&maintainer=all
+
+  # Social websites
+  - title:    Pinboard
+    icon:     pinboard.png
+    shortcut: pin
+    url:      https://pinboard.in/u:alexwlchan
+  - title:    "Search Pincushion for '{query}'"
+    icon:     pincushion.png
+    shortcut: pin
+    url:      https://pincushion.alexwlchan.net/?query={query}
+  - title:    Pincushion
+    icon:     pincushion.png
+    shortcut: pin
+    url:      https://pincushion.alexwlchan.net/
+  - title:    Blogtrottr
+    icon:     blogtrottr.png
+    shortcut: blog
+    url:      https://blogtrottr.com/
+
+github:
+  - owner:    wellcometrust
+    repo:     platform
+    shortcut: platform
+  - owner:    HypothesisWorks
+    repo:     hypothesis-python
+    shortcut: hyp
+  - owner:    python-hyper
+    repo:     hyper-h2
+    shortcut: hyp
+  - owner:    loris-imageserver
+    repo:     loris
+    shortcut: loris
+  - owner:    alexwlchan
+    repo:     alexwlchan.net
+    shortcut: alexwlchan.net
+  - owner:    alexwlchan
+    repo:     homeconfig
+    shortcut: homeconfig
+  - owner:    HypothesisWorks
+    repo:     HypothesisWorks.GitHub.io
+    shortcut: hyp
