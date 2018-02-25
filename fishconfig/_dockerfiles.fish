@@ -8,7 +8,7 @@ function __build_docker_image
   # with a silent exit code before actually triggering it.
   pushd $ROOT
     if not make --question $ROOT/.docker/$argv[1]
-      make $ROOT/.docker/$argv[1]
+      make docker-$argv[1]-build
     end
   popd
 end
