@@ -1,7 +1,6 @@
-function __call_docker_image
-
-  # First we build the Docker image associated with this command.  If Make
-  # detects that the target is already up-to-date, it prints:
+function __build_docker_image
+  # Build the Docker image associated with this command.  If Make detects
+  # that the target is already up-to-date, it prints:
   #
   #    make: `.docker/primitive' is up to date.
   #
@@ -12,7 +11,9 @@ function __call_docker_image
       make $ROOT/.docker/$argv[1]
     end
   popd
+end
 
+function __call_docker_image
   # Then we run the container itself, passing the current directory into
   # the container and mapping through any arguments to the function straight
   # into the container.
@@ -26,6 +27,17 @@ end
 
 function primitive
   __call_docker_image primitive $argv
+end
+
+function travis
+  __build_docker_image travis
+
+  # Because Travis needs several extra directories, and the repo root
+  # rather than the current working dir, we call it directly.
+  docker run --rm --tty \
+    --volume (git rev-parse --show-toplevel):/repo \
+    --volume ~/.travis:/root/.travis alexwlchan/travis $argv
+
 end
 
 function youtube-dl
