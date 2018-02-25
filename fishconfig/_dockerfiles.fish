@@ -19,7 +19,10 @@ function __call_docker_image
   # Then we run the container itself, passing the current directory into
   # the container and mapping through any arguments to the function straight
   # into the container.
-  docker run --rm --tty --volume (pwd):/data alexwlchan/$argv[1] $argv[2..-1]
+  docker run --rm --tty \
+    --volume (pwd):/data \
+    --workdir /data \
+    alexwlchan/$argv[1] $argv[2..-1]
 end
 
 
@@ -45,6 +48,11 @@ function travis
     --volume (git rev-parse --show-toplevel):/repo \
     --volume ~/.travis:/root/.travis alexwlchan/travis $argv
 
+end
+
+
+function optipng
+  __call_docker_image optipng $argv
 end
 
 

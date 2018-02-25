@@ -1,7 +1,7 @@
 ROOT = $(shell git rev-parse --show-toplevel)
 DOCKERFILES = $(ROOT)/dockerfiles
 
-IMAGES = lessc primitive travis youtube_dl
+IMAGES = lessc optipng primitive travis youtube_dl
 
 
 define __template
