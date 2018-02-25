@@ -18,10 +18,7 @@ end
 function gup
     set top_level (git rev-parse --show-toplevel)
     if [ "$status" -eq "0" ]
-        set curdir (pwd)
-        cd $top_level
-        open -a GitUp.app .
-        cd $curdir
+        open -a GitUp.app $top_level
         return 0
     else
         return 1
