@@ -2,8 +2,10 @@
 
 This directory contains Dockerfiles for Docker images that I find useful.
 
-Often I'll run programs in Docker (which makes installation much easier on a new machine) than on the host.
+I run a lot of programs in Docker rather than installing them directly on a machine (e.g. with brew or apt-get).
 
-This is especially useful for software which is installed with tools I don't usually keep handy, e.g. npm or golang.
-Because I'm not a JavaScript or Go developer, I don't have those set up on my machine, and I don't want to set them up for a single tool.
-Docker works as a handy stopgap!
+*   I can see exactly what files are being written/edited on the host
+*   I can use packages/tools that are installed with package managers I don't use very often, e.g. npm or golang, and not have to worry about getting the package manager working
+*   When I get a new machine, I have them available as soon as I install Docker
+
+In my fishconfig, I've got some shell functions that call out to these images, building them first if necessary.
