@@ -73,3 +73,9 @@ function aws
     --env AWS_PROFILE="$AWS_PROFILE" \
     mesosphere/aws-cli $argv
 end
+
+
+function wget
+  __build_docker_image wget
+  docker run --rm --volume (pwd):/data --workdir /data alexwlchan/wget $argv
+end
