@@ -29,16 +29,22 @@ function primitive
   __call_docker_image primitive $argv
 end
 
+
 function travis
   __build_docker_image travis
 
-  # Because Travis needs several extra directories, and the repo root
-  # rather than the current working dir, we call it directly.
+  # Travis needs:
+  #
+  #   - The current Git repo, because it uses the .git dir to work out the name
+  #     of the associated GitHub repo, and set up certain things.
+  #   - The ~/.travis dir, which is where Travis config lives
+  #
   docker run --rm --tty \
     --volume (git rev-parse --show-toplevel):/repo \
     --volume ~/.travis:/root/.travis alexwlchan/travis $argv
 
 end
+
 
 function youtube-dl
   __call_docker_image youtube_dl $argv
