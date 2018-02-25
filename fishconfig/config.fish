@@ -49,8 +49,8 @@ eval (python2 -m virtualfish auto_activation) >> /dev/null 2>&1
 
 . $DIR/prompt.fish
 . $DIR/git.fish
-. $DIR/dockerfiles.fish
 . $DIR/_docker.fish
+. $DIR/_dockerfiles.fish
 
 # Load macOS-specific utilities
 if [ (uname -s) = "Darwin" ]
