@@ -14,6 +14,8 @@ function __build_docker_image
 end
 
 function __call_docker_image
+  __build_docker_image $argv[1]
+
   # Then we run the container itself, passing the current directory into
   # the container and mapping through any arguments to the function straight
   # into the container.
