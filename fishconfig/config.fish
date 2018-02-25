@@ -16,9 +16,6 @@ end
 # Entry point for fish shell config
 ###############################################################################
 
-# Add pipsi install path
-append_dir_to_path ~/.local/bin
-
 # Add Cargo install path
 append_dir_to_path ~/.cargo/bin
 
