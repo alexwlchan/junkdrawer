@@ -51,7 +51,7 @@ eval (python2 -m virtualfish auto_activation) >> /dev/null 2>&1
 
 # Load macOS-specific utilities
 if [ (uname -s) = "Darwin" ]
-    . $DIR/macos.fish
+    . $DIR/_macos.fish
 end
 
 if [ (hostname) = "Alexs-MacBook-2" -o (hostname) = "Alexs-MacBook-2.local" ]
