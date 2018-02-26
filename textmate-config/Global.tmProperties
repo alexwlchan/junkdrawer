@@ -2,7 +2,7 @@
 exclude          = '{*.{o,pyc},Icon\r,CVS,_darcs,_MTN,\{arch\},blib,*\~.nib,__pycache__}'
 fontName         = PragmataPro
 fontSize         = 15
-include          = {*,.tm_properties,.travis*,.github*,.gitignore}
+include          = {*,.tm_properties,.travis*,.github*,.gitignore,.scalafmt.conf}
 showInvisibles   = false
 showWrapColumn   = true
 softTabs         = true
