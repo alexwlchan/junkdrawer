@@ -69,7 +69,7 @@ class TweetStore(MutableMapping):
         return self.tweet_data[tweet_id]
 
     def __setitem__(self, tweet_id, tweet):
-        path = os.path.join(self.path, tweet_id[:2], tweet_id)
+        path = os.path.join(self.path, tweet_id[-2:], tweet_id)
         os.makedirs(path, exist_ok=True)
 
         json_data = json.dumps(tweet._json, indent=2, sort_keys=True)
