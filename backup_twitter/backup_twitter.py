@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 """
-Usage: backup_twitter.py --credentials=<CREDENTIALS_FILE> --dir=<DIR>
+Usage: backup_twitter.py --credentials=<CREDENTIALS_FILE> --dir=<DIR> --method=<METHOD> [--args=<ARGS>] [--kwargs=<KWARGS>]
        backup_twitter.py -h --help
 
 Options:
@@ -64,11 +64,14 @@ class TweetStore(MutableMapping):
     def save(self, tweet, reindex=False):
         if reindex or (str(tweet.id) not in self):
             self[str(tweet.id)] = tweet
+        else:
+            print('.', end='')
 
     def __getitem__(self, tweet_id):
         return self.tweet_data[tweet_id]
 
     def __setitem__(self, tweet_id, tweet):
+        print(f'Storing {tweet_id}')
         path = os.path.join(self.path, tweet_id[-2:], tweet_id)
         os.makedirs(path, exist_ok=True)
 
@@ -141,15 +144,22 @@ def get_tweets(method, *args, **kwargs):
     # https://dev.twitter.com/overview/api/upcoming-changes-to-tweets
     kwargs['tweet_mode'] = 'extended'
 
-    @tenacity.retry(wait=tenacity.wait_exponential(multiplier=1, max=10))
+    @tenacity.retry(wait=tenacity.wait_exponential(multiplier=1, max=60))
     def _get_next_tweets():
-        return method(*args, **kwargs)
+        try:
+            return method(*args, **kwargs)
+        except Exception as exc:
+            print(exc)
+            raise
 
     # Keep going until we've exhausted all the tweets from the API, or
     # something else causes us to break.
     while True:
         new_tweets = _get_next_tweets()
         yield from new_tweets
+
+        if not new_tweets:
+            break
 
         # What is the earliest ID of the tweets we've seen?  We'll want
         # to get everything up to that point on the next call.
@@ -158,12 +168,17 @@ def get_tweets(method, *args, **kwargs):
 
 
 if __name__ == '__main__':
-    args = docopt.docopt(__doc__)
+    docopt_args = docopt.docopt(__doc__)
 
-    credentials = TwitterCredentials.from_path(args['--credentials'])
+    credentials = TwitterCredentials.from_path(docopt_args['--credentials'])
     api = setup_api(credentials=credentials)
 
-    store = TweetStore.from_path(path=args['--dir'])
+    store = TweetStore.from_path(path=os.path.abspath(docopt_args['--dir']))
 
-    for tweet in get_tweets(api.user_timeline):
+    method = docopt_args['--method']
+    method = getattr(api, method)
+    args = tuple(json.loads(docopt_args['--args'] or '[]'))
+    kwargs = json.loads(docopt_args['--kwargs'] or '{}')
+
+    for tweet in get_tweets(method, *args, **kwargs):
         store.save(tweet)
