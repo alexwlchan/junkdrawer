@@ -94,9 +94,9 @@ class TweetStore(MutableMapping):
 
         self.tweet_data[tweet_id] = {
             'dir': os.path.relpath(path, start=self.path),
-            'text': tweet.full_text,
-            'user': tweet.user.screen_name,
-            'date': tweet.created_at.isoformat(),
+            '_text': tweet.full_text,
+            '_user': tweet.user.screen_name,
+            '_date': tweet.created_at.isoformat(),
         }
         json_data = json.dumps(self.tweet_data, indent=2, sort_keys=True)
         with open(os.path.join(self.path, 'tweets.json'), 'w') as outfile:
