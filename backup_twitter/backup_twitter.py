@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 """
-Usage: backup_twitter.py --credentials=<CREDENTIALS_FILE>
+Usage: backup_twitter.py --credentials=<CREDENTIALS_FILE> --dir=<DIR>
        backup_twitter.py -h --help
 
 Options:
@@ -13,7 +13,15 @@ Options:
         * access_token
         * access_token_secret
 
+    --dir=<DIR>
+        Directory to store the backed-up tweet data.
+
 """
+
+from collections.abc import MutableMapping
+import json
+import os
+import shutil
 
 import attr
 import docopt
@@ -33,6 +41,54 @@ class TwitterCredentials:
     def from_path(cls, path):
         data = hcl.load(open(path))
         return cls(**data)
+
+
+@attr.s
+class TweetStore(MutableMapping):
+    path = attr.ib()
+    tweet_data = attr.ib()
+
+    @classmethod
+    def from_path(cls, path):
+        os.makedirs(path, exist_ok=True)
+
+        try:
+            tweet_data = json.load(open(os.path.join(path, 'tweets.json')))
+        except FileNotFoundError:
+            tweet_data = {}
+
+        return cls(path=path, tweet_data=tweet_data)
+
+    def save(self, tweet, reindex=False):
+        if reindex or (str(tweet.id) not in self):
+            self[str(tweet.id)] = tweet
+
+    def __getitem__(self, tweet_id):
+        return self.tweet_data[tweet_id]
+
+    def __setitem__(self, tweet_id, tweet):
+        path = os.path.join(self.path, tweet_id[:2], tweet_id)
+        os.makedirs(path, exist_ok=True)
+
+        json_data = json.dumps(tweet._json, indent=2, sort_keys=True)
+        with open(os.path.join(path, 'info.json'), 'w') as outfile:
+            outfile.write(json_data)
+
+        assert not hasattr(tweet, 'extended_entities')
+
+        self.tweet_data[tweet_id] = os.path.relpath(path, start=self.path)
+        json_data = json.dumps(self.tweet_data, indent=2, sort_keys=True)
+        with open(os.path.join(self.path, 'tweets.json'), 'w') as outfile:
+            outfile.write(json_data)
+
+    def __delitem__(self, tweet_id):
+        raise NotImplementedError
+
+    def __iter__(self):
+        return iter(self.tweet_data)
+
+    def __len__(self):
+        return len(self.tweet_data)
 
 
 def setup_api(credentials):
@@ -86,5 +142,7 @@ if __name__ == '__main__':
     credentials = TwitterCredentials.from_path(args['--credentials'])
     api = setup_api(credentials=credentials)
 
-    for t in get_tweets(api.user_timeline):
-        print(t)
+    store = TweetStore.from_path(path=args['--dir'])
+
+    for tweet in get_tweets(api.user_timeline):
+        store.save(tweet)
