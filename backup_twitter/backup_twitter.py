@@ -22,6 +22,8 @@ from collections.abc import MutableMapping
 import json
 import os
 import shutil
+from urllib.parse import urlparse
+from urllib.request import urlretrieve
 
 import attr
 import docopt
@@ -74,7 +76,21 @@ class TweetStore(MutableMapping):
         with open(os.path.join(path, 'info.json'), 'w') as outfile:
             outfile.write(json_data)
 
-        assert not hasattr(tweet, 'extended_entities')
+        try:
+            extended_entities = tweet.extended_entities
+        except AttributeError:
+            pass
+        else:
+            media = extended_entities.pop('media')
+
+            for m in media:
+                url = m['media_url_https']
+                filename = os.path.join(
+                    path, os.path.basename(urlparse(url).path)
+                )
+                urlretrieve(url=url, filename=filename)
+
+            assert not extended_entities
 
         self.tweet_data[tweet_id] = os.path.relpath(path, start=self.path)
         json_data = json.dumps(self.tweet_data, indent=2, sort_keys=True)
