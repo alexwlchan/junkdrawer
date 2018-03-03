@@ -92,7 +92,12 @@ class TweetStore(MutableMapping):
 
             assert not extended_entities
 
-        self.tweet_data[tweet_id] = os.path.relpath(path, start=self.path)
+        self.tweet_data[tweet_id] = {
+            'dir': os.path.relpath(path, start=self.path),
+            'text': tweet.full_text,
+            'user': tweet.user.screen_name,
+            'date': tweet.created_at.isoformat(),
+        }
         json_data = json.dumps(self.tweet_data, indent=2, sort_keys=True)
         with open(os.path.join(self.path, 'tweets.json'), 'w') as outfile:
             outfile.write(json_data)
