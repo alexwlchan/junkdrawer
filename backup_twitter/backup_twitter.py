@@ -18,6 +18,7 @@ Options:
 import attr
 import docopt
 import hcl
+import tweepy
 
 
 @attr.s
@@ -33,7 +34,24 @@ class TwitterCredentials:
         return cls(**data)
 
 
+def setup_api(credentials):
+    """Authorise the use of the Twitter API.
+
+    :param credentials: An instance of TwitterCredentials.
+
+    """
+    auth = tweepy.OAuthHandler(
+        consumer_key=credentials.consumer_key,
+        consumer_secret=credentials.consumer_secret)
+    auth.set_access_token(
+        key=credentials.access_token,
+        secret=credentials.access_token_secret
+    )
+    return tweepy.API(auth)
+
+
 if __name__ == '__main__':
     args = docopt.docopt(__doc__)
 
-    auth = TwitterCredentials.from_path(args['--credentials'])
+    credentials = TwitterCredentials.from_path(args['--credentials'])
+    api = setup_api(credentials=credentials)
