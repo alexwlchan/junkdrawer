@@ -9,12 +9,14 @@ certifi==2018.1.18        # via requests
 chardet==3.0.4            # via requests
 docopt==0.6.2
 idna==2.6                 # via requests
+monotonic==1.4            # via tenacity
 oauthlib==2.0.6           # via requests-oauthlib
 ply==3.10                 # via pyhcl
 pyhcl==0.3.10
 pysocks==1.6.8            # via tweepy
 requests-oauthlib==0.8.0  # via tweepy
 requests==2.18.4          # via requests-oauthlib, tweepy
-six==1.11.0               # via tweepy
+six==1.11.0               # via tenacity, tweepy
+tenacity==4.8.0
 tweepy==3.6.0
 urllib3==1.22             # via requests
