@@ -142,7 +142,8 @@ def get_tweets(method, *args, **kwargs):
     # We always want the extended mode: this includes the full text of tweets
     # that are >140 characters.
     # https://dev.twitter.com/overview/api/upcoming-changes-to-tweets
-    kwargs['tweet_mode'] = 'extended'
+    if method.__name__ != 'statuses_lookup':
+        kwargs['tweet_mode'] = 'extended'
 
     @tenacity.retry(wait=tenacity.wait_exponential(multiplier=1, max=60))
     def _get_next_tweets():
@@ -157,6 +158,9 @@ def get_tweets(method, *args, **kwargs):
     while True:
         new_tweets = _get_next_tweets()
         yield from new_tweets
+
+        if method.__name__ == 'statuses_lookup':
+            break
 
         if not new_tweets:
             break
