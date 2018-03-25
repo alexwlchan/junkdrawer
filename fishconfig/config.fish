@@ -37,7 +37,7 @@ alias cdir 'for l in (ls); if [ -d $l ]; echo (find $l | wc -l)"  $l"; end; end 
 # virtualfish -- a fish wrapper for virtualenv
 # https://github.com/adambrenecki/virtualfish
 ###############################################################################
-eval (python2 -m virtualfish auto_activation) >> /dev/null 2>&1
+eval (python3 -m virtualfish auto_activation) >> /dev/null 2>&1
 
 
 ###############################################################################
