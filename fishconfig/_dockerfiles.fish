@@ -72,6 +72,8 @@ function aws
     --volume (pwd):/data \
     --workdir /data \
     --volume ~/.aws:/root/.aws \
+    --volume (pwd):/data \
+    --workdir /data \
     --env AWS_PROFILE="$AWS_PROFILE" \
     mesosphere/aws-cli $argv
 end
