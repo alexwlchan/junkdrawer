@@ -105,6 +105,9 @@ github:
   - owner:    wellcometrust
     repo:     platform
     shortcut: platform
+  - owner:    wellcometrust
+    repo:     platform-private
+    shortcut: private
   - owner:    HypothesisWorks
     repo:     hypothesis-python
     shortcut: hyp
