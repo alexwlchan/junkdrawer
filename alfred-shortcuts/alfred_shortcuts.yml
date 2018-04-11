@@ -56,6 +56,10 @@ links:
     icon:     cloudfront.png
     shortcut: cloudfront
     url:      https://eu-west-1.console.aws.amazon.com/cloudfront
+  - title:    ACM Certificate Manager
+    icon:     acm.png
+    shortcut: acm
+    url:      https://eu-west-1.console.aws.amazon.com/acm
 
   # Search software/package repositories
   - title:    "Search PyPI for '{query}'"
