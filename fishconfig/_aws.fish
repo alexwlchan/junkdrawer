@@ -14,3 +14,13 @@ function s3mate
     end
   popd
 end
+
+function s3cat
+  set s3key $argv[1]
+  set localname (basename $argv[1])
+
+  pushd (mktemp -d)
+    aws s3 cp "$s3key" "$localname"
+    cat "$localname"
+  popd
+end
