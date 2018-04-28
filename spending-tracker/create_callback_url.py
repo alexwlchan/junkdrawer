@@ -1,4 +1,34 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8
 
-print('x-drafts4://x-callback-url/import_action?v=2&tintColor=%5B%0A%20%200.27500000596046448%2C%0A%20%200.75700002908706665%2C%0A%20%200.21600000560283661%0A%5D&shouldConfirm=0&logLevel=1&uuid=5F62BCA9-A01D-4804-82D3-2DF126ACED8E&disposition=2&actionSteps=%5B%0A%20%20%7B%0A%20%20%20%20%22scriptText%22%20%3A%20%22%5C%2F%5C%2F%20The%20expected%20format%20of%20a%20spending%5Cn%5C%2F%5C%2F%20entry%20is%20a%20three-line%20draft%3A%5Cn%5C%2F%5C%2F%5Cn%5C%2F%5C%2F%20%20%20%20%20%28amount%29%5Cn%5C%2F%5C%2F%20%20%20%20%20%28tags%2C%20space%20separated%29%5Cn%5C%2F%5C%2F%20%20%20%20%20%28description%2C%20may%20be%20multi-line%29%5Cn%5C%2F%5C%2F%5Cncomponents%20%3D%20draft%5Cn%20%20.content%5Cn%20%20.split%28%5C%22%5C%5Cn%5C%22%2C%20limit%20%3D%203%29%3B%5Cn%5Cnif%20%28components.length%20%21%3D%3D%203%29%20%7B%5Cn%20%20alert%28%5C%22Not%20enough%20lines%20in%20the%20budget%21%5C%22%29%3B%5Cn%20%20stopAction%28%29%3B%5Cn%7D%5Cn%5Cn%5C%2F%5C%2F%20Build%20the%20JSON%20blob%20which%20is%20to%20be%5Cn%5C%2F%5C%2F%20stored%20in%20Dropbox.%5Cnamount%20%3D%20parseFloat%28components%5B0%5D%29%3B%5Cntags%20%3D%20components%5B1%5D%5Cn%20%20.toLowerCase%28%29%5Cn%20%20.split%28%5C%22%20%5C%22%29%5Cn%20%20.sort%28%29%3B%5Cndescription%20%3D%20components%5B2%5D%3B%5Cn%5Cndate_created%20%3D%20draft.createdDate%3B%5Cn%5Cndata%20%3D%20%7B%5Cn%20%20%5C%22amount%5C%22%3A%20amount%2C%5Cn%20%20%5C%22tags%5C%22%3A%20tags%2C%5Cn%20%20%5C%22description%5C%22%3A%20description%2C%5Cn%20%20%5C%22date_created%5C%22%3A%20date_created%2C%5Cn%7D%5Cn%5Cndraft.content%20%3D%20JSON.stringify%28%5Cn%20%20data%2C%20replace%20%3D%20null%2C%20space%20%3D%202%5Cn%29%3B%5Cncommit%28draft%29%3B%22%2C%0A%20%20%20%20%22actionStepType%22%20%3A%20%22Script%22%0A%20%20%7D%2C%0A%20%20%7B%0A%20%20%20%20%22writeType%22%20%3A%20%22create%22%2C%0A%20%20%20%20%22fileTemplate%22%20%3A%20%22%5B%5Bdraft%5D%5D%22%2C%0A%20%20%20%20%22actionStepType%22%20%3A%20%22Dropbox%22%2C%0A%20%20%20%20%22folderTemplate%22%20%3A%20%22%5C%2Fspending%5C%2F%5B%5Bdate%7C%25Y%5D%5D%5C%2F%5B%5Bdate%7C%25m%5D%5D%5C%2F%5B%5Bdate%7C%25d%5D%5D%22%2C%0A%20%20%20%20%22fileExtTemplate%22%20%3A%20%22json%22%2C%0A%20%20%20%20%22fileNameTemplate%22%20%3A%20%22%5B%5Buuid%5D%5D%22%0A%20%20%7D%0A%5D&description=Take%20a%20spending%20entry%2C%20convert%20it%20into%20a%20JSON%20file%2C%20and%20save%20it%20to%20Dropbox.&modifiedAt=2018-04-28%2007%3A33%3A47%20%2B0000&name=Record%20spending&iconImageName=454-pounds2')
+import json
+from urllib.parse import urlparse, urlencode, urlunparse
+
+
+parts = [
+    'x-drafts4',
+    'x-callback-url',
+    '/import_action',
+
+    # params
+    '',
+
+    urlencode({
+        'actionSteps': ['[\n  {\n    "scriptText" : "\\/\\/ The expected format of a spending\\n\\/\\/ entry is a three-line draft:\\n\\/\\/\\n\\/\\/     (amount)\\n\\/\\/     (tags, space separated)\\n\\/\\/     (description, may be multi-line)\\n\\/\\/\\ncomponents = draft\\n  .content\\n  .split(\\"\\\\n\\", limit = 3);\\n\\nif (components.length !== 3) {\\n  alert(\\"Not enough lines in the budget!\\");\\n  stopAction();\\n}\\n\\n\\/\\/ Build the JSON blob which is to be\\n\\/\\/ stored in Dropbox.\\namount = parseFloat(components[0]);\\ntags = components[1]\\n  .toLowerCase()\\n  .split(\\" \\")\\n  .sort();\\ndescription = components[2];\\n\\ndate_created = draft.createdDate;\\n\\ndata = {\\n  \\"amount\\": amount,\\n  \\"tags\\": tags,\\n  \\"description\\": description,\\n  \\"date_created\\": date_created,\\n}\\n\\ndraft.content = JSON.stringify(\\n  data, replace = null, space = 2\\n);\\ncommit(draft);",\n    "actionStepType" : "Script"\n  },\n  {\n    "writeType" : "create",\n    "fileTemplate" : "[[draft]]",\n    "actionStepType" : "Dropbox",\n    "folderTemplate" : "\\/spending\\/[[date|%Y]]\\/[[date|%m]]\\/[[date|%d]]",\n    "fileExtTemplate" : "json",\n    "fileNameTemplate" : "[[uuid]]"\n  }\n]'],
+        'shouldConfirm': ['0'],
+        'uuid': ['5F62BCA9-A01D-4804-82D3-2DF126ACED8E'],
+        'logLevel': ['1'],
+        'name': ['Record spending'],
+        'tintColor': ['[\n  0.27500000596046448,\n  0.75700002908706665,\n  0.21600000560283661\n]'],
+        'modifiedAt': ['2018-04-28 07:33:47 +0000'],
+        'disposition': ['2'],
+        'v': ['2'],
+        'iconImageName': ['454-pounds2'],
+        'description': ['Take a spending entry, convert it into a JSON file, and save it to Dropbox.']
+    }),
+
+    # fragment
+    '',
+]
+
+print(urlunparse(parts))
