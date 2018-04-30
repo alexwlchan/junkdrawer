@@ -4,6 +4,7 @@
 import collections
 import datetime as dt
 import json
+import math
 import os
 import re
 import sys
@@ -48,14 +49,25 @@ if __name__ == '__main__':
     print('')
     print('## Spending by day ##')
     print('')
+    max_spend = max(sum(v) for v in spending.values())
+    increment = max_spend / 20
+
     for d, expenses in sorted(spending.items()):
         total = '%.2f' % sum(expenses)
-        print('%s\t%s' % (d.strftime('%Y-%m-%d'), total.rjust(6)))
+        units = int(math.floor(sum(expenses) / increment))
+        print('%s\t%s\t%s' % (
+            d.strftime('%Y-%m-%d'),
+            total.rjust(6),
+            u'█' * units))
 
     print('\n')
 
     print('## Spending by tag ##')
     print('')
+    max_spend = max(sum(v) for v in spending.values())
+    increment = max_spend / 20
+
     for t, value in tagged_spending.most_common(20):
         total = '%.2f' % value
-        print('%s\t%s' % (t.ljust(20), total.rjust(6)))
+        units = int(math.floor(value / increment))
+        print('%s\t%s\t%s' % (t.ljust(20), total.rjust(6), u'█' * units))
