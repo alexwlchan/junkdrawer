@@ -56,6 +56,6 @@ if __name__ == '__main__':
 
     print('## Spending by tag ##')
     print('')
-    for t, value in tagged_spending.most_common():
+    for t, value in tagged_spending.most_common(20):
         total = '%.2f' % value
         print('%s\t%s' % (t.ljust(20), total.rjust(6)))
