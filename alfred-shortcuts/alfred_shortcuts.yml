@@ -117,6 +117,9 @@ github:
   - owner:    wellcometrust
     repo:     platform-private
     shortcut: private
+  - owner:    wellcometrust
+    repo:     terraform-modules
+    shortcut: terraform
   - owner:    HypothesisWorks
     repo:     hypothesis-python
     shortcut: hyp
