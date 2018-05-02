@@ -58,7 +58,7 @@ if __name__ == '__main__':
         print('%s\t%s\t%s' % (
             d.strftime('%Y-%m-%d'),
             total.rjust(6),
-            u'█' * units))
+            u'█' * units or '▏'))
 
     print('\n')
 
@@ -70,4 +70,7 @@ if __name__ == '__main__':
     for t, value in tagged_spending.most_common(20):
         total = '%.2f' % value
         units = int(math.floor(value / increment))
-        print('%s\t%s\t%s' % (t.ljust(20), total.rjust(6), u'█' * units))
+        print('%s\t%s\t%s' % (
+            t.ljust(20),
+            total.rjust(6),
+            u'█' * units or '▏'))
