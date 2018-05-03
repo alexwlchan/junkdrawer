@@ -133,6 +133,10 @@ github:
   - owner:    wellcometrust
     repo:     terraform-modules
     shortcut: terraform
+  - owner:    wellcometrust
+    repo:     dockerfiles
+    shortcut: dockerfiles
+
   - owner:    HypothesisWorks
     repo:     hypothesis-python
     shortcut: hyp
