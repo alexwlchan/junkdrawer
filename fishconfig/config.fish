@@ -49,6 +49,7 @@ eval (python3 -m virtualfish auto_activation) >> /dev/null 2>&1
 . $DIR/_aws.fish
 . $DIR/_docker.fish
 . $DIR/_dockerfiles.fish
+. $DIR/_imdown.fish
 . $DIR/_wellcome.fish
 
 # Load macOS-specific utilities
