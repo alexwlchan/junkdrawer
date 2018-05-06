@@ -96,6 +96,15 @@ links:
     shortcut: q3
     url:      https://github.com/wellcometrust/platform/projects/6
 
+  - title:    "Search Pixabay for '{query}'"
+    icon:     pixabay.png
+    shortcut: pixabay
+    url:      https://pixabay.com/en/photos/?image_type=all&q={query}
+  - title:    "Search Pexels for '{query}'"
+    icon:     pexels.png
+    shortcut: pexels
+    url:      https://www.pexels.com/search/{query}/
+
   # Social websites
   - title:    Pinboard
     icon:     pinboard.png
