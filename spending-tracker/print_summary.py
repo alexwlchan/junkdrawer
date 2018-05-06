@@ -15,7 +15,7 @@ ROOT = os.path.join(os.environ['HOME'], 'Dropbox', 'spending')
 if len(sys.argv) >= 2:
     DAYS_TO_GET = int(sys.argv[1])
 else:
-    DAYS_TO_GET = 7
+    DAYS_TO_GET = 14
 
 
 if __name__ == '__main__':
@@ -53,12 +53,17 @@ if __name__ == '__main__':
     increment = max_spend / 20
 
     for d, expenses in sorted(spending.items()):
-        total = '%.2f' % sum(expenses)
+        total = '%3.2f' % sum(expenses)
         units = int(math.floor(sum(expenses) / increment))
         print('%s\t%s\t%s' % (
             d.strftime('%Y-%m-%d'),
             total.rjust(6),
             u'█' * units or '▏'))
+
+    print(
+        ' ' * 16 +
+        ('%.2f' % sum(sum(v) for v in spending.values())).rjust(6)
+    )
 
     print('\n')
 
@@ -73,4 +78,4 @@ if __name__ == '__main__':
         print('%s\t%s\t%s' % (
             t.ljust(20),
             total.rjust(6),
-            u'█' * units or '▏'))
+            u'█' * units or u'▏'))
