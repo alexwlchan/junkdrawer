@@ -60,6 +60,10 @@ links:
     icon:     acm.png
     shortcut: acm
     url:      https://eu-west-1.console.aws.amazon.com/acm
+  - title:    EC2 Auto Scaling
+    icon:     autoscaling.png
+    shortcut: autoscaling
+    url:      https://eu-west-1.console.aws.amazon.com/ec2/autoscaling
 
   # Search software/package repositories
   - title:    "Search PyPI for '{query}'"
