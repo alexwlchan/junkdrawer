@@ -51,6 +51,11 @@ function travis
 end
 
 
+function atool
+  __call_docker_image atool $argv
+end
+
+
 function optipng
   __call_docker_image optipng $argv
 end
