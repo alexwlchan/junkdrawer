@@ -44,7 +44,7 @@ function travis
   #     of the associated GitHub repo, and set up certain things.
   #   - The ~/.travis dir, which is where Travis config lives
   #
-  docker run --rm --tty \
+  docker run --rm --interactive --tty \
     --volume (git rev-parse --show-toplevel):/repo \
     --volume ~/.travis:/root/.travis alexwlchan/travis $argv
 
