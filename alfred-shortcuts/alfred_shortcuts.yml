@@ -136,6 +136,9 @@ github:
   - owner:    wellcometrust
     repo:     dockerfiles
     shortcut: dockerfiles
+  - owner:    wellcometrust
+    repo:     workflow
+    shortcut: workflow
 
   - owner:    HypothesisWorks
     repo:     hypothesis-python
