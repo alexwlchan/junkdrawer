@@ -30,14 +30,15 @@ class AlfredWorkflow:
             self._add_link(idx=idx, link_data=link_data)
             idx += 1
 
-        for github_data in self.yaml_data.get('github', []):
-            self._add_link(idx=idx, link_data={
-                'title': f'{github_data["owner"]}/{github_data["repo"]}',
-                'icon': 'github.png',
-                'shortcut': github_data['shortcut'],
-                'url': f'https://github.com/{github_data["owner"]}/{github_data["repo"]}'  # noqa
-            })
-            idx += 1
+        for owner, repo_list in self.yaml_data.get('github', {}).items():
+            for repo_name in repo_list:
+                self._add_link(idx=idx, link_data={
+                    'title': f'{owner}/{repo_name}',
+                    'icon': 'github.png',
+                    'shortcut': repo_name,
+                    'url': f'https://github.com/{owner}/{repo_name}'
+                })
+                idx += 1
 
         self._copy_workflow_icon()
         plistlib.writePlist(self.metadata, self.tmpfile('Info.plist'))

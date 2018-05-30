@@ -124,37 +124,23 @@ links:
     url:      https://blogtrottr.com/
 
 github:
-  - owner:    wellcometrust
-    repo:     platform
-    shortcut: platform
-  - owner:    wellcometrust
-    repo:     platform-private
-    shortcut: private
-  - owner:    wellcometrust
-    repo:     terraform-modules
-    shortcut: terraform
-  - owner:    wellcometrust
-    repo:     dockerfiles
-    shortcut: dockerfiles
-  - owner:    wellcometrust
-    repo:     workflow
-    shortcut: workflow
+  wellcometrust:
+    - platform
+    - platform-private
+    - terraform-modules
+    - dockerfiles
+    - workflow
 
-  - owner:    HypothesisWorks
-    repo:     hypothesis-python
-    shortcut: hyp
-  - owner:    python-hyper
-    repo:     hyper-h2
-    shortcut: hyp
-  - owner:    loris-imageserver
-    repo:     loris
-    shortcut: loris
-  - owner:    alexwlchan
-    repo:     alexwlchan.net
-    shortcut: alexwlchan.net
-  - owner:    alexwlchan
-    repo:     homeconfig
-    shortcut: homeconfig
-  - owner:    HypothesisWorks
-    repo:     HypothesisWorks.GitHub.io
-    shortcut: hyp
+  HypothesisWorks:
+    - hypothesis
+    - HypothesisWorks.GitHub.io
+
+  python-hyper:
+    - hyper-h2
+
+  loris-imageserver:
+    - loris
+
+  alexwlchan:
+    - alexwlchan.net
+    - homeconfig
