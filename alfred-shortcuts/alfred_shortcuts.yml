@@ -130,6 +130,7 @@ github:
     - terraform-modules
     - dockerfiles
     - workflow
+    - sierra-streams-source
 
   HypothesisWorks:
     - hypothesis
