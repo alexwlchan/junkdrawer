@@ -4,6 +4,7 @@ version = "0.1.0"
 authors = ["Alex Chan <alex@alexwlchan.net>"]
 
 [dependencies]
+docopt = "1"
 reqwest = "0.8.5"
 serde = "1.0.64"
 serde_derive = "1.0.64"
