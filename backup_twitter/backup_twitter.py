@@ -150,7 +150,12 @@ def get_tweets(method, *args, **kwargs):
         try:
             return method(*args, **kwargs)
         except Exception as exc:
-            print(exc)
+            # Rate limit exceeded is common if you're running this script
+            # a lot.  Record it in the output, but don't print the whole thing.
+            if exc.reason == "[{'message': 'Rate limit exceeded', 'code': 88}]":
+                print('r', end='')
+            else:
+                print(exc)
             raise
 
     # Keep going until we've exhausted all the tweets from the API, or
