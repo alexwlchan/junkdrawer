@@ -123,6 +123,12 @@ links:
     shortcut: blog
     url:      https://blogtrottr.com/
 
+  # Wellcome internal sites
+  - title:    SelectHR
+    icon:     selecthr.png
+    shortcut: selecthr
+    url:      https://selecthr.wellcome.ac.uk/accessselecthr/
+
 github:
   wellcometrust:
     - platform
