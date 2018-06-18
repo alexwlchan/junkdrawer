@@ -40,6 +40,18 @@ class AlfredWorkflow:
                 })
                 idx += 1
 
+        for service in self.yaml_data.get('aws', []):
+            title = service['title']
+            shortcut = service.get('shortcut', title.lower())
+            url = service.get('url', f'https://eu-west-1.console.aws.amazon.com/{shortcut}')
+            self._add_link(idx=idx, link_data={
+                'title': title,
+                'icon': f'{shortcut}.png',
+                'shortcut': shortcut,
+                'url': url,
+            })
+            idx += 1
+
         self._copy_workflow_icon()
         plistlib.writePlist(self.metadata, self.tmpfile('Info.plist'))
         self._build_alfred_workflow_zip(name=name)
