@@ -45,12 +45,13 @@ eval (python3 -m virtualfish auto_activation) >> /dev/null 2>&1
 
 . $DIR/prompt.fish
 . $DIR/git.fish
-. $DIR/_aws.fish
 . $DIR/_docker.fish
 . $DIR/_dockerfiles.fish
 . $DIR/_imdown.fish
 . $DIR/_twitter.fish
 . $DIR/_wellcome.fish
+
+. $DIR/_aws.fish
 
 # Load macOS-specific utilities
 if [ (uname -s) = "Darwin" ]
