@@ -24,8 +24,7 @@ alias tally "sort | uniq -c | sort"
 
 # Quickly create and cd to a temporary directory
 function tmpdir
-    set dir (mktemp -d)
-    cd $dir
+    cd (mktemp -d)
 end
 
 # Alias for finding out which subdirectories of the current dir contain
