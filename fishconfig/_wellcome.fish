@@ -26,6 +26,12 @@ end
 # Get the contents of the JSON record for a Miro image from the VHS.
 #
 function mirocat
-  set s3url (python3 -c 'import sys; print(f"s3://wellcomecollection-vhs-sourcedata/miro/{sys.argv[1][:-3:-1]}/{sys.argv[1]}/0.json")' $argv[1])
-  s3cat "$s3url" | tail -n 1 | python -c 'import sys, json; print(json.dumps(json.loads(json.loads(sys.stdin.read())["data"]), indent=2, sort_keys=True))'
+  ~/.virtualenvs/platform/bin/python ~/repos/homeconfig/fishconfig/vhscat.py "miro/$argv[1]"
+end
+
+
+# Get the contents of the JSON record for a Sierra record from the VHS.
+#
+function sierracat
+  ~/.virtualenvs/platform/bin/python ~/repos/homeconfig/fishconfig/vhscat.py "sierra/$argv[1]"
 end
