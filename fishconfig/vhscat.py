@@ -2,7 +2,6 @@
 # -*- encoding: utf-8
 
 import json
-import pprint
 import subprocess
 import sys
 
@@ -41,8 +40,7 @@ if __name__ == '__main__':
     payload = json.loads(body.read())
     if payload.get('sourceName') == 'sierra':
         payload['maybeBibData']['data'] = json.loads(payload['maybeBibData']['data'])
-        payload['itemData'] = {
-            k: json.loads(v) for k, v in payload['itemData'].items()
-        }
+        for k, v in payload['itemData'].items():
+            v['data'] = json.loads(v['data'])
 
     print(json.dumps(payload, indent=2, sort_keys=True))
