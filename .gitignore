@@ -1,6 +1,7 @@
 .docker
 .DS_Store
 fishd*
+travis_token.txt
 
 # Created by https://www.gitignore.io/api/osx,rust,python
 
