@@ -116,3 +116,8 @@ github:
   alexwlchan:
     - alexwlchan.net
     - junkdrawer
+
+iterm2:
+  - shortcut: "linode"
+    title:    "SSH to my Linode VM"
+    command:  "ssh alexwlchan@helene.linode"

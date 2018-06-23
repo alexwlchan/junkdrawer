@@ -52,6 +52,45 @@ class AlfredWorkflow:
             })
             idx += 1
 
+        for iterm_shortcut in self.yaml_data['iterm2']:
+            title = iterm_shortcut['title']
+            shortcut = iterm_shortcut['shortcut']
+            command = iterm_shortcut['command']
+
+            trigger_object = {
+                'config': {
+                    'argumenttype': 2,
+                    'keyword': shortcut,
+                    'subtext': '',
+                    'text': title,
+                    'withspace': False,
+                },
+                'type': 'alfred.workflow.input.keyword',
+                'uid': str(uuid.uuid4()).upper(),
+                'version': 1,
+            }
+
+            browser_object = {
+                'config': {
+                    'applescript': '\n'.join([
+                        'on alfred_script(q)',
+                        'tell application "iTerm" to create window with default profile command "%s"' % command,
+                        'end alfred_script',
+                    ]),
+                    'cachescript': False,
+                },
+                'type': 'alfred.workflow.action.applescript',
+                'uid': str(uuid.uuid4()).upper(),
+                'version': 1,
+            }
+
+            self._add_trigger_action_pair(
+                idx=idx,
+                trigger_object=trigger_object,
+                action_object=browser_object,
+                icon_name='iterm.png'
+            )
+
         self._copy_workflow_icon()
         plistlib.writePlist(self.metadata, self.tmpfile('Info.plist'))
         self._build_alfred_workflow_zip(name=name)
@@ -114,24 +153,36 @@ class AlfredWorkflow:
             'version': 1,
         }
 
-        resized = self._resize_icon(link_data['icon'])
+        self._add_trigger_action_pair(
+            idx=idx,
+            trigger_object=trigger_object,
+            action_object=browser_object,
+            icon_name=link_data['icon']
+        )
+
+    def _add_trigger_action_pair(self,
+                                 idx,
+                                 trigger_object,
+                                 action_object,
+                                 icon_name):
+        resized = self._resize_icon(icon_name)
         shutil.copyfile(resized, self.tmpfile(f'{trigger_object["uid"]}.png'))
 
         self.metadata['objects'].append(trigger_object)
-        self.metadata['objects'].append(browser_object)
+        self.metadata['objects'].append(action_object)
 
         self.metadata['uidata'][trigger_object['uid']] = {
             'xpos': 150,
             'ypos': 50 + 120 * idx,
         }
-        self.metadata['uidata'][browser_object['uid']] = {
+        self.metadata['uidata'][action_object['uid']] = {
             'xpos': 600,
             'ypos': 50 + 120 * idx,
         }
 
         self.metadata['connections'][trigger_object['uid']] = [
             {
-                'destinationuid': browser_object['uid'],
+                'destinationuid': action_object['uid'],
                 'modifiers': 0,
                 'modifiersubtext': '',
                 'vitoclose': False,
