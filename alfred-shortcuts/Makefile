@@ -11,7 +11,7 @@ $(ROOT)/.docker/alfred: $(ALFRED)/requirements.txt $(ALFRED)/build_alfred_workfl
 	mkdir -p $(ROOT)/.docker
 	touch $(ROOT)/.docker/alfred
 
-$(ALFRED)/web-links.alfredworkflow: $(ROOT)/.docker/alfred alfred_shortcuts.yml $(wildcard $(ALFRED)/icons/*.png)
+$(ALFRED)/junkdrawer.alfredworkflow: $(ROOT)/.docker/alfred $(ALFRED)/alfred_shortcuts.yml $(wildcard $(ALFRED)/icons/*.png)
 	docker run --tty --rm --volume $(ALFRED):/data $(BUILD_IMAGE)
 
-web-links.alfredworkflow: $(ALFRED)/web-links.alfredworkflow
+junkdrawer.alfredworkflow: $(ALFRED)/junkdrawer.alfredworkflow

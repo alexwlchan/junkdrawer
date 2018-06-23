@@ -67,17 +67,17 @@ class AlfredWorkflow:
 
     def _get_package_metadata(self):
         defaults = {
-            'bundleid': 'edu.self.alfred-web-links',
+            'bundleid': 'edu.self.alfred-junk-drawer',
             'category': 'Internet',
             'connections': {},
             'createdby': '',
-            'description': 'Web links links for Alfred',
-            'name': 'Alfred web links',
+            'description': 'An assorted collection of useful shortcuts for Alfred',
+            'name': 'Alfred junk drawer',
             'objects': [],
             'readme': '',
             'uidata': {},
             'version': '0.0.1',
-            'webaddress': 'https://github.com/alexwlchan/alfred-web-links',
+            'webaddress': 'https://github.com/alexwlchan/junkdrawer',
         }
 
         return {
@@ -188,4 +188,4 @@ class AlfredWorkflow:
 
 if __name__ == '__main__':
     workflow = AlfredWorkflow(path='alfred_shortcuts.yml')
-    workflow.build(name='web-links')
+    workflow.build(name='junkdrawer')
