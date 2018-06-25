@@ -34,6 +34,11 @@ function primitive
   __call_docker_image primitive $argv
 end
 
+function tree
+  __build_docker_image tree
+  docker run --rm --interactive --tty --volume (pwd):/data alexwlchan/tree $argv
+end
+
 
 function travis
   __build_docker_image travis
