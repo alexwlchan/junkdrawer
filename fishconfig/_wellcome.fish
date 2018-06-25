@@ -35,3 +35,12 @@ end
 function sierracat
   ~/.virtualenvs/platform/bin/python ~/repos/homeconfig/fishconfig/vhscat.py "sierra/$argv[1]"
 end
+
+
+# Save the contents of an SQS DLQ to S3
+function sqs_freeze
+  set queue_name "$argv[1]"
+  ~/.virtualenvs/platform/bin/python ~/repos/dockerfiles/sqs_freezeray/freezeray.py \
+    --src="https://sqs.eu-west-1.amazonaws.com/760097843905/"$queue_name"_dlq" \
+    --bucket=wellcomecollection-platform-infra
+end
