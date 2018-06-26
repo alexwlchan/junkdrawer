@@ -102,6 +102,7 @@ github:
     - workflow
     - scala-storage
     - sierra-streams-source
+    - aws_utils
 
   HypothesisWorks:
     - hypothesis
