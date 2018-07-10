@@ -35,6 +35,10 @@ function get_travis_logs
     open (~/.virtualenvs/platform/bin/python ~/repos/homeconfig/get_travis_logs.py (furl) --token=(cat ~/repos/homeconfig/travis_token.txt))
 end
 
+function tfdiff
+    python3 $ROOT/tfdiff.py (pbpaste)
+end
+
 
 ###############################################################################
 # virtualfish -- a fish wrapper for virtualenv
