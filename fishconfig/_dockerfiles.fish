@@ -19,12 +19,23 @@ function __call_docker_image
   # Then we run the container itself, passing the current directory into
   # the container and mapping through any arguments to the function straight
   # into the container.
-  docker run --rm --tty \
-    --volume (pwd):/data \
-    --workdir /data \
-    alexwlchan/$argv[1] $argv[2..-1]
+  if [ (count $argv) = "1" ]
+    docker run --rm --tty \
+      --volume (pwd):/data \
+      --workdir /data \
+      alexwlchan/$argv[1]
+  else
+    docker run --rm --tty \
+      --volume (pwd):/data \
+      --workdir /data \
+      alexwlchan/$argv[1] $argv[2..-1]
+  end
 end
 
+
+function cloc
+  __call_docker_image cloc $argv
+end
 
 function dos2unix
   __call_docker_image dos2unix $argv
