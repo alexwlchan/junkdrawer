@@ -26,6 +26,10 @@ function __call_docker_image
 end
 
 
+function dos2unix
+  __call_docker_image dos2unix $argv
+end
+
 function lessc
   __call_docker_image lessc $argv
 end
