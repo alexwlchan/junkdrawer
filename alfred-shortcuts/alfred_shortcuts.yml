@@ -122,3 +122,9 @@ iterm2:
   - shortcut: "linode"
     title:    "SSH to my Linode VM"
     command:  "ssh alexwlchan@helene.linode"
+
+trains:
+  - from: London
+    to: Stevenage
+  - from: Stevenage
+    to: London

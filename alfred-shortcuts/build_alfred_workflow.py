@@ -91,6 +91,19 @@ class AlfredWorkflow:
                 icon_name='iterm.png'
             )
 
+        for journey in self.yaml_data.get('trains', []):
+            t_from = journey['from']
+            t_to = journey['to']
+            shortcut = f'{t_from.lower()} to {t_to.lower()}'
+            url = f'https://www.thetrainline.com/train-times/{t_from.lower()}-to-{t_to.lower()}'
+            self._add_link(idx=idx, link_data={
+                'title': f'Trains from {t_from} to {t_to}',
+                'icon': f'train-emoji.png',
+                'shortcut': shortcut,
+                'url': url,
+            })
+            idx += 1
+
         self._copy_workflow_icon()
         plistlib.writePlist(self.metadata, self.tmpfile('Info.plist'))
         self._build_alfred_workflow_zip(name=name)
