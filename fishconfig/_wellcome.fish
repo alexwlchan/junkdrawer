@@ -26,14 +26,14 @@ end
 # Get the contents of the JSON record for a Miro image from the VHS.
 #
 function mirocat
-  ~/.virtualenvs/platform/bin/python ~/repos/homeconfig/fishconfig/vhscat.py "miro/$argv[1]"
+  ~/.virtualenvs/platform/bin/python $ROOT/fishconfig/vhscat.py "miro/$argv[1]"
 end
 
 
 # Get the contents of the JSON record for a Sierra record from the VHS.
 #
 function sierracat
-  ~/.virtualenvs/platform/bin/python ~/repos/homeconfig/fishconfig/vhscat.py "sierra/$argv[1]"
+  ~/.virtualenvs/platform/bin/python $ROOT/fishconfig/vhscat.py "sierra/$argv[1]"
 end
 
 
