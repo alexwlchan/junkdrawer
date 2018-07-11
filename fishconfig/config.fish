@@ -31,6 +31,10 @@ end
 # the most files.  Useful when trying to find wasted disk space.
 alias cdir 'for l in (ls); if [ -d $l ]; echo (find $l | wc -l)"  $l"; end; end | sort'
 
+function reload_fish_config
+  . ~/.config/fish/config.fish
+end
+
 function get_travis_logs
     open (~/.virtualenvs/platform/bin/python ~/repos/homeconfig/get_travis_logs.py (furl) --token=(cat ~/repos/homeconfig/travis_token.txt))
 end
