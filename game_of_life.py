@@ -13,6 +13,7 @@ Stuff that's quite neat (imo):
 
 import collections
 import random
+import sys
 
 
 WIDTH = 30
@@ -79,9 +80,12 @@ while True:
     grid = random_grid()
 
     for _ in range(1000):
-        print_grid(grid)
-        print('\033[F' * (HEIGHT + 1))
-        grid = next_grid(grid)
+        try:
+            print_grid(grid)
+            grid = next_grid(grid)
 
-        import time
-        time.sleep(0.25)
+            import time
+            time.sleep(0.25)
+            print('\033[F' * (HEIGHT + 1))
+        except KeyboardInterrupt:
+            sys.exit(0)
