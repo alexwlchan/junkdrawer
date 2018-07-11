@@ -71,7 +71,7 @@ def print_grid(grid):
         row = dict((c, cell) for (c, cell) in grid.items() if c[1] == row_idx)
         row = [cell for c, cell in sorted(row.items(), key=lambda x: x[0][0])]
         row = [C if cell.is_alive else '·' for cell in row]
-        print(''.join(row))
+        print(' '.join(row))
 
 
 while True:
