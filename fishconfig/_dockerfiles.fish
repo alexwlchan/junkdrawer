@@ -37,6 +37,10 @@ function cloc
   __call_docker_image cloc $argv
 end
 
+function convert
+  __call_docker_image imagemagick convert $argv
+end
+
 function dos2unix
   __call_docker_image dos2unix $argv
 end
