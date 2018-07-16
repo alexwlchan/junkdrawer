@@ -18,6 +18,7 @@ class AlfredWorkflow:
         self.yaml_data = yaml.load(open(path))
         self.tmpdir = tempfile.mkdtemp()
         self.metadata = {}
+        self.idx = 0
 
     def tmpfile(self, path):
         return os.path.join(self.tmpdir, path)
@@ -25,45 +26,40 @@ class AlfredWorkflow:
     def build(self, name):
         self.metadata = self._get_package_metadata()
 
-        idx = 0
         for link_data in self.yaml_data['links']:
-            self._add_link(idx=idx, link_data=link_data)
-            idx += 1
+            self._add_link(link_data=link_data)
 
         for owner, repo_list in self.yaml_data.get('github', {}).items():
             for repo_name in repo_list:
-                self._add_link(idx=idx, link_data={
+                self._add_link(link_data={
                     'title': f'{owner}/{repo_name}',
                     'icon': 'github.png',
                     'shortcut': repo_name,
                     'url': f'https://github.com/{owner}/{repo_name}'
                 })
-                idx += 1
 
         for service in self.yaml_data.get('aws', []):
             title = service['title']
             shortcut = service.get('shortcut', title.lower())
             url = service.get('url', f'https://eu-west-1.console.aws.amazon.com/{shortcut}')
-            self._add_link(idx=idx, link_data={
+            self._add_link(link_data={
                 'title': title,
                 'icon': f'{shortcut}.png',
                 'shortcut': shortcut,
                 'url': url,
             })
-            idx += 1
 
         for service in self.yaml_data['boto3']:
             title = service['title']
             shortcut = service.get('shortcut', title.lower())
             slug = service.get('slug', title).lower()
             url = f'https://boto3.readthedocs.io/en/stable/reference/services/{slug}.html'
-            self._add_link(idx=idx, link_data={
+            self._add_link(link_data={
                 'title': title,
                 'icon': 'boto3.png',
                 'shortcut': title.lower(),
                 'url': url,
             })
-            idx += 1
 
         for iterm_shortcut in self.yaml_data['iterm2']:
             title = iterm_shortcut['title']
@@ -98,7 +94,6 @@ class AlfredWorkflow:
             }
 
             self._add_trigger_action_pair(
-                idx=idx,
                 trigger_object=trigger_object,
                 action_object=browser_object,
                 icon_name='iterm.png'
@@ -109,13 +104,12 @@ class AlfredWorkflow:
             t_to = journey['to']
             shortcut = f'{t_from.lower()} to {t_to.lower()}'
             url = f'https://www.thetrainline.com/train-times/{t_from.lower()}-to-{t_to.lower()}'
-            self._add_link(idx=idx, link_data={
+            self._add_link(link_data={
                 'title': f'Trains from {t_from} to {t_to}',
                 'icon': f'train-emoji.png',
                 'shortcut': shortcut,
                 'url': url,
             })
-            idx += 1
 
         self._copy_workflow_icon()
         plistlib.writePlist(self.metadata, self.tmpfile('Info.plist'))
@@ -149,7 +143,7 @@ class AlfredWorkflow:
             key: self.yaml_data.get(key, defaults[key]) for key in defaults
         }
 
-    def _add_link(self, idx, link_data):
+    def _add_link(self, link_data):
         shortcut = link_data['shortcut']
         url = link_data['url']
         title = link_data['title']
@@ -180,14 +174,12 @@ class AlfredWorkflow:
         }
 
         self._add_trigger_action_pair(
-            idx=idx,
             trigger_object=trigger_object,
             action_object=browser_object,
             icon_name=link_data['icon']
         )
 
     def _add_trigger_action_pair(self,
-                                 idx,
                                  trigger_object,
                                  action_object,
                                  icon_name):
@@ -199,12 +191,13 @@ class AlfredWorkflow:
 
         self.metadata['uidata'][trigger_object['uid']] = {
             'xpos': 150,
-            'ypos': 50 + 120 * idx,
+            'ypos': 50 + 120 * self.idx,
         }
         self.metadata['uidata'][action_object['uid']] = {
             'xpos': 600,
-            'ypos': 50 + 120 * idx,
+            'ypos': 50 + 120 * self.idx,
         }
+        self.idx += 1
 
         self.metadata['connections'][trigger_object['uid']] = [
             {
