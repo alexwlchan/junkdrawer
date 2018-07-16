@@ -93,6 +93,9 @@ aws:
   - title:    EC2 Auto Scaling
     shortcut: autoscaling
 
+boto3:
+  - title: DynamoDB
+
 github:
   wellcometrust:
     - platform

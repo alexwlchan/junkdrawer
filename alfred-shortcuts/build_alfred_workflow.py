@@ -52,6 +52,19 @@ class AlfredWorkflow:
             })
             idx += 1
 
+        for service in self.yaml_data['boto3']:
+            title = service['title']
+            shortcut = service.get('shortcut', title.lower())
+            slug = service.get('slug', title).lower()
+            url = f'https://boto3.readthedocs.io/en/stable/reference/services/{slug}.html'
+            self._add_link(idx=idx, link_data={
+                'title': title,
+                'icon': 'boto3.png',
+                'shortcut': title.lower(),
+                'url': url,
+            })
+            idx += 1
+
         for iterm_shortcut in self.yaml_data['iterm2']:
             title = iterm_shortcut['title']
             shortcut = iterm_shortcut['shortcut']
