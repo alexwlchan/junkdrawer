@@ -71,30 +71,30 @@ links:
     url:      https://selecthr.wellcome.ac.uk/accessselecthr/
 
 aws:
-  - title:    CloudWatch
-  - title:    DynamoDB
-  - title:    EC2
-  - title:    Elastic Container Registry
+  - name:    CloudWatch
+  - name:    DynamoDB
+  - name:    EC2
+  - name:    Elastic Container Registry
     shortcut: ecr
     url:      https://eu-west-1.console.aws.amazon.com/ecs/home?region=eu-west-1#/repositories
-  - title:    EC2 Container Service
+  - name:    EC2 Container Service
     shortcut: ecs
     url:      https://eu-west-1.console.aws.amazon.com/ecs
-  - title:    Glacier
-  - title:    IAM
-  - title:    AWS Lambda
+  - name:    Glacier
+  - name:    IAM
+  - name:    AWS Lambda
     shortcut: lambda
-  - title:    S3
-  - title:    SNS
-  - title:    SQS
-  - title:    CloudFront
-  - title:    ACM Certificate Manager
+  - name:    S3
+  - name:    SNS
+  - name:    SQS
+  - name:    CloudFront
+  - name:    ACM Certificate Manager
     shortcut: acm
-  - title:    EC2 Auto Scaling
+  - name:    EC2 Auto Scaling
     shortcut: autoscaling
 
 boto3:
-  - title: DynamoDB
+  - name: DynamoDB
 
 github:
   wellcometrust:

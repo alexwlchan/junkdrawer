@@ -23,43 +23,43 @@ class AlfredWorkflow:
     def tmpfile(self, path):
         return os.path.join(self.tmpdir, path)
 
-    def build(self, name):
+    def _construct_all_metadata(self):
         self.metadata = self._get_package_metadata()
 
         for link_data in self.yaml_data['links']:
-            self._add_link(link_data=link_data)
+            self._add_link(**link_data)
 
         for owner, repo_list in self.yaml_data.get('github', {}).items():
             for repo_name in repo_list:
-                self._add_link(link_data={
-                    'title': f'{owner}/{repo_name}',
-                    'icon': 'github.png',
-                    'shortcut': repo_name,
-                    'url': f'https://github.com/{owner}/{repo_name}'
-                })
+                self._add_link(
+                    url=f'https://github.com/{owner}/{repo_name}',
+                    title=f'{owner}/{repo_name}',
+                    icon='github.png',
+                    shortcut=repo_name
+                )
 
         for service in self.yaml_data.get('aws', []):
-            title = service['title']
-            shortcut = service.get('shortcut', title.lower())
+            name = service['name']
+            shortcut = service.get('shortcut', name.lower())
             url = service.get('url', f'https://eu-west-1.console.aws.amazon.com/{shortcut}')
-            self._add_link(link_data={
-                'title': title,
-                'icon': f'{shortcut}.png',
-                'shortcut': shortcut,
-                'url': url,
-            })
+
+            self._add_link(
+                url=url,
+                title=name,
+                icon=f'{shortcut}.png',
+                shortcut=shortcut
+            )
 
         for service in self.yaml_data['boto3']:
-            title = service['title']
-            shortcut = service.get('shortcut', title.lower())
-            slug = service.get('slug', title).lower()
-            url = f'https://boto3.readthedocs.io/en/stable/reference/services/{slug}.html'
-            self._add_link(link_data={
-                'title': title,
-                'icon': 'boto3.png',
-                'shortcut': title.lower(),
-                'url': url,
-            })
+            name = service['name']
+            slug = service.get('slug', name).lower()
+
+            self._add_link(
+                url=f'https://boto3.readthedocs.io/en/stable/reference/services/{slug}.html',
+                title=f'boto3 docs for {name}',
+                icon='boto3.png',
+                shortcut=name.lower()
+            )
 
         for iterm_shortcut in self.yaml_data['iterm2']:
             title = iterm_shortcut['title']
@@ -96,24 +96,19 @@ class AlfredWorkflow:
             self._add_trigger_action_pair(
                 trigger_object=trigger_object,
                 action_object=browser_object,
-                icon_name='iterm.png'
+                icon='iterm.png'
             )
 
         for journey in self.yaml_data.get('trains', []):
             t_from = journey['from']
             t_to = journey['to']
-            shortcut = f'{t_from.lower()} to {t_to.lower()}'
-            url = f'https://www.thetrainline.com/train-times/{t_from.lower()}-to-{t_to.lower()}'
-            self._add_link(link_data={
-                'title': f'Trains from {t_from} to {t_to}',
-                'icon': f'train-emoji.png',
-                'shortcut': shortcut,
-                'url': url,
-            })
 
-        self._copy_workflow_icon()
-        plistlib.writePlist(self.metadata, self.tmpfile('Info.plist'))
-        self._build_alfred_workflow_zip(name=name)
+            self._add_link(
+                url=f'https://www.thetrainline.com/train-times/{t_from.lower()}-to-{t_to.lower()}',
+                title=f'Trains from {t_from} to {t_to}',
+                icon='train-emoji.png',
+                shortcut=f'{t_from.lower()} to {t_to.lower()}'
+            )
 
     def _copy_workflow_icon(self):
         try:
@@ -143,11 +138,7 @@ class AlfredWorkflow:
             key: self.yaml_data.get(key, defaults[key]) for key in defaults
         }
 
-    def _add_link(self, link_data):
-        shortcut = link_data['shortcut']
-        url = link_data['url']
-        title = link_data['title']
-
+    def _add_link(self, url, title, icon, shortcut):
         trigger_object = {
             'config': {
                 'argumenttype': 0 if r'{query}' in url else 2,
@@ -176,14 +167,14 @@ class AlfredWorkflow:
         self._add_trigger_action_pair(
             trigger_object=trigger_object,
             action_object=browser_object,
-            icon_name=link_data['icon']
+            icon=icon
         )
 
     def _add_trigger_action_pair(self,
                                  trigger_object,
                                  action_object,
-                                 icon_name):
-        resized = self._resize_icon(icon_name)
+                                 icon):
+        resized = self._resize_icon(icon)
         shutil.copyfile(resized, self.tmpfile(f'{trigger_object["uid"]}.png'))
 
         self.metadata['objects'].append(trigger_object)
@@ -255,7 +246,13 @@ class AlfredWorkflow:
         )
         shutil.move(f'{name}.alfredworkflow.zip', f'{name}.alfredworkflow')
 
+    def assemble_package(self, name):
+        self._construct_all_metadata()
+        self._copy_workflow_icon()
+        plistlib.writePlist(self.metadata, self.tmpfile('Info.plist'))
+        self._build_alfred_workflow_zip(name=name)
+
 
 if __name__ == '__main__':
     workflow = AlfredWorkflow(path='alfred_shortcuts.yml')
-    workflow.build(name='junkdrawer')
+    workflow.assemble_package(name='junkdrawer')
