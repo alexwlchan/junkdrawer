@@ -51,14 +51,10 @@ links:
     icon:     pinboard.png
     shortcut: pin
     url:      https://pinboard.in/u:alexwlchan
-  - title:    "Search Pincushion for '{query}'"
-    icon:     pincushion.png
+  - title:    "Search Pinboard for '{query}'"
+    icon:     "pinboard.png"
     shortcut: pin
-    url:      https://pincushion.alexwlchan.net/?query={query}
-  - title:    Pincushion
-    icon:     pincushion.png
-    shortcut: pin
-    url:      https://pincushion.alexwlchan.net/
+    url:      "https://pinboard.alexwlchan.net/?query={query}"
   - title:    Blogtrottr
     icon:     blogtrottr.png
     shortcut: blog
