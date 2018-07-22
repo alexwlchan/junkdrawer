@@ -90,6 +90,11 @@ function youtube-dl
 end
 
 
+function youtude_dl_mp3
+  __call_docker_image youtube_dl --extract-audio --audio-format=mp3 $argv
+end
+
+
 function jq
   docker run --rm --interactive giantswarm/tiny-tools jq $argv
 end
