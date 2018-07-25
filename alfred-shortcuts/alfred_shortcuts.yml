@@ -95,6 +95,7 @@ aws:
 
 boto3:
   - name: DynamoDB
+  - name: S3
 
 github:
   wellcometrust:
