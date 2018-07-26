@@ -101,6 +101,7 @@ github:
     - dockerfiles
     - workflow
     - scala-storage
+    - scala-monitoring
     - sierra-streams-source
     - aws_utils
 
