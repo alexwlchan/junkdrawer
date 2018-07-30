@@ -1,0 +1,15 @@
+\documentclass{standalone}
+
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{tikz}
+
+\definecolor{DarkBlue}{HTML}{5c5c5c}
+
+\begin{document}
+  \begin{tikzpicture}
+    \draw [SkyBlue!80!white, line width=7pt, fill=DarkBlue] (0, 0) circle (5);
+    \foreach \s in {1, ..., 43} {
+      \draw [SkyBlue!80!white, line width=7pt] (90+360/43*\s:5) -- (90+360/43*\s:5.5);
+    }
+  \end{tikzpicture}
+\end{document}
