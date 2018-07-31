@@ -100,6 +100,7 @@ github:
     - terraform-modules
     - dockerfiles
     - workflow
+    - scala-json
     - scala-storage
     - scala-messaging
     - scala-monitoring
