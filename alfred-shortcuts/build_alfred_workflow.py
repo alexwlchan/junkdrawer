@@ -38,6 +38,17 @@ class AlfredWorkflow:
                     shortcut=repo_name
                 )
 
+                if (
+                    owner == 'wellcometrust' and
+                    repo_name.startswith(('platform-', 'scala-'))
+                ):
+                    self._add_link(
+                        url=f'https://github.com/{owner}/{repo_name}',
+                        title=f'{owner}/{repo_name}',
+                        icon='github.png',
+                        shortcut=repo_name.split('-', 1)[1]
+                    )
+
         for service in self.yaml_data.get('aws', []):
             name = service['name']
             shortcut = service.get('shortcut', name.lower())
