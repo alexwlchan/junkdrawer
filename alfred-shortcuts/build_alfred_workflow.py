@@ -3,6 +3,7 @@
 
 import os
 import plistlib
+import random
 import shutil
 import tempfile
 import uuid
@@ -19,6 +20,10 @@ class AlfredWorkflow:
         self.tmpdir = tempfile.mkdtemp()
         self.metadata = {}
         self.idx = 0
+        self.random = random.Random(0)
+
+    def uuid(self):
+        return str(uuid.UUID(int=self.random.randint(0, 2 ** 128 - 1))).upper()
 
     def tmpfile(self, path):
         return os.path.join(self.tmpdir, path)
@@ -178,7 +183,7 @@ class AlfredWorkflow:
                                  action_object,
                                  icon):
         for obj in (trigger_object, action_object):
-            obj['uid'] = str(uuid.uuid4()).upper()
+            obj['uid'] = self.uuid()
             obj['version'] = 1
 
         resized = self._resize_icon(icon)
