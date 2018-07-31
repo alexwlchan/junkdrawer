@@ -86,8 +86,6 @@ class AlfredWorkflow:
                     'withspace': False,
                 },
                 'type': 'alfred.workflow.input.keyword',
-                'uid': str(uuid.uuid4()).upper(),
-                'version': 1,
             }
 
             browser_object = {
@@ -100,8 +98,6 @@ class AlfredWorkflow:
                     'cachescript': False,
                 },
                 'type': 'alfred.workflow.action.applescript',
-                'uid': str(uuid.uuid4()).upper(),
-                'version': 1,
             }
 
             self._add_trigger_action_pair(
@@ -159,8 +155,6 @@ class AlfredWorkflow:
                 'withspace': (r'{query}' in url),
             },
             'type': 'alfred.workflow.input.keyword',
-            'uid': str(uuid.uuid4()).upper(),
-            'version': 1,
         }
 
         browser_object = {
@@ -171,8 +165,6 @@ class AlfredWorkflow:
                 'utf8': True,
             },
             'type': 'alfred.workflow.action.openurl',
-            'uid': str(uuid.uuid4()).upper(),
-            'version': 1,
         }
 
         self._add_trigger_action_pair(
@@ -185,6 +177,10 @@ class AlfredWorkflow:
                                  trigger_object,
                                  action_object,
                                  icon):
+        for obj in (trigger_object, action_object):
+            obj['uid'] = str(uuid.uuid4()).upper()
+            obj['version'] = 1
+
         resized = self._resize_icon(icon)
         shutil.copyfile(resized, self.tmpfile(f'{trigger_object["uid"]}.png'))
 
