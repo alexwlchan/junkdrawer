@@ -88,6 +88,7 @@ aws:
     shortcut: acm
   - name:    EC2 Auto Scaling
     shortcut: autoscaling
+  - name:     "RDS"
   - name:     "VPC"
 
 boto3:
