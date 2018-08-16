@@ -27,5 +27,5 @@ if __name__ == '__main__':
             assert False, message
 
         body = s3.get_object(Bucket=bucket, Key=message['s3key'])['Body']
-        contents = body.read()
+        contents = body.read().decode('utf8')
         print(contents)
