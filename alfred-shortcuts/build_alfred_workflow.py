@@ -86,7 +86,7 @@ class AlfredWorkflow:
                     'withspace': False,
                 },
                 'type': 'alfred.workflow.input.keyword',
-                'uid': str(uuid.uuid4()).upper(),
+                'uid': self.uuid(),
                 'version': 1,
             }
 
@@ -100,7 +100,7 @@ class AlfredWorkflow:
                     'cachescript': False,
                 },
                 'type': 'alfred.workflow.action.applescript',
-                'uid': str(uuid.uuid4()).upper(),
+                'uid': self.uuid(),
                 'version': 1,
             }
 
@@ -159,7 +159,7 @@ class AlfredWorkflow:
                 'withspace': (r'{query}' in url),
             },
             'type': 'alfred.workflow.input.keyword',
-            'uid': str(uuid.uuid4()).upper(),
+            'uid': self.uuid(),
             'version': 1,
         }
 
@@ -171,7 +171,7 @@ class AlfredWorkflow:
                 'utf8': True,
             },
             'type': 'alfred.workflow.action.openurl',
-            'uid': str(uuid.uuid4()).upper(),
+            'uid': self.uuid(),
             'version': 1,
         }
 
@@ -180,6 +180,13 @@ class AlfredWorkflow:
             action_object=browser_object,
             icon=icon
         )
+
+    def uuid(self):
+        if not hasattr(self, '_uuid'):
+            self._uuid = 0
+        self._uuid += 1
+
+        return str(uuid.UUID(int=self._uuid)).upper()
 
     def _add_trigger_action_pair(self,
                                  trigger_object,
