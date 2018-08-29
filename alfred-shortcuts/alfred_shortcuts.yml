@@ -90,6 +90,8 @@ aws:
     shortcut: autoscaling
   - name:     "RDS"
   - name:     "VPC"
+  - name:     "Route 53"
+    shortcut: "route53"
 
 boto3:
   - name: DynamoDB
