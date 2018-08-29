@@ -76,6 +76,7 @@ aws:
   - name:    EC2 Container Service
     shortcut: ecs
     url:      https://eu-west-1.console.aws.amazon.com/ecs
+  - name:     "EFS"
   - name:    Glacier
   - name:    IAM
   - name:    AWS Lambda
