@@ -144,11 +144,13 @@ github:
 
 iterm2:
   - shortcut: "linode"
-    title:    "SSH to my Linode VM"
+    title:    "SSH to my Linode"
     command:  "ssh alexwlchan@helene.linode"
   - shortcut: "alexwlchan"
     title:    "SSH to ~/repos/alexwlchan.net on my Linode"
-    command:  "ssh -t alexwlchan@helene.linode 'cd ~/repos/alexwlchan.net; fish'"
+  - shortcut: "taggle"
+    title:    "SSH to ~/repos/taggle on Linode"
+    command:  "ssh -t alexwlchan@helene.linode \"cd ~/repos/taggle/examples/images; alias pab '/home/alexwlchan/.virtualenvs/taggle/bin/python add_bookmark.py'; fish\""
 
 trains:
   - from: London
