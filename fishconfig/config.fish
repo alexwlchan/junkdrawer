@@ -48,7 +48,7 @@ end
 # virtualfish -- a fish wrapper for virtualenv
 # https://github.com/adambrenecki/virtualfish
 ###############################################################################
-eval (python3 -m virtualfish auto_activation) >> /dev/null 2>&1
+eval (python3 -m virtualfish auto_activation) >> /dev/null 2>&1 &
 
 
 ###############################################################################
