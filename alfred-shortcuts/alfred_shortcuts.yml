@@ -67,6 +67,7 @@ links:
     url:      https://selecthr.wellcome.ac.uk/accessselecthr/
 
 aws:
+  - name:     "Billing"
   - name:    CloudWatch
   - name:    DynamoDB
   - name:    EC2
