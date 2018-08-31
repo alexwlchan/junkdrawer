@@ -30,3 +30,12 @@ end
 function gh-clone
     github-clone (furl)
 end
+
+
+# Scramble the current MAC address (for... reasons)
+# https://apple.stackexchange.com/a/183370/14295
+function scramble_mac_address
+    sudo /System/Library/PrivateFrameworks/Apple80211.framework/Resources/airport --disassociate
+    sudo ifconfig en0 ether (openssl rand -hex 6 | sed 's/\(..\)/\1:/g; s/./0/2; s/.$//')
+    networksetup -detectnewhardware
+end
