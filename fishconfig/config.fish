@@ -1,6 +1,5 @@
-set -x DIR (cd (dirname (status -f)); and pwd)
+set -x DIR (dirname (status -f))
 set -x ROOT (dirname $DIR)
-cd ~
 
 
 # Add a directory to the path, if it exists
