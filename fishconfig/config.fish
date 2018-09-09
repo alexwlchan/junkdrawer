@@ -42,6 +42,9 @@ function tfdiff
     python3 $ROOT/tfdiff.py (pbpaste)
 end
 
+alias fave='/Users/alexwlchan/.virtualenvs/twitter/bin/python "$ROOT/backup_twitter/save_single_tweet.py" --dst=favorites --id'
+alias selfie='/Users/alexwlchan/.virtualenvs/twitter/bin/python "$ROOT/backup_twitter/save_single_tweet.py" --dst=selfies --id'
+
 
 ###############################################################################
 # virtualfish -- a fish wrapper for virtualenv
