@@ -65,6 +65,10 @@ links:
     icon:     selecthr.png
     shortcut: selecthr
     url:      https://selecthr.wellcome.ac.uk/accessselecthr/
+  - title:    Trustnet
+    icon:     trustnet.png
+    shortcut: trustnet
+    url:      https://trustnet.wellcome.ac.uk/
 
 aws:
   - name:     "Billing"
