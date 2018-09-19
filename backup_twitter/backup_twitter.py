@@ -21,28 +21,16 @@ Options:
 from collections.abc import MutableMapping
 import json
 import os
-import shutil
 from urllib.parse import urlparse
 from urllib.request import urlretrieve
 
 import attr
 import docopt
-import hcl
 import tenacity
 import tweepy
 
 
-@attr.s
-class TwitterCredentials:
-    consumer_key = attr.ib()
-    consumer_secret = attr.ib(repr=False)
-    access_token = attr.ib()
-    access_token_secret = attr.ib(repr=False)
-
-    @classmethod
-    def from_path(cls, path):
-        data = hcl.load(open(path))
-        return cls(**data)
+from birdsite import TwitterCredentials
 
 
 @attr.s
