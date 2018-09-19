@@ -23,25 +23,8 @@ import os
 
 import docopt
 import tenacity
-import tweepy
 
-from birdsite import TweetStore, TwitterCredentials
-
-
-def setup_api(credentials):
-    """Authorise the use of the Twitter API.
-
-    :param credentials: An instance of TwitterCredentials.
-
-    """
-    auth = tweepy.OAuthHandler(
-        consumer_key=credentials.consumer_key,
-        consumer_secret=credentials.consumer_secret)
-    auth.set_access_token(
-        key=credentials.access_token,
-        secret=credentials.access_token_secret
-    )
-    return tweepy.API(auth)
+from birdsite import setup_api, TweetStore, TwitterCredentials
 
 
 def get_tweets(method, *args, **kwargs):
