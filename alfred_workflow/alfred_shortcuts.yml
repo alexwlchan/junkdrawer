@@ -136,6 +136,9 @@ iterm2:
   - shortcut: "linode"
     title:    "SSH to my Linode VM"
     command:  "ssh alexwlchan@helene.linode"
+  - shortcut: "alexwlchan"
+    title:    "SSH to ~/repos/alexwlchan.net on my Linode"
+    command:  "ssh -t alexwlchan@helene.linode 'cd ~/repos/alexwlchan.net; fish'"
 
 trains:
   - from: London
