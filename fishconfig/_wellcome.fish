@@ -44,3 +44,6 @@ function sqs_freeze
     --src="https://sqs.eu-west-1.amazonaws.com/760097843905/"$queue_name"_dlq" \
     --bucket=wellcomecollection-platform-infra
 end
+
+
+alias ec2ssh "ssh -i ~/.ssh/wellcomedigitalplatform"
