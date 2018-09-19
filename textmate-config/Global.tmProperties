@@ -26,6 +26,12 @@ fileType         = source.python
 [ *.ini ]
 fileType         = source.ini
 
+[ *.svg ]
+fileType         = text.xml
+
+[ *.ttx ]
+fileType         = text.xml
+
 [ *.txt ]
 fileType         = text.plain
 
@@ -46,6 +52,9 @@ fileType         = source.json
 
 [ *.scala ]
 fileType         = source.scala
+
+[ Jenkinsfile ]
+fileType         = source.groovy
 
 [ managed_schema ]
 fileType         = text.xml
