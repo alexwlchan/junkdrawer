@@ -1,6 +1,6 @@
 ROOT = $(shell git rev-parse --show-toplevel)
 
-ALFRED = $(ROOT)/alfred-shortcuts
+ALFRED = $(ROOT)/alfred_workflow
 BUILD_IMAGE = alexwlchan/build_alfred_workflow
 
 $(ALFRED)/requirements.txt: $(ALFRED)/requirements.in
