@@ -1,6 +1,6 @@
 ROOT = $(shell git rev-parse --show-toplevel)
 
-include alfred-shortcuts/Makefile
+include alfred_workflow/Makefile
 include safari-stylesheet/Makefile
 include textmate-config/Makefile
 
