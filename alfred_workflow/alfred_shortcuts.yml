@@ -145,3 +145,8 @@ trains:
     to: Stevenage
   - from: Stevenage
     to: London
+
+fastmail:
+  - "Contacts"
+  - "Calendar"
+  - "Notes"

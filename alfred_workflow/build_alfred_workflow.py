@@ -121,6 +121,21 @@ class AlfredWorkflow:
                 shortcut=f'{t_from.lower()} to {t_to.lower()}'
             )
 
+        self._add_link(
+            url='https://www.fastmail.com/mail/',
+            title='FastMail',
+            icon='fastmail.png',
+            shortcut='fastmail'
+        )
+
+        for service in self.yaml_data['fastmail']:
+            self._add_link(
+                url=f'https://www.fastmail.com/{service.lower()}',
+                title=f'{service} (FastMail)',
+                icon='fastmail.png',
+                shortcut=service.lower()
+            )
+
     def _copy_workflow_icon(self):
         try:
             icon = self.yaml_data['icon']
