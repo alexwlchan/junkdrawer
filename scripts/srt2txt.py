@@ -34,6 +34,9 @@ data, _ = re.subn(r'<c\.color[0-9A-Z]{6}>', '', data)
 # with optional closing/opening tags.
 data, _ = re.subn(r'(?:</c>)?(?:<\d{2}:\d{2}:\d{2},\d{3}>)?(?:<c>)?', '', data)
 
+# 00:00:03,500 --> 00:00:03,510
+data, _ = re.subn(r'\d{2}:\d{2}:\d{2},\d{3} \-\-> \d{2}:\d{2}:\d{2},\d{3}\n', '', data)
+
 # Separate out the different segments of the subtitle track.
 # I'm not sure what these numbers mean, but they're a start!
 components = [data]
@@ -44,13 +47,15 @@ while True:
     if f'\n{i}\n' in last_component:
         components.extend(list(last_component.split(f'\n{i}\n')))
         assert len(components) == i + 1
+    elif last_component.startswith('1\n'):
+        components.extend(list(last_component.split(f'1\n', 1)))
     else:
         break
 
 # Now chuck away the first bit, which is something like "Kind: captions"
 # -- I don't know what it is, but we don't need it.
-assert components[0].startswith('Kind: captions\n')
-components.pop(0)
+if components[0].startswith('Kind: captions\n'):
+    components.pop(0)
 
 # Next, remove all the trailing whitespace from each subtitle.
 components = [c.rstrip() for c in components]
