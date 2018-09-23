@@ -1,4 +1,8 @@
-set BACKUP_TWITTER $DIR/../backup_twitter
+set -x BACKUP_TWITTER $DIR/../backup_twitter
+
+
+alias fave='/Users/alexwlchan/.virtualenvs/twitter/bin/python "$BACKUP_TWITTER/save_single_tweet.py" --dst=favorites --url=(furl)'
+alias selfie='/Users/alexwlchan/.virtualenvs/twitter/bin/python "$BACKUP_TWITTER/save_single_tweet.py" --dst=selfies --url=(furl)'
 
 
 function backup_twitter
