@@ -15,7 +15,17 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 if __name__ == '__main__':
     args = docopt.docopt(__doc__)
-    tweet_id = args['--url'].split('/')[-1]
+
+    tweet_url = args['--url']
+    components = tweet_url.split('/')
+
+    if tweet_url.endswith('/photo/1'):
+        assert components[-4] == 'status'
+        tweet_id = components[-3]
+    else:
+        assert components[-2] == 'status'
+        tweet_id = components[-1]
+
     subprocess.check_call([
         sys.executable, os.path.join(SCRIPT_DIR, 'backup_twitter.py'),
         '--credentials', os.path.join(SCRIPT_DIR, 'auth.json'),
