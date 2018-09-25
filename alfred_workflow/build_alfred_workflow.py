@@ -136,6 +136,43 @@ class AlfredWorkflow:
                 shortcut=service.lower()
             )
 
+        for command in self.yaml_data['shell']:
+            title = command['title']
+            shortcut = command['shortcut']
+
+            trigger_object = {
+                'config': {
+                    'argumenttype': 2,
+                    'keyword': shortcut,
+                    'subtext': '',
+                    'text': title,
+                    'withspace': False,
+                },
+                'type': 'alfred.workflow.input.keyword',
+                'uid': self.uuid(),
+                'version': 1,
+            }
+
+            script_object = {
+                'config': {
+                    'concurrently': False,
+                    'escaping': 102,
+                    'script': command['script'],
+                    'scriptargtype': 1,
+                    'scriptfile': '',
+                    'type': 0
+                },
+                'type': 'alfred.workflow.action.script',
+                'uid': self.uuid(),
+                'version': 2,
+            }
+
+            self._add_trigger_action_pair(
+                trigger_object=trigger_object,
+                action_object=script_object,
+                icon=command.get('icon', 'iterm.png')
+            )
+
     def _copy_workflow_icon(self):
         try:
             icon = self.yaml_data['icon']
