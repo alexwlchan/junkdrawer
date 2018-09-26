@@ -30,12 +30,19 @@ class AlfredWorkflow:
             self._add_link(**link_data)
 
         for owner, repo_list in self.yaml_data.get('github', {}).items():
-            for repo_name in repo_list:
+            for repo in repo_list:
+                if isinstance(repo, str):
+                    repo_name = repo
+                    shortcut = repo
+                else:
+                    repo_name = repo['name']
+                    shortcut = repo['shortcut']
+
                 self._add_link(
                     url=f'https://github.com/{owner}/{repo_name}',
                     title=f'{owner}/{repo_name}',
                     icon='github.png',
-                    shortcut=repo_name
+                    shortcut=shortcut
                 )
 
                 if (

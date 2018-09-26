@@ -119,6 +119,8 @@ github:
     - scala-monitoring
     - sierra-streams-source
     - aws_utils
+    - name:     "wellcome-dns-infra"
+      shortcut: "dns-infra"
 
   HypothesisWorks:
     - hypothesis
