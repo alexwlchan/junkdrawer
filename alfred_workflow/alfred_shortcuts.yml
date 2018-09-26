@@ -98,6 +98,9 @@ aws:
   - name:     "VPC"
   - name:     "Route 53"
     shortcut: "route53"
+  - name:     "Load Balancers"
+    shortcut: "loadbalancer"
+    url:      "https://eu-west-1.console.aws.amazon.com/ec2/v2/home?region=eu-west-1#LoadBalancers:sort=loadBalancerName"
 
 boto3:
   - name: DynamoDB
