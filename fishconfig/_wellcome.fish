@@ -47,3 +47,11 @@ end
 
 
 alias ec2ssh "ssh -i ~/.ssh/wellcomedigitalplatform"
+
+
+# Aliases for the data science ASG
+set -x PLATFORM_PYTHON ~/.virtualenvs/platform/bin/python
+
+alias ds_start "$PLATFORM_PYTHON ~/repos/platform/data_science/scripts/toggle_asg.py --start"
+alias ds_stop "$PLATFORM_PYTHON ~/repos/platform/data_science/scripts/toggle_asg.py --stop"
+alias ds_tunnel "$PLATFORM_PYTHON ~/repos/platform/data_science/scripts/create_tunnel_to_asg.py"
