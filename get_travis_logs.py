@@ -67,8 +67,9 @@ if __name__ == '__main__':
         out_path = os.path.join(out_dir, job['number'] + '.log')
 
         log_resp = sess.get(f'/job/{job["id"]}/log')
-        with open(out_path, 'w') as outfile:
-            outfile.write(log_resp['content'])
+        if log_resp['content']:
+            with open(out_path, 'w') as outfile:
+                outfile.write(log_resp['content'])
 
     if os.path.exists(out_dir):
         print(out_dir)
