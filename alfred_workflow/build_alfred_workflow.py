@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- encoding: utf-8
 
+import hashlib
 import os
 import plistlib
 import shutil
@@ -93,7 +94,7 @@ class AlfredWorkflow:
                     'withspace': False,
                 },
                 'type': 'alfred.workflow.input.keyword',
-                'uid': self.uuid(),
+                'uid': self.uuid('title', shortcut, title),
                 'version': 1,
             }
 
@@ -107,7 +108,7 @@ class AlfredWorkflow:
                     'cachescript': False,
                 },
                 'type': 'alfred.workflow.action.applescript',
-                'uid': self.uuid(),
+                'uid': self.uuid('command', shortcut, command),
                 'version': 1,
             }
 
@@ -156,7 +157,7 @@ class AlfredWorkflow:
                     'withspace': False,
                 },
                 'type': 'alfred.workflow.input.keyword',
-                'uid': self.uuid(),
+                'uid': self.uuid('shortcut', shortcut, title),
                 'version': 1,
             }
 
@@ -170,7 +171,7 @@ class AlfredWorkflow:
                     'type': 0
                 },
                 'type': 'alfred.workflow.action.script',
-                'uid': self.uuid(),
+                'uid': self.uuid('script', command['script']),
                 'version': 2,
             }
 
@@ -218,7 +219,7 @@ class AlfredWorkflow:
                 'withspace': (r'{query}' in url),
             },
             'type': 'alfred.workflow.input.keyword',
-            'uid': self.uuid(),
+            'uid': self.uuid('link', shortcut, url),
             'version': 1,
         }
 
@@ -230,7 +231,7 @@ class AlfredWorkflow:
                 'utf8': True,
             },
             'type': 'alfred.workflow.action.openurl',
-            'uid': self.uuid(),
+            'uid': self.uuid('openurl', shortcut, url),
             'version': 1,
         }
 
@@ -240,12 +241,20 @@ class AlfredWorkflow:
             icon=icon
         )
 
-    def uuid(self):
-        if not hasattr(self, '_uuid'):
-            self._uuid = 0
-        self._uuid += 1
+    def uuid(self, *args):
+        assert len(args) > 0
+        md5 = hashlib.md5()
+        for a in args:
+            md5.update(a.encode('utf8'))
 
-        return str(uuid.UUID(int=self._uuid)).upper()
+        # Quick check we don't have colliding UUIDs.
+        if not hasattr(self, '_md5s'):
+            self._md5s = {}
+        hex_digest = md5.hexdigest()
+        assert hex_digest not in self._md5s, (args, self._md5s[hex_digest])
+        self._md5s[hex_digest] = args
+
+        return str(uuid.UUID(hex=hex_digest)).upper()
 
     def _add_trigger_action_pair(self,
                                  trigger_object,
