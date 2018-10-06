@@ -1,8 +1,22 @@
 set -x BACKUP_TWITTER $DIR/../backup_twitter
 
 
-alias fave='/Users/alexwlchan/.virtualenvs/twitter/bin/python "$BACKUP_TWITTER/save_single_tweet.py" --dst=favorites --url=(furl)'
-alias selfie='/Users/alexwlchan/.virtualenvs/twitter/bin/python "$BACKUP_TWITTER/save_single_tweet.py" --dst=selfies --url=(furl)'
+function fave --argument-names url
+  if test -z "$url"
+    set url (furl)
+  end
+
+  /Users/alexwlchan/.virtualenvs/twitter/bin/python "$BACKUP_TWITTER/save_single_tweet.py" --dst=favorites --url="$url"
+end
+
+
+function selfie --argument-names url
+  if test -z "$url"
+    set url (furl)
+  end
+
+  /Users/alexwlchan/.virtualenvs/twitter/bin/python "$BACKUP_TWITTER/save_single_tweet.py" --dst=selfies --url="$url"
+end
 
 
 function backup_twitter
