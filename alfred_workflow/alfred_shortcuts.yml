@@ -46,6 +46,11 @@ links:
     shortcut: pexels
     url:      https://www.pexels.com/search/{query}/
 
+  - title:    "The Man in Seat Sixty-One"
+    icon:     "seat.png"
+    shortcut: "seat"
+    url:      "https://www.seat61.com/"
+
   # Social websites
   - title:    Pinboard
     icon:     pinboard.png
