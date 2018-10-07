@@ -19,6 +19,19 @@ function parse_git_branch
 end
 
 
+function _display_hostname
+  if test (sysctl hw.model 2>/dev/null | grep iMac)
+    printf "🖥️ "
+  else if test (sysctl hw.model 2>/dev/null | grep MacBook)
+    printf "💻 "
+  else if test (sysctl kernel.osrelease 2>/dev/null | grep linode)
+    printf "☁️ "
+  else
+    printf (hostname)
+  end
+end
+
+
 function fish_prompt
   # A newline between new prompts for cleanliness
   echo ''
@@ -36,7 +49,7 @@ function fish_prompt
   set_color normal
   printf (echo ' at ')
   set_color yellow
-  printf (hostname)
+  _display_hostname
 
   # Print the current directory
   set_color normal
