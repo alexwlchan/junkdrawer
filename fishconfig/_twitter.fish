@@ -21,6 +21,15 @@ end
 
 function backup_twitter
   bash $BACKUP_TWITTER/backup_twitter.sh
+  osascript -e '
+    tell application "Things3"
+      repeat with todayToDo in to dos of list "Today"
+        if ((name of todayToDo) = "Run my tweet backup script") then
+          set status of todayToDo to completed
+        end if
+      end repeat
+    end tell
+  '
 end
 
 
