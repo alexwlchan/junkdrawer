@@ -173,9 +173,8 @@ fastmail:
   - "Calendar"
   - "Notes"
 
-shell:
+python:
   - shortcut: "cost"
     title:    "AWS Cost Explorer"
     icon:     "billing.png"
-    script: |+
-      open "https://console.aws.amazon.com/cost-reports/home?#/custom?groupBy=Operation&forecastTimeRangeOption=None&hasBlended=false&excludeRefund=false&excludeCredit=false&excludeRIUpfrontFees=false&excludeRIRecurringCharges=false&excludeOtherSubscriptionCosts=false&excludeSupportCharges=false&excludeTax=false&excludeTaggedResources=false&chartStyle=Stack&timeRangeOption=LastMonth&granularity=Daily&reportName=Monthly%20EC2%20running%20hours%20costs%20and%20usage&isTemplate=true&filter=%5B%5D&reportType=CostUsage&hasAmortized=false&startDate=2018-08-01&endDate=$(date +'%Y-%m-%d')"
+    file:     "cost_explorer.py"

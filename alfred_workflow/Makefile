@@ -11,7 +11,12 @@ $(ROOT)/.docker/alfred: $(ALFRED)/requirements.txt
 	mkdir -p $(ROOT)/.docker
 	touch $(ROOT)/.docker/alfred
 
-$(ALFRED)/junkdrawer.alfredworkflow: $(ROOT)/.docker/alfred $(ALFRED)/alfred_shortcuts.yml $(wildcard $(ALFRED)/icons/*.png)
+deps = \
+	$(ALFRED)/alfred_shortcuts.yml \
+	$(wildcard $(ALFRED)/icons/*.png) \
+	$(wildcard $(ALFRED)/scripts/*.py)
+
+$(ALFRED)/junkdrawer.alfredworkflow: $(ROOT)/.docker/alfred $(deps)
 	docker run --tty --rm --volume $(ALFRED):/data $(BUILD_IMAGE)
 	open $(ALFRED)/junkdrawer.alfredworkflow
 

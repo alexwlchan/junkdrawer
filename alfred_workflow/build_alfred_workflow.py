@@ -144,7 +144,7 @@ class AlfredWorkflow:
                 shortcut=service.lower()
             )
 
-        for command in self.yaml_data['shell']:
+        for command in self.yaml_data['python']:
             title = command['title']
             shortcut = command['shortcut']
 
@@ -161,17 +161,24 @@ class AlfredWorkflow:
                 'version': 1,
             }
 
+            script_body = (
+                open(os.path.join('scripts', command['file']))
+                    .read()
+                    .replace('#!/usr/bin/env python\n# -*- encoding: utf-8\n', '')
+                    .strip()
+            )
+
             script_object = {
                 'config': {
                     'concurrently': False,
                     'escaping': 102,
-                    'script': command['script'],
+                    'script': script_body,
                     'scriptargtype': 1,
                     'scriptfile': '',
-                    'type': 0
+                    'type': 3
                 },
                 'type': 'alfred.workflow.action.script',
-                'uid': self.uuid('script', command['script']),
+                'uid': self.uuid('script', script_body),
                 'version': 2,
             }
 
