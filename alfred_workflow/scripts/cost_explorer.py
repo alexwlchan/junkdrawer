@@ -14,6 +14,8 @@ except ImportError:  # Python 3
 query_dict = {
     "startDate": (dt.datetime.now() - dt.timedelta(days=30)).strftime("%Y-%m-%d"),
     "endDate": dt.datetime.now().strftime("%Y-%m-%d"),
+    "timeRangeOption": "Custom",
+
     "chartStyle": "Stack",
     "excludeCredit": "false",
     "excludeOtherSubscriptionCosts": "false",
@@ -32,7 +34,6 @@ query_dict = {
     "isTemplate": "true",
     "reportName": "Daily API operation costs",
     "reportType": "CostUsage",
-    "timeRangeOption": "LastMonth"
 }
 
 parts = [
