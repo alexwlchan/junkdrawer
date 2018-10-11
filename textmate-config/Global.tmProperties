@@ -9,7 +9,7 @@ softTabs         = true
 softWrap         = true
 tabSize          = 2
 theme            = A4299D9B-1DE5-4BC4-87F6-A757E71B1597
-wrapColumn       = 80
+wrapColumn       = 89
 
 [ *.md ]
 fileType         = text.html.markdown
