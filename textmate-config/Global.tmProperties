@@ -53,6 +53,9 @@ fileType         = source.json
 [ *.scala ]
 fileType         = source.scala
 
+[ *.py.tpl ]
+fileType         = source.python
+
 [ Jenkinsfile ]
 fileType         = source.groovy
 
