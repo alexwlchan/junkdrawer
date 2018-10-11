@@ -79,6 +79,10 @@ links:
     shortcut: "marc"
     icon:     "plaintext.png"
     url:      "https://search.wellcomelibrary.org/iii/encore/record/C__Rb{query}?marcData=Y&lang=eng"
+  - title:    "Storage service RFC"
+    shortcut: "storage"
+    icon:     "markdown.png"
+    url:      "https://github.com/wellcometrust/platform/tree/master/docs/rfcs/002-archival_storage"
 
 aws:
   - name:     "Billing"
