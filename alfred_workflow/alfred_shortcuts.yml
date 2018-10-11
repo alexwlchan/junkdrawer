@@ -82,7 +82,12 @@ links:
 
 aws:
   - name:     "Billing"
-  - name:    CloudWatch
+  - name:     "CloudWatch Logs"
+    shortcut: "cloudwatch"
+    url:      "https://eu-west-1.console.aws.amazon.com/cloudwatch/home?region=eu-west-1#logs:"
+  - name:     "CloudWatch Metrics"
+    shortcut: "metrics"
+    url:      "https://eu-west-1.console.aws.amazon.com/cloudwatch/home?region=eu-west-1#metricsV2:"
   - name:    DynamoDB
   - name:    EC2
   - name:    Elastic Container Registry
