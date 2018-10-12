@@ -35,7 +35,7 @@ function reload_fish_config
 end
 
 function get_travis_logs
-    open (~/.virtualenvs/platform/bin/python $ROOT/get_travis_logs.py (furl) --token=(cat $ROOT/travis_token.txt))
+    open (~/.virtualenvs/platform/bin/python $ROOT/scripts/get_travis_logs.py (furl) --token=(cat $ROOT/travis_token.txt))
 end
 
 function tfdiff
