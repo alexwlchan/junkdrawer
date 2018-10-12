@@ -32,10 +32,10 @@ links:
     shortcut: apk
     url:      https://pkgs.alpinelinux.org/packages?name=*{query}*&repo=all&arch=x86_64&maintainer=all
 
-  - title:    "2018 Q4"
-    icon:     github.png
-    shortcut: q4
-    url:      https://github.com/wellcometrust/platform/projects/7
+  - title:    "2019 Q1"
+    icon:     "github.png"
+    shortcut: "q1"
+    url:      "https://github.com/wellcometrust/platform/projects/8"
 
   - title:    "Search Pixabay for '{query}'"
     icon:     pixabay.png
