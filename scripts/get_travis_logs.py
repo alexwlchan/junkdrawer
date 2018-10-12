@@ -13,6 +13,7 @@ Options:
 """
 
 import os
+import subprocess
 import tempfile
 from urllib.parse import urlparse
 
@@ -72,6 +73,22 @@ if __name__ == '__main__':
                 outfile.write(log_resp['content'])
 
     if os.path.exists(out_dir):
+        for f in os.listdir(out_dir):
+            subprocess.check_call([
+                'osascript', '-e',
+                f'''
+                tell application "iTerm"
+                	tell current window
+                		set theTab to create tab with default profile
+                		tell theTab
+                			tell the current session
+                				write text "cat {out_dir}/{f}"
+                			end tell
+                		end tell
+                	end tell
+                end tell
+                '''
+            ])
         print(out_dir)
     else:
         print('No failed jobs?')
