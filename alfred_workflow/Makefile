@@ -13,8 +13,9 @@ $(ROOT)/.docker/alfred: $(ALFRED)/requirements.txt
 
 deps = \
 	$(ALFRED)/alfred_shortcuts.yml \
+	$(ALFRED)/build_alfred_workflow.py \
 	$(wildcard $(ALFRED)/icons/*.png) \
-	$(wildcard $(ALFRED)/scripts/*.py)
+	$(wildcard $(ALFRED)/scripts/*)
 
 $(ALFRED)/junkdrawer.alfredworkflow: $(ROOT)/.docker/alfred $(deps)
 	docker run --tty --rm --volume $(ALFRED):/data $(BUILD_IMAGE)

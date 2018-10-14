@@ -163,10 +163,6 @@ iterm2:
   - shortcut: "alexwlchan"
     title:    "SSH to ~/repos/alexwlchan.net on my Linode"
     command:  "ssh -t alexwlchan@helene.linode 'cd ~/repos/alexwlchan.net; fish'"
-  - shortcut: "analytics"
-    title:    "Analytics report for alexwlchan.net"
-    command:  |+
-      ssh -t alexwlchan@helene.linode 'cd ~/repos/alexwlchan.net; make analytics-report; fish
   - shortcut: "taggle"
     title:    "SSH to ~/repos/taggle on Linode"
     command:  "ssh -t alexwlchan@helene.linode \"cd ~/repos/taggle/examples/images; alias pab '/home/alexwlchan/.virtualenvs/taggle/bin/python add_bookmark.py'; fish\""
@@ -187,3 +183,9 @@ python:
     title:    "AWS Cost Explorer"
     icon:     "billing.png"
     file:     "cost_explorer.py"
+
+applescript:
+  - shortcut: "analytics"
+    title:    "Analytics report for alexwlchan.net"
+    icon:     "iterm.png"
+    file:     "linode_analytics.scpt"

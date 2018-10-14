@@ -188,6 +188,49 @@ class AlfredWorkflow:
                 icon=command.get('icon', 'iterm.png')
             )
 
+        for command in self.yaml_data['applescript']:
+            title = command['title']
+            shortcut = command['shortcut']
+
+            trigger_object = {
+                'config': {
+                    'argumenttype': 2,
+                    'keyword': shortcut,
+                    'subtext': '',
+                    'text': title,
+                    'withspace': False,
+                },
+                'type': 'alfred.workflow.input.keyword',
+                'uid': self.uuid('shortcut', shortcut, title),
+                'version': 1,
+            }
+
+            script_body = (
+                open(os.path.join('scripts', command['file']))
+                    .read()
+                    .strip()
+            )
+
+            script_object = {
+                'config': {
+                    'applescript': '\n'.join([
+                        'on alfred_script(q)',
+                        script_body,
+                        'end alfred_script',
+                    ]),
+                    'cachescript': False,
+                },
+                'type': 'alfred.workflow.action.applescript',
+                'uid': self.uuid('script', script_body),
+                'version': 1,
+            }
+
+            self._add_trigger_action_pair(
+                trigger_object=trigger_object,
+                action_object=script_object,
+                icon=command.get('icon', 'iterm.png')
+            )
+
     def _copy_workflow_icon(self):
         try:
             icon = self.yaml_data['icon']
