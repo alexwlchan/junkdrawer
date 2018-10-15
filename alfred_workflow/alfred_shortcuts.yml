@@ -74,6 +74,10 @@ links:
     icon:     "trustnet.png"
     shortcut: "trustnet"
     url:      "https://trustnet.wellcome.ac.uk/"
+  - title:    "Search Tandem Vault for '{query}'"
+    icon:     "tandemvault.png"
+    shortcut: "tandemvault"
+    url:      "https://wellcome.tandemvault.com/browse?q={query}"
 
   - title:    "MARC record for '{query}'"
     shortcut: "marc"
