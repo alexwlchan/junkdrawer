@@ -4,6 +4,7 @@
 import json
 import os
 import subprocess
+from urllib.parse import parse_qs, urlparse
 from urllib.request import urlretrieve
 
 from bs4 import BeautifulSoup
@@ -37,42 +38,98 @@ if __name__ == '__main__':
         elif post_data["type"] == "video":
             players = [p for p in post_data["player"] if p["embed_code"]]
 
-            # TODO: Why does this happen?
-            if not players:
-                print(post_data)
+            if post_data["video_type"] == "tumblr":
+                _download_asset(post_dir=root, url=post_data["video_url"])
                 continue
 
-            best_player = max(players, key=lambda p: p["width"])
+            elif post_data["video_type"] == "youtube":
+                if all(not p["embed_code"] for p in post_data["player"]):
+                    continue
 
-            soup = BeautifulSoup(best_player["embed_code"], "html.parser")
+                try:
+                    if post_data["source_url"].startswith("https://www.youtube.com/embed"):
+                        source_url = post_data["source_url"]
+                    else:
+                        source_url = parse_qs(urlparse(post_data["source_url"]).query)["z"][0]
+                except KeyError:
+                    best_player = max(players, key=lambda p: p["width"])
+                    soup = BeautifulSoup(best_player["embed_code"], "html.parser")
+                    iframe_matches = soup.find_all("iframe", attrs={"id": "youtube_iframe"})
+                    assert len(iframe_matches) == 1
 
-            sources = soup.find_all("source")
-            if len(sources) == 1:
-                source = sources[0]
+                    source_url = iframe_matches[0].attrs["src"]
 
-                assert source.attrs["type"] == "video/mp4"
-                _download_asset(post_dir=root, url=source.attrs["src"], suffix=".mp4")
+                print(source_url)
                 continue
 
-            iframes = soup.find_all("iframe", attrs={"id": "youtube_iframe"})
-            if len(iframes) == 1:
-                iframe = iframes[0]
-                # TODO: Actually do the download here.
+            elif post_data["video_type"] in ("vimeo", "youtube"):
+                best_player = max(players, key=lambda p: p["width"])
+                soup = BeautifulSoup(best_player["embed_code"], "html.parser")
+                iframe_matches = soup.find_all("iframe")
+                assert len(iframe_matches) == 1
+
+                embed_url = iframe_matches[0].attrs["src"]
+
+                print(embed_url)
                 continue
 
-            a_flickrs = soup.find_all("a", attrs={"data-flickr-embed": "true"})
-            if len(a_flickrs) == 1:
-                assert len(a_flickrs[0].find_all("img")) == 1
-                img = a_flickrs[0].find_all("img")[0]
-                _download_asset(post_dir=root, url=img.attrs["src"])
+            elif (
+                post_data["video_type"] == "unknown" and
+                post_data.get("source_url").startswith("https://t.umblr.com/redirect?z=http%3A%2F%2Fwww.youtube.com")
+            ):
+                source_url = parse_qs(urlparse(post_data["source_url"]).query)["z"][0]
+                print(source_url)
                 continue
 
+            elif post_data["video_type"] == "instagram":
+                source_url = post_data["permalink_url"]
+                print(source_url)
+                continue
 
+            elif post_data["video_type"] == "flickr":
+                source_url = parse_qs(urlparse(post_data["source_url"]).query)["z"][0]
+                print(source_url)
+                continue
 
             print(post_data)
-            # assert False, soup
 
         elif post_data["type"] == "audio":
+
+            # Exammple contents of the "player" field:
+            #
+            #     <iframe
+            #       class="tumblr_audio_player tumblr_audio_player_76004518890"
+            #       src="http://example.tumblr.com/post/1234/audio_player_iframe/example/tumblr_1234?audio_file=https%3A%2F%2Fwww.tumblr.com%2Faudio_file%2Fexample%2F1234%2Ftumblr_1234"
+            #       frameborder="0"
+            #       allowtransparency="true"
+            #       scrolling="no"
+            #       width="540"
+            #       height="169"></iframe>
+            #
+            if post_data["audio_type"] == "tumblr":
+                player_soup = BeautifulSoup(post_data["player"], "html.parser")
+                player_matches = player_soup.find_all(
+                    "iframe", attrs={"class": "tumblr_audio_player"}
+                )
+                assert len(player_matches) == 1
+
+                src_url = player_matches[0]["src"]
+                query_string = parse_qs(urlparse(src_url).query)
+                assert len(query_string["audio_file"]) == 1
+                audio_file = query_string["audio_file"][0]
+                print(audio_file)
+                continue
+
+            elif post_data["audio_type"] == "spotify":
+                source_url = post_data["audio_source_url"]
+                print(source_url)
+                continue
+
+            elif post_data["audio_type"] == "soundcloud":
+                source_url = post_data["audio_source_url"]
+                print(source_url)
+                continue
+
             # TODO: Something useful!
             print(post_data)
 
