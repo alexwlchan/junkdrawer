@@ -117,7 +117,7 @@ if __name__ == '__main__':
 
             elif post_data["video_type"] == "instagram":
                 source_url = post_data["permalink_url"]
-                print(source_url)
+                _download_with_youtube_dl(post_dir=post_dir, url=source_url)
                 continue
 
             elif post_data["video_type"] == "flickr":
