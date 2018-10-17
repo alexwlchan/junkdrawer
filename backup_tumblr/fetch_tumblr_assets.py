@@ -26,6 +26,34 @@ def _download_asset(post_dir, url, suffix=""):
     print(".", end="", flush=True)
 
 
+def _download_with_youtube_dl(post_dir, url):
+    """
+    Download a video using youtube-dl.
+    """
+
+    # The purpose of this marker is to check "have we run youtube_dl before?"
+    #
+    # Although youtube_dl is smart about not re-downloading files, it has to make
+    # a network request before it does that, which is slow and mostly unnecessary.
+    # This is a crude way to avoid unnecessary shell-outs/network requests.
+    #
+    marker = os.path.join(post_dir, ".youtube_dl")
+    if os.path.exists(marker):
+        return
+
+    try:
+        subprocess.check_call(
+            ["youtube-dl", url],
+            stdout=subprocess.DEVNULL,
+            cwd=post_dir
+        )
+    except subprocess.CalledProcessError:
+        print(url)
+    else:
+        open(marker, "wb").write(b"")
+        print(".", end="", flush=True)
+
+
 if __name__ == '__main__':
     for root, _, filenames in os.walk(BACKUP_DIR):
         if "info.json" not in filenames:
@@ -65,7 +93,7 @@ if __name__ == '__main__':
 
                     source_url = iframe_matches[0].attrs["src"]
 
-                print(source_url)
+                _download_with_youtube_dl(post_dir=post_dir, url=source_url)
                 continue
 
             elif post_data["video_type"] in ("vimeo", "youtube"):
@@ -76,7 +104,7 @@ if __name__ == '__main__':
 
                 embed_url = iframe_matches[0].attrs["src"]
 
-                print(embed_url)
+                _download_with_youtube_dl(post_dir=post_dir, url=embed_url)
                 continue
 
             elif (
@@ -84,7 +112,7 @@ if __name__ == '__main__':
                 post_data.get("source_url").startswith("https://t.umblr.com/redirect?z=http%3A%2F%2Fwww.youtube.com")
             ):
                 source_url = parse_qs(urlparse(post_data["source_url"]).query)["z"][0]
-                print(source_url)
+                _download_with_youtube_dl(post_dir=post_dir, url=source_url)
                 continue
 
             elif post_data["video_type"] == "instagram":
