@@ -31,11 +31,12 @@ if __name__ == '__main__':
         if "info.json" not in filenames:
             continue
 
-        post_data = json.load(open(os.path.join(root, "info.json")))
+        post_dir = root
+        post_data = json.load(open(os.path.join(post_dir, "info.json")))
 
         if post_data["type"] == "photo":
             for photo in post_data["photos"]:
-                _download_asset(post_dir=root, url=photo["original_size"]["url"])
+                _download_asset(post_dir=post_dir, url=photo["original_size"]["url"])
 
         elif post_data["type"] in ("answer", "chat", "link", "quote", "text"):
             continue
@@ -44,7 +45,7 @@ if __name__ == '__main__':
             players = [p for p in post_data["player"] if p["embed_code"]]
 
             if post_data["video_type"] == "tumblr":
-                _download_asset(post_dir=root, url=post_data["video_url"])
+                _download_asset(post_dir=post_dir, url=post_data["video_url"])
                 continue
 
             elif post_data["video_type"] == "youtube":
