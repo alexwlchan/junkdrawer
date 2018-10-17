@@ -4,6 +4,7 @@
 import json
 import os
 import subprocess
+from urllib.error import HTTPError
 from urllib.parse import parse_qs, urlparse
 from urllib.request import urlretrieve
 
@@ -17,7 +18,11 @@ def _download_asset(post_dir, url, suffix=""):
     out_path = os.path.join(post_dir, name)
     if os.path.exists(out_path):
         return
-    urlretrieve(url, out_path)
+    try:
+        urlretrieve(url, out_path)
+    except HTTPError:
+        print(url)
+        return
     print(".", end="", flush=True)
 
 
