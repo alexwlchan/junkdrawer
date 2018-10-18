@@ -45,6 +45,10 @@ function dos2unix
   __call_docker_image dos2unix $argv
 end
 
+function ffmpeg
+  __call_docker_image ffmpeg $argv
+end
+
 function lessc
   __call_docker_image lessc $argv
 end
