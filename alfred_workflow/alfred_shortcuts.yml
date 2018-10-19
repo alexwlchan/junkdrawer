@@ -87,6 +87,10 @@ links:
     shortcut: "storage"
     icon:     "markdown.png"
     url:      "https://github.com/wellcometrust/platform/tree/master/docs/rfcs/002-archival_storage"
+  - title:    "Search /works for '{query}'"
+    shortcut: "works"
+    icon:     "wellcome_works.png"
+    url:      "https://wellcomecollection.org/works?page=1&query={query}"
 
 aws:
   - name:     "Billing"
