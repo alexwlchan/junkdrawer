@@ -64,6 +64,10 @@ links:
     icon:     blogtrottr.png
     shortcut: blog
     url:      https://blogtrottr.com/
+  - title:    "Search AO3 for '{query}'"
+    icon:     "ao3.png"
+    shortcut: "ao3"
+    url:      "https://archiveofourown.org/works/search?work_search[sort_direction]=desc&work_search[sort_column]=_score&work_search[query]={query}&work_search[single_chapter]=0&commit=Search&utf8=%E2%9C%93"
 
   # Wellcome internal sites
   - title:    SelectHR
