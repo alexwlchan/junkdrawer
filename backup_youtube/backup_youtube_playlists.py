@@ -42,8 +42,19 @@ if __name__ == '__main__':
         with open(os.path.join(backup_dir, "info.json"), "w") as outfile:
             outfile.write(json.dumps(data, indent=2, sort_keys=True))
 
+        current_files = os.listdir(backup_dir)
+
         for entry in data:
             video_id = entry["contentDetails"]["videoId"]
+
+            # Detect if this video has already been downloaded, or obtained
+            # elsewhere -- otherwise this script takes too long to ever finish.
+            if any(
+                c.endswith(("-%s.mp4" % video_id, "-%s.webm" % video_id))
+                for c in current_files
+            ):
+                continue
+
             video_url = f"https://youtube.com/watch?v={video_id}"
             try:
                 subprocess.check_call(
