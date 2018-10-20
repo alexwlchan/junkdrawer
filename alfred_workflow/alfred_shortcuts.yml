@@ -55,6 +55,10 @@ links:
     icon:     "tvdb.png"
     shortcut: "tvdb"
     url:      "https://www.thetvdb.com/search?q={query}"
+  - title:    "Search The Movie DB for '{query}'"
+    icon:     "moviedb.png"
+    shortcut: "moviedb"
+    url:      "https://www.themoviedb.org/search?query={query}"
 
   # Social websites
   - title:    Pinboard
