@@ -51,6 +51,11 @@ links:
     shortcut: "seat"
     url:      "https://www.seat61.com/"
 
+  - title:    "Search TheTVDB for '{query}'"
+    icon:     "tvdb.png"
+    shortcut: "tvdb"
+    url:      "https://www.thetvdb.com/search?q={query}"
+
   # Social websites
   - title:    Pinboard
     icon:     pinboard.png
