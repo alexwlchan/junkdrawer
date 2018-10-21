@@ -4,10 +4,8 @@
 Usage: turn_into_gif.py <PATH> --rows=<ROWS> --columns=<COLUMNS> [--reversed]
 """
 
-import math
 import os
 import subprocess
-import sys
 import tempfile
 
 import docopt
@@ -27,8 +25,10 @@ def crop_areas(*, rows, columns):
             )
 
 
-def create_frames(im, *, rows, columns):
+def create_frames(im, **kwargs):
     tmp_dir = tempfile.mkdtemp()
+
+    areas = crop_areas(**kwargs)
 
     for idx, area in enumerate(areas):
         frame = im.crop(area)
@@ -41,19 +41,17 @@ if __name__ == "__main__":
     args = docopt.docopt(__doc__)
 
     path = args["<PATH>"]
+    row_count = int(args["--rows"])
+    column_count = int(args["--columns"])
 
     im = Image.open(path)
-    im.convert('RGB')
 
-    tmp_dir = tempfile.mkdtemp()
+    cmd = ["convert"]
 
-    areas = crop_areas(rows=int(args["--rows"]), columns=int(args["--columns"]))
-    for i, area in enumerate(areas):
-        frame = im.crop(area)
-        frame.save(os.path.join(tmp_dir, 'frame%03d.jpg' % i))
+    for frame in create_frames(im, rows=row_count, columns=column_count):
+        cmd.append(frame)
 
-    subprocess.check_call(
-        ["convert", "-delay", "0", "-loop", "0", "*.jpg", "combined.gif"], cwd=tmp_dir
-    )
-
-    os.rename(os.path.join(tmp_dir, "combined.gif"), path.replace(".jpg", ".gif"))
+    gif_path = path.replace(".jpg", ".gif")
+    cmd.append(gif_path)
+    subprocess.check_call(cmd)
+    print(gif_path)
