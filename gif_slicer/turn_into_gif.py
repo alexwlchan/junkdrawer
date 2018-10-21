@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8
 """
-Usage: turn_into_gif.py <PATH> --rows=<ROWS> --columns=<COLUMNS> [--reversed]
+Usage: turn_into_gif.py <PATH> --rows=<ROWS> --columns=<COLUMNS>
 """
 
 import os
