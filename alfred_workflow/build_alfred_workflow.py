@@ -389,6 +389,19 @@ class AlfredWorkflow:
         self._build_alfred_workflow_zip(name=name)
 
 
+def bump_version(path):
+    existing_lines = list(open(path))
+    assert existing_lines[3].startswith("version:")
+
+    existing_version = int(existing_lines[3].split()[1])
+    new_version = existing_version + 1
+    existing_lines[3] = "version: %d\n" % (new_version + 1)
+
+    with open(path, "w") as outfile:
+        outfile.write("".join(existing_lines))
+
+
 if __name__ == '__main__':
+    bump_version("alfred_shortcuts.yml")
     workflow = AlfredWorkflow(path='alfred_shortcuts.yml')
     workflow.assemble_package(name='junkdrawer')
