@@ -12,7 +12,7 @@ import docopt
 from PIL import Image
 
 
-def crop_areas(*, rows, columns):
+def crop_areas(im, *, rows, columns):
     segment_width = im.width / columns
     segment_height = im.height / rows
     for row_idx in range(rows):
@@ -28,7 +28,7 @@ def crop_areas(*, rows, columns):
 def create_frames(im, **kwargs):
     tmp_dir = tempfile.mkdtemp()
 
-    areas = crop_areas(**kwargs)
+    areas = crop_areas(im, **kwargs)
 
     for idx, area in enumerate(areas):
         frame = im.crop(area)
@@ -37,13 +37,8 @@ def create_frames(im, **kwargs):
         yield frame_path
 
 
-if __name__ == "__main__":
-    args = docopt.docopt(__doc__)
-
-    path = args["<PATH>"]
-    row_count = int(args["--rows"])
-    column_count = int(args["--columns"])
-
+def create_gif(path, row_count, column_count):
+    assert path.endswith(".jpg")
     im = Image.open(path)
 
     cmd = ["convert"]
@@ -54,4 +49,21 @@ if __name__ == "__main__":
     gif_path = path.replace(".jpg", ".gif")
     cmd.append(gif_path)
     subprocess.check_call(cmd)
+
+    return gif_path
+
+
+if __name__ == "__main__":
+    args = docopt.docopt(__doc__)
+
+    path = args["<PATH>"]
+    row_count = int(args["--rows"])
+    column_count = int(args["--columns"])
+
+    gif_path = create_gif(
+        path=path,
+        row_count=row_count,
+        column_count=column_count
+    )
+
     print(gif_path)
