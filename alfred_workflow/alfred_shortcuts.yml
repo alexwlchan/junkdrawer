@@ -59,6 +59,10 @@ links:
     icon:     "moviedb.png"
     shortcut: "moviedb"
     url:      "https://www.themoviedb.org/search?query={query}"
+  - title:    "Search Wirecutter for '{query}'"
+    icon:     "wirecutter.png"
+    shortcut: "wirecutter"
+    url:      "https://thewirecutter.com/?s={query}"
 
   # Social websites
   - title:    Pinboard
