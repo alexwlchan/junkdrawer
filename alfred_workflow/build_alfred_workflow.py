@@ -156,11 +156,11 @@ class AlfredWorkflow:
 
                 trigger_object = {
                     'config': {
-                        'argumenttype': 2,
+                        'argumenttype': 0 if "{query}" in title else 2,
                         'keyword': shortcut,
                         'subtext': '',
                         'text': title,
-                        'withspace': False,
+                        'withspace': True,
                     },
                     'type': 'alfred.workflow.input.keyword',
                     'uid': self.uuid('shortcut', shortcut, title),
