@@ -1,7 +1,7 @@
 bundleid: com.alexwlchan.alfred-shortcuts
 
 createdby: Alex Chan
-version: 23
+version: 25
 
 icon: globe.png
 
@@ -83,10 +83,14 @@ links:
     url:      "https://archiveofourown.org/works/search?work_search[sort_direction]=desc&work_search[sort_column]=_score&work_search[query]={query}&work_search[single_chapter]=0&commit=Search&utf8=%E2%9C%93"
 
   # Wellcome internal sites
-  - title:    SelectHR
-    icon:     selecthr.png
-    shortcut: selecthr
-    url:      https://selecthr.wellcome.ac.uk/accessselecthr/
+  - title:    "SelectHR"
+    icon:     "selecthr.png"
+    shortcut: "selecthr"
+    url:      "https://selecthr.wellcome.ac.uk/accessselecthr/"
+  - title:    "Book annual leave"
+    icon:     "selecthr.png"
+    shortcut: "leave"
+    url:      "https://selecthr.wellcome.ac.uk/accessselecthr/Absence/EnterAbsence.aspx"
   - title:    "Trustnet"
     icon:     "trustnet.png"
     shortcut: "trustnet"
