@@ -144,49 +144,51 @@ class AlfredWorkflow:
                 shortcut=service.lower()
             )
 
-        for command in self.yaml_data['python']:
-            title = command['title']
-            shortcut = command['shortcut']
+        script_types = {
+            "shell": 0,
+            "python": 3,
+        }
 
-            trigger_object = {
-                'config': {
-                    'argumenttype': 2,
-                    'keyword': shortcut,
-                    'subtext': '',
-                    'text': title,
-                    'withspace': False,
-                },
-                'type': 'alfred.workflow.input.keyword',
-                'uid': self.uuid('shortcut', shortcut, title),
-                'version': 1,
-            }
+        for language, all_scripts in self.yaml_data["scripts"].items():
+            for script in all_scripts:
+                title = script['title']
+                shortcut = script['shortcut']
 
-            script_body = (
-                open(os.path.join('scripts', command['file']))
-                    .read()
-                    .replace('#!/usr/bin/env python\n# -*- encoding: utf-8\n', '')
-                    .strip()
-            )
+                trigger_object = {
+                    'config': {
+                        'argumenttype': 2,
+                        'keyword': shortcut,
+                        'subtext': '',
+                        'text': title,
+                        'withspace': False,
+                    },
+                    'type': 'alfred.workflow.input.keyword',
+                    'uid': self.uuid('shortcut', shortcut, title),
+                    'version': 1,
+                }
 
-            script_object = {
-                'config': {
-                    'concurrently': False,
-                    'escaping': 102,
-                    'script': script_body,
-                    'scriptargtype': 1,
-                    'scriptfile': '',
-                    'type': 3
-                },
-                'type': 'alfred.workflow.action.script',
-                'uid': self.uuid('script', script_body),
-                'version': 2,
-            }
+                script_path = os.path.join('scripts', script['file'])
+                script_body = open(script_path).read().strip()
 
-            self._add_trigger_action_pair(
-                trigger_object=trigger_object,
-                action_object=script_object,
-                icon=command.get('icon', 'iterm.png')
-            )
+                script_object = {
+                    'config': {
+                        'concurrently': False,
+                        'escaping': 102,
+                        'script': script_body,
+                        'scriptargtype': 1,
+                        'scriptfile': '',
+                        'type': script_types[language]
+                    },
+                    'type': 'alfred.workflow.action.script',
+                    'uid': self.uuid('script', script_body),
+                    'version': 2,
+                }
+
+                self._add_trigger_action_pair(
+                    trigger_object=trigger_object,
+                    action_object=script_object,
+                    icon=script.get('icon', 'iterm.png')
+                )
 
         for command in self.yaml_data['applescript']:
             title = command['title']

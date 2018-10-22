@@ -1,7 +1,7 @@
 bundleid: com.alexwlchan.alfred-shortcuts
 
 createdby: Alex Chan
-version: 3
+version: 11
 
 icon: globe.png
 
@@ -203,11 +203,18 @@ fastmail:
   - "Calendar"
   - "Notes"
 
-python:
-  - shortcut: "cost"
-    title:    "AWS Cost Explorer"
-    icon:     "billing.png"
-    file:     "cost_explorer.py"
+scripts:
+  shell:
+    - shortcut: "airport"
+      title:    "Toggle AirPort"
+      icon:     "airport.png"
+      file:     "toggle_airport.sh"
+
+  python:
+    - shortcut: "cost"
+      title:    "AWS Cost Explorer"
+      icon:     "billing.png"
+      file:     "cost_explorer.py"
 
 applescript:
   - shortcut: "analytics"
