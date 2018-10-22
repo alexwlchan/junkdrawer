@@ -1,7 +1,7 @@
 bundleid: com.alexwlchan.alfred-shortcuts
 
 createdby: Alex Chan
-version: 11
+version: 13
 
 icon: globe.png
 
@@ -209,6 +209,18 @@ scripts:
       title:    "Toggle AirPort"
       icon:     "airport.png"
       file:     "toggle_airport.sh"
+    - shortcut: "cycle"
+      title:    "Cycle AirPort"
+      icon:     "airport.png"
+      file:     "cycle_airport.sh"
+    - shortcut: "bluetooth"
+      title:    "Toggle Bluetooth"
+      icon:     "bluetooth.png"
+      file:     "toggle_bluetooth.sh"
+    - shortcut: "cycle"
+      title:    "Cycle Bluetooth"
+      icon:     "bluetooth.png"
+      file:     "cycle_bluetooth.sh"
 
   python:
     - shortcut: "cost"
