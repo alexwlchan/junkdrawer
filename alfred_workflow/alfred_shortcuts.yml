@@ -1,7 +1,7 @@
 bundleid: com.alexwlchan.alfred-shortcuts
 
 createdby: Alex Chan
-version: 21
+version: 23
 
 icon: globe.png
 
@@ -223,7 +223,7 @@ scripts:
       file:     "cycle_bluetooth.sh"
     - shortcut: "catalogue"
       title:    "Search Catalogue API for '{query}'"
-      icon:     "wellcome_works.png"
+      icon:     "wellcome_api.png"
       file:     "catalogue_search.sh"
 
   python:
