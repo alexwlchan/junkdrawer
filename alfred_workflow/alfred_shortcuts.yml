@@ -8,29 +8,29 @@ icon: globe.png
 links:
   # Search software/package repositories
   - title:    "Search PyPI for '{query}'"
-    icon:     pypi.png
-    shortcut: pypi
-    url:      https://pypi.org/search/?q={query}
+    icon:     "pypi.png"
+    shortcut: "pypi"
+    url:      "https://pypi.org/search/?q={query}"
   - title:    "Search Rubygems for '{query}'"
-    icon:     rubygems.png
-    shortcut: gem
-    url:      https://rubygems.org/search?utf8=✓&query={query}
+    icon:     "rubygems.png"
+    shortcut: "gem"
+    url:      "https://rubygems.org/search?utf8=✓&query={query}"
   - title:    "Search npm for '{query}'"
-    icon:     npm.png
-    shortcut: npm
-    url:      https://www.npmjs.com/search?q={query}
+    icon:     "npm.png"
+    shortcut: "npm"
+    url:      "https://www.npmjs.com/search?q={query}"
   - title:    "Search crates.io for '{query}'"
-    icon:     crates-io.png
-    shortcut: cargo
-    url:      https://crates.io/search?q={query}
+    icon:     "crates-io.png"
+    shortcut: "cargo"
+    url:      "https://crates.io/search?q={query}"
   - title:    "Search Docker Hub for '{query}'"
-    icon:     docker.png
-    shortcut: dock
-    url:      https://hub.docker.com/search/?q={query}
+    icon:     "docker.png"
+    shortcut: "dock"
+    url:      "https://hub.docker.com/search/?q={query}"
   - title:    "Search Alpine package repos for '{query}'"
-    icon:     apk.png
-    shortcut: apk
-    url:      https://pkgs.alpinelinux.org/packages?name=*{query}*&repo=all&arch=x86_64&maintainer=all
+    icon:     "apk.png"
+    shortcut: "apk"
+    url:      "https://pkgs.alpinelinux.org/packages?name=*{query}*&repo=all&arch=x86_64&maintainer=all"
 
   # Search software documentation
   - title:    "Search the boto3 docs for '{query}'"
