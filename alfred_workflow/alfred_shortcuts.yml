@@ -1,7 +1,7 @@
 bundleid: com.alexwlchan.alfred-shortcuts
 
 createdby: Alex Chan
-version: 27
+version: 29
 
 icon: globe.png
 
@@ -31,6 +31,20 @@ links:
     icon:     apk.png
     shortcut: apk
     url:      https://pkgs.alpinelinux.org/packages?name=*{query}*&repo=all&arch=x86_64&maintainer=all
+
+  # Search software documentation
+  - title:    "Search the boto3 docs for '{query}'"
+    icon:     "boto3.png"
+    shortcut: "boto3"
+    url:      "https://boto3.amazonaws.com/v1/documentation/api/latest/search.html?check_keywords=yes&area=default&q={query}"
+  - title:    "Search the Python 2 docs for '{query}'"
+    icon:     "python.png"
+    shortcut: "py2doc"
+    url:      "https://docs.python.org/2.7/search.html?q={query}"
+  - title:    "Search the Python docs for '{query}'"
+    icon:     "python.png"
+    shortcut: "pydoc"
+    url:      "https://docs.python.org/3/search.html?q={query}"
 
   - title:    "2019 Q1"
     icon:     "github.png"
