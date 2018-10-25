@@ -11,10 +11,13 @@ The name comes from [@betsythemuffin](https://twitter.com/betsythemuffin/status/
 >
 > Be bold. Admit what you're doing. Do it with joy.
 
-## Usage
+**Nothing in this repo is documented or supported.**
 
-Most of this isn't well-documented or explained.
-If I thought something might be useful enough to be worth documenting, I'd give it a proper home!
+It's a collection of stuff that's useful for me, but not necessarily anybody else.
+If I thought something was useful enough to be worth documenting or supporting properly, I'd put it in its own repo.
+
+Pick through what you find here, but don't be surprised if it's hard to follow or seems odd.
+It made sense to me when I wrote it (probably), that's it.
 
 ## License
 
