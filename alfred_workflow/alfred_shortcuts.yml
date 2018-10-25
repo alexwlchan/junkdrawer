@@ -1,7 +1,7 @@
 bundleid: com.alexwlchan.alfred-shortcuts
 
 createdby: Alex Chan
-version: 29
+version: 31
 
 icon: globe.png
 
@@ -126,6 +126,11 @@ links:
     shortcut: "works"
     icon:     "wellcome_works.png"
     url:      "https://wellcomecollection.org/works?page=1&query={query}"
+
+  - title:    "WI snagging.xlsx"
+    shortcut: "snagging"
+    icon:     "excel.png"
+    url:      "https://wellcomecloud.sharepoint.com/:x:/r/sites/wc2/DE/Production/_layouts/15/Doc.aspx?file=WI%20snagging.xlsx&mobileredirect=true&sourcedoc=%7B8A1221BC-5870-473D-A23A-3CFD3482C9F5%7D&action=default"
 
 aws:
   - name:     "Billing"
