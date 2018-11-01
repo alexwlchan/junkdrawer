@@ -4,6 +4,7 @@ import (
     "fmt"
     "github.com/aws/aws-sdk-go/aws/session"
     "github.com/aws/aws-sdk-go/service/sns"
+    "os"
 )
 
 
@@ -12,21 +13,25 @@ func main() {
     snsClient := sns.New(sess)
 
     params := &sns.ListTopicsInput{}
-    var arns []string
+    subscriptionCountsByTopicArn := make(map[string]int)
 
     err := snsClient.ListTopicsPages(
         params,
         func(page *sns.ListTopicsOutput, lastPage bool) bool {
             for _, topic := range page.Topics {
-                arns = append(arns, *topic.TopicArn)
+                subscriptionCountsByTopicArn[*topic.TopicArn] = 0
             }
             return true
         })
 
     if err != nil {
         fmt.Println("Error describing topics: %q", err)
-    } else {
-        fmt.Println("ARNS = %q", arns)
-        fmt.Println("Hello world!")
+        os.Exit(1)
+    }
+
+    for topicArn, subscriptionCount := range subscriptionCountsByTopicArn {
+        if subscriptionCount == 0 {
+            fmt.Println(topicArn)
+        }
     }
 }
