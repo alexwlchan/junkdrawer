@@ -57,6 +57,10 @@ function primitive
   __call_docker_image primitive $argv
 end
 
+function sass
+  __call_docker_image sass $argv
+end
+
 function tree
   __build_docker_image tree
   docker run --rm --interactive --tty --volume (pwd):/data alexwlchan/tree $argv
