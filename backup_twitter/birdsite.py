@@ -61,7 +61,8 @@ class TweetStore(MutableMapping):
         try:
             extended_entities = tweet.extended_entities
         except AttributeError:
-            pass
+            extended_entities = tweet.entities
+
         else:
             media = extended_entities.pop('media')
 

@@ -11,4 +11,4 @@ gobuilder: $(ROOT)/.docker/gobuilder
 
 
 snssubscriptions: gobuilder snssubscriptions.go
-	docker run --volume $(AWS):/go/src alexwlchan/gobuilder snssubscriptions.go
+	docker run --volume $(AWS):/go/src alexwlchan/gobuilder -o /go/src/snssubscriptions.out /go/src/snssubscriptions.go
