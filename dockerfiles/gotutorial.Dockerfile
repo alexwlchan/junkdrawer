@@ -8,7 +8,10 @@
 #
 #     $ docker run --publish 3999:3999 alexwlchan/gotutorial
 #
-# You can then view the tutorial at http://localhost:3999/ in your browser.
+# You can then view the tutorial at http://0.0.0.0:3999/ in your browser.
+#
+# Note: Safari redirects to localhost:3999, which seems to break the
+# tutorial's ability to execute code.  I run it in Chrome instead.
 
 FROM golang:alpine
 

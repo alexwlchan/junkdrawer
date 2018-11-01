@@ -1,7 +1,7 @@
 ROOT = $(shell git rev-parse --show-toplevel)
 DOCKERFILES = $(ROOT)/dockerfiles
 
-IMAGES = atool cloc dos2unix ffmpeg imagemagick lessc optipng primitive sass tiny_elastic travis tree wget youtube_dl
+IMAGES = atool cloc dos2unix ffmpeg gotutorial imagemagick lessc optipng primitive sass tiny_elastic travis tree wget youtube_dl
 
 
 define __template
