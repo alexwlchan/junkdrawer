@@ -7,8 +7,12 @@ $(ROOT)/.docker/gobuilder: $(AWS)/Dockerfile
 	mkdir -p $(ROOT)/.docker
 	touch $(ROOT)/.docker/gobuilder
 
-gobuilder: $(ROOT)/.docker/gobuilder
+gobuilder = $(ROOT)/.docker/gobuilder
 
 
-snssubscriptions: gobuilder snssubscriptions.go
-	docker run --volume $(AWS):/go/src alexwlchan/gobuilder -o /go/src/snssubscriptions.out /go/src/snssubscriptions.go
+%.out: gobuilder %.go
+	docker run --rm --volume $(AWS):/go/src alexwlchan/gobuilder \
+		-o /go/src/$@ /go/src/$(shell basename $@ .out).go
+
+run-%: %.out
+	@docker run --rm --volume $(AWS):/bin tianon/true /bin/"$(subst run-,,$@).out"
