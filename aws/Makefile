@@ -2,17 +2,16 @@ ROOT = $(shell git rev-parse --show-toplevel)
 AWS = $(ROOT)/aws
 
 
-$(ROOT)/.docker/gobuilder: $(AWS)/Dockerfile
-	docker build --tag alexwlchan/gobuilder $(AWS)
+$(ROOT)/.docker/gobuilder: $(AWS)/builder.Dockerfile
+	docker build --tag alexwlchan/gobuilder --file builder.Dockerfile $(AWS)
 	mkdir -p $(ROOT)/.docker
 	touch $(ROOT)/.docker/gobuilder
 
-gobuilder = $(ROOT)/.docker/gobuilder
+$(ROOT)/.docker/gorunner: $(AWS)/runner.Dockerfile
+	docker build --tag alexwlchan/gorunner --file runner.Dockerfile $(AWS)
+	mkdir -p $(ROOT)/.docker
+	touch $(ROOT)/.docker/gorunner
 
-
-%.out: gobuilder %.go
-	docker run --rm --volume $(AWS):/go/src alexwlchan/gobuilder \
-		-o /go/src/$@ /go/src/$(shell basename $@ .out).go
-
-run-%: %.out
-	@docker run --rm --volume $(AWS):/bin tianon/true /bin/"$(subst run-,,$@).out"
+%.out: $(ROOT)/.docker/gobuilder %.go
+	docker run --rm --volume $(AWS):/src --workdir /src alexwlchan/gobuilder \
+		-o /src/$@ /src/$(shell basename $@ .out).go
