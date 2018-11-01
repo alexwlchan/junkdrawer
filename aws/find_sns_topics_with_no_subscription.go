@@ -1,3 +1,11 @@
+// I've had issues at work where SNS topics can get separated from their
+// subscriptions, and then stuff sent to that topic silently disappears.
+// Sadness.
+//
+// This script prints the ARN of every topic in SNS which doesn't have
+// any subscriptions.  Useful for debugging this problem!
+//
+
 package main
 
 import (
