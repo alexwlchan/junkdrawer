@@ -72,7 +72,3 @@ end
 if [ (hostname) = "Alexs-MacBook-2" -o (hostname) = "Alexs-MacBook-2.local" ]
   . $DIR/_macbook.fish
 end
-
-if [ (hostname) = "Alexs-iMac.local" ]
-  . $DIR/_imac.fish
-end
