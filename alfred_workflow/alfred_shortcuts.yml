@@ -1,7 +1,7 @@
 bundleid: com.alexwlchan.alfred-shortcuts
 
 createdby: Alex Chan
-version: 33
+version: 37
 
 icon: globe.png
 
@@ -131,6 +131,15 @@ links:
     shortcut: "snagging"
     icon:     "excel.png"
     url:      "https://wellcomecloud.sharepoint.com/:x:/r/sites/wc2/DE/Production/_layouts/15/Doc.aspx?file=WI%20snagging.xlsx&mobileredirect=true&sourcedoc=%7B8A1221BC-5870-473D-A23A-3CFD3482C9F5%7D&action=default"
+
+  - title:    "Elastic Cloud"
+    shortcut: "elastic"
+    icon:     "elastic_cloud.png"
+    url:      "https://cloud.elastic.co/deployments"
+  - title:    "Kibana"
+    shortcut: "kibana"
+    icon:     "kibana.png"
+    url:      "https://f6089ba99ad9bca6b1ac1b66f8df3278.eu-west-1.aws.found.io:9243/app/kibana#/dev_tools/console?_g=()"
 
 aws:
   - name:     "Billing"
