@@ -44,9 +44,11 @@ it("transforms this ID") {
   import com.amazonaws.services.s3.AmazonS3ClientBuilder
   import com.gu.scanamo._
   import com.gu.scanamo.syntax._
+  import uk.ac.wellcome.json.JsonUtil._
+  import uk.ac.wellcome.platform.transformer.miro.models.MiroTransformable
   import uk.ac.wellcome.storage.vhs.HybridRecord
 
-  val miroId = "L0018893"
+  val miroId = "B0003989"
 
   val dynamoDbClient = AmazonDynamoDBClientBuilder
     .standard()
@@ -69,6 +71,6 @@ it("transforms this ID") {
 
   println(s"data = <<$data>>")
 
-  val miroTransformable = createMiroTransformableWith(miroId = miroId, data = data)
+  val miroTransformable = fromJson[MiroTransformable](data).get
   transformToWork(miroTransformable).asInstanceOf[UnidentifiedWork]
 }
