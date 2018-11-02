@@ -1,7 +1,7 @@
 bundleid: com.alexwlchan.alfred-shortcuts
 
 createdby: Alex Chan
-version: 31
+version: 33
 
 icon: globe.png
 
@@ -154,7 +154,11 @@ aws:
   - name:    AWS Lambda
     shortcut: lambda
   - name:    S3
-  - name:    SNS
+
+  - name:     "SNS"
+    shortcut: "sns"
+    url:      "https://eu-west-1.console.aws.amazon.com/sns/v2/home?region=eu-west-1#/topics"
+
   - name:    SQS
   - name:    CloudFront
   - name:    ACM Certificate Manager
