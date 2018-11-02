@@ -36,3 +36,39 @@ it("transforms this record") {
 
     transformToWork(transformable)
   }
+
+// For finding out why a Miro record won't transform:
+
+it("transforms this ID") {
+  import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder
+  import com.amazonaws.services.s3.AmazonS3ClientBuilder
+  import com.gu.scanamo._
+  import com.gu.scanamo.syntax._
+  import uk.ac.wellcome.storage.vhs.HybridRecord
+
+  val miroId = "L0018893"
+
+  val dynamoDbClient = AmazonDynamoDBClientBuilder
+    .standard()
+    .withRegion("eu-west-1")
+    .build()
+
+  val s3client = AmazonS3ClientBuilder
+    .standard
+    .withRegion("eu-west-1")
+    .build()
+
+  val hybridRecord: HybridRecord = Scanamo.get[HybridRecord](dynamoDbClient)("vhs-sourcedata-miro")('id -> miroId).get.right.get
+
+  val data =
+    scala.io.Source
+      .fromInputStream(
+        s3client.getObject(hybridRecord.location.namespace, hybridRecord.location.key).getObjectContent
+      )
+      .mkString
+
+  println(s"data = <<$data>>")
+
+  val miroTransformable = createMiroTransformableWith(miroId = miroId, data = data)
+  transformToWork(miroTransformable).asInstanceOf[UnidentifiedWork]
+}
