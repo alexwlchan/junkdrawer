@@ -13,6 +13,7 @@ Options:
 """
 
 import os
+import re
 import subprocess
 import tempfile
 from urllib.parse import urlparse
@@ -46,9 +47,34 @@ class TravisSession():
 if __name__ == '__main__':
     args = docopt.docopt(__doc__)
 
-    build_id = os.path.basename(urlparse(args['<URL>']).path)
+    url = args["<URL>"]
+    token = args["--token"]
 
-    sess = TravisSession(token=args['--token'])
+    parsed_url = urlparse(url)
+
+    if parsed_url.netloc == "travis-ci.org":
+        pass
+    elif parsed_url.netloc == "github.com":
+        _, organisation, repo_name, *_ = parsed_url.path.split("/")
+
+        resp = requests.get(url)
+        resp.raise_for_status()
+
+        match = re.search(
+            r"https://travis-ci\.org/%s/%s/builds/\d+" % (organisation, repo_name),
+            resp.text
+        )
+
+        if match is not None:
+            print("Detected URL as %s..." % match.group(0))
+            parsed_url = urlparse(match.group(0))
+
+    if parsed_url.netloc != "travis-ci.org":
+        sys.exit("Unrecognised URL: %s" % url)
+
+    build_id = os.path.basename(parsed_url.path)
+
+    sess = TravisSession(token=token)
 
     job_resp = sess.get(f'/build/{build_id}/jobs')
 
