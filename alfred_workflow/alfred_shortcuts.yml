@@ -1,7 +1,7 @@
 bundleid: com.alexwlchan.alfred-shortcuts
 
 createdby: Alex Chan
-version: 37
+version: 39
 
 icon: globe.png
 
@@ -79,14 +79,14 @@ links:
     url:      "https://thewirecutter.com/?s={query}"
 
   # Social websites
-  - title:    Pinboard
-    icon:     pinboard.png
-    shortcut: pin
-    url:      https://pinboard.in/u:alexwlchan
+  - title:    "Pinboard"
+    icon:     "pinboard.png"
+    shortcut: "pin"
+    url:      "https://pinboard.in/u:alexwlchan"
   - title:    "Search Pinboard for '{query}'"
     icon:     "pinboard.png"
-    shortcut: pin
-    url:      "https://pinboard.alexwlchan.net/?query={query}"
+    shortcut: "pin"
+    url:      "https://pinboard.in/search/u:alexwlchan?query={query}"
   - title:    Blogtrottr
     icon:     blogtrottr.png
     shortcut: blog
