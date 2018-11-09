@@ -16,7 +16,7 @@ query_dict = {
     "endDate": dt.datetime.now().strftime("%Y-%m-%d"),
     "timeRangeOption": "Custom",
 
-    "chartStyle": "Stack",
+    "chartStyle": "Line",
     "excludeCredit": "false",
     "excludeOtherSubscriptionCosts": "false",
     "excludeRIRecurringCharges": "false",
