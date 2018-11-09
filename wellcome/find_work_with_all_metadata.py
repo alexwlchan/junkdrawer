@@ -10,8 +10,6 @@ try:
 except ImportError:
     from urllib import urlretrieve
 
-import tqdm
-
 
 if not os.path.exists("works2.json.gz"):
     urlretrieve(
@@ -20,18 +18,21 @@ if not os.path.exists("works2.json.gz"):
 
     os.rename("works2.json.gz.tmp", "works2.json.gz")
 
-with gzip.GzipFile("works2.json.gz") as gz:
-    for line in tqdm.tqdm(gz, total=1300000):
-        work = json.loads(line)
+for line in gzip.GzipFile("works2.json.gz"):
+    work = json.loads(line)
 
-        keys = set(work.keys())
-        if "extent" not in keys:
-            continue
-        if "physicalDescription" not in keys:
-            continue
-        if "description" not in keys:
-            continue
-        if "dimensions" not in keys:
-            continue
+    keys = work.keys()
+    if "extent" not in keys:
+        continue
+    if "physicalDescription" not in keys:
+        continue
+    if "description" not in keys:
+        continue
+    if "dimensions" not in keys:
+        continue
+    if "lettering" not in keys:
+        continue
+    if "language" not in keys:
+        continue
 
-        print(work)
+    print(work["id"])
