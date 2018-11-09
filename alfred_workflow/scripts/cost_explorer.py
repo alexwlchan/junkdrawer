@@ -25,7 +25,7 @@ query_dict = {
     "excludeSupportCharges": "false",
     "excludeTaggedResources": "false",
     "excludeTax": "false",
-    "filter": "[]",
+    "filter": '[{"dimension":"Operation","values":[""],"include":false,"children":null}]',
     "forecastTimeRangeOption": "None",
     "granularity": "Daily",
     "groupBy": "Operation",
