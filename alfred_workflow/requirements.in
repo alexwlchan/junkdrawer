@@ -1,4 +1,0 @@
-pyyaml
-
-# Pinned to match the version of Pillow installed by `py3-pillow` on Alpine
-Pillow==4.3.0
