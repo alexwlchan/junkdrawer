@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 """
-Usage: save_single_tweet.py --url=<URL> --dst=<DST>
+Usage: save_single_tweet.py (--url=<URL> | --id=<ID>) --dst=<DST>
 """
 
 import os
@@ -16,15 +16,18 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 if __name__ == '__main__':
     args = docopt.docopt(__doc__)
 
-    tweet_url = args['--url']
-    components = tweet_url.split('/')
-
-    if tweet_url.endswith('/photo/1'):
-        assert components[-4] == 'status'
-        tweet_id = components[-3]
+    if args["--id"] is not None:
+        tweet_id = args["--id"]
     else:
-        assert components[-2] == 'status'
-        tweet_id = components[-1]
+        tweet_url = args['--url']
+        components = tweet_url.split('/')
+
+        if tweet_url.endswith('/photo/1'):
+            assert components[-4] == 'status'
+            tweet_id = components[-3]
+        else:
+            assert components[-2] == 'status'
+            tweet_id = components[-1]
 
     subprocess.check_call([
         sys.executable, os.path.join(SCRIPT_DIR, 'backup_twitter.py'),
