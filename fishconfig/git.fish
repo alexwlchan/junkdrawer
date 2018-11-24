@@ -104,6 +104,24 @@ function github-clone
 end
 
 
+# Do a clone of a GitHub repository if you don't have the full URL.
+#
+# Useful in Prompt on the iPad!
+#
+#     $1 - Name of the repository owner
+#     $2 - Name of the repository
+#
+# If only one argument is passed, assume the owner is "alexwlchan".
+function quick-clone
+    if test (count $argv) = 2
+        set url "https://github.com/$argv[1]/$argv[2]"
+        github-clone "$url"
+    else
+        quick-clone alexwlchan "$argv[1]"
+    end
+end
+
+
 # Given a GitHub pull request, create the repo and make sure the remote
 # of the PR owner is added as a remote.
 #
