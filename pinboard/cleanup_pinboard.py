@@ -8,7 +8,7 @@ import copy
 import sys
 
 from pinboard import create_session
-from text_transforms import cleanup_blockquote_whitespace
+from text_transforms import apply_markdown_blockquotes, cleanup_blockquote_whitespace
 
 
 
@@ -26,6 +26,7 @@ if __name__ == '__main__':
     for b in bookmarks:
         original_b = copy.deepcopy(b)
 
+        b["extended"] = apply_markdown_blockquotes(b["extended"])
         b["extended"] = cleanup_blockquote_whitespace(b["extended"])
 
         if b != original_b:
