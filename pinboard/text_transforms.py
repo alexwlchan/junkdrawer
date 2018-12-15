@@ -14,7 +14,9 @@ def cleanup_blockquote_whitespace(description):
     """
     if (
         ("<blockquote>\n" in description) or
-        ("\n</blockquote>" in description)
+        ("\n</blockquote>" in description) or
+        ("<blockquote>\r\n" in description) or
+        ("\r\n</blockquote>" in description)
     ):
         return BLOCKQUOTE_WHITESPACE_RE.sub(r"\g<opening_tag>\g<closing_tag>", description)
     else:

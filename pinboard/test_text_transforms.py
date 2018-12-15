@@ -11,7 +11,9 @@ from text_transforms import cleanup_blockquote_whitespace
     ("<blockquote>hello world</blockquote>", "<blockquote>hello world</blockquote>"),
     ("<blockquote>\nhello world</blockquote>", "<blockquote>hello world</blockquote>"),
     ("<blockquote>\n hello world</blockquote>", "<blockquote>hello world</blockquote>"),
+    ("<blockquote>\r\nhello world</blockquote>", "<blockquote>hello world</blockquote>"),
     ("<blockquote>hello world\n</blockquote>", "<blockquote>hello world</blockquote>"),
+    ("<blockquote>hello world\r\n</blockquote>", "<blockquote>hello world</blockquote>"),
     ("<blockquote>hello world\n\n</blockquote>", "<blockquote>hello world</blockquote>"),
 ])
 def test_cleanup_blockquote_whitespace(description, expected):
