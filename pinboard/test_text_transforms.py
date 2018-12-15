@@ -3,7 +3,7 @@
 
 import pytest
 
-from text_transforms import cleanup_blockquote_whitespace
+from text_transforms import apply_markdown_blockquotes, cleanup_blockquote_whitespace
 
 
 @pytest.mark.parametrize('description, expected', [
@@ -18,3 +18,17 @@ from text_transforms import cleanup_blockquote_whitespace
 ])
 def test_cleanup_blockquote_whitespace(description, expected):
     assert cleanup_blockquote_whitespace(description) == expected
+
+
+@pytest.mark.parametrize('description, expected', [
+    ("hello world", "hello world"),
+    ("> hello world", "<blockquote>hello world</blockquote>"),
+    ("> hello world\n\nfoo bar", "<blockquote>hello world</blockquote>\n\nfoo bar"),
+    ("foo bar\n\n> hello world", "foo bar\n\n<blockquote>hello world</blockquote>"),
+    ("foo bar\n\n> hello world\n\nbar baz", "foo bar\n\n<blockquote>hello world</blockquote>\n\nbar baz"),
+    ("> hello world\n\n> howdy friend", "<blockquote>hello world\n\nhowdy friend</blockquote>"),
+    ("> hello world\n\n> howdy friend\n\nfoo bar", "<blockquote>hello world\n\nhowdy friend</blockquote>\n\nfoo bar"),
+    ("foo bar\n\n> hello world\n\n> howdy friend", "foo bar\n\n<blockquote>hello world\n\nhowdy friend</blockquote>"),
+])
+def test_apply_markdown_blockquotes(description, expected):
+    assert apply_markdown_blockquotes(description) == expected
