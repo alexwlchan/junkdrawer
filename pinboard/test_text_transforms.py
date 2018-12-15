@@ -28,6 +28,7 @@ def test_cleanup_blockquote_whitespace(description, expected):
     ("foo bar\n\n> hello world\n\nbar baz", "foo bar\n\n<blockquote>hello world</blockquote>\n\nbar baz"),
     ("> hello world\n\n> howdy friend", "<blockquote>hello world\n\nhowdy friend</blockquote>"),
     ("> hello world\n\n> howdy friend\n\nfoo bar", "<blockquote>hello world\n\nhowdy friend</blockquote>\n\nfoo bar"),
+    ("> hello world\n>\n> howdy friend\n\nfoo bar", "<blockquote>hello world\n\nhowdy friend</blockquote>\n\nfoo bar"),
     ("foo bar\n\n> hello world\n\n> howdy friend", "foo bar\n\n<blockquote>hello world\n\nhowdy friend</blockquote>"),
 ])
 def test_apply_markdown_blockquotes(description, expected):
