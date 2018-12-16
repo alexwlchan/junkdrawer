@@ -42,6 +42,17 @@ function tfdiff
     python3 $ROOT/tfdiff.py (pbpaste)
 end
 
+# Get the last screenshot I took
+alias last_screenshot="find ~/Desktop -name 'Screen Shot*' | grep -v reborder | tail -n 1"
+
+# Adjust the border on the last screenshot I took
+function reborder_last_screenshot
+  pushd ~/Desktop
+    python3 $ROOT/reborder.py (basename (last_screenshot)) $argv[1]
+    find ~/Desktop -name 'Screen Shot*reborder.png' | tail -n 1
+  popd
+end
+
 
 ###############################################################################
 # virtualfish -- a fish wrapper for virtualenv
