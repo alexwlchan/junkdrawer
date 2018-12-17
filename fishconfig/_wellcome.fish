@@ -48,6 +48,8 @@ end
 
 alias ec2ssh "ssh -i ~/.ssh/wellcomedigitalplatform"
 
+alias ec2scp "scp -i ~/.ssh/wellcomedigitalplatform"
+
 
 # Aliases for the data science ASG
 set -x PLATFORM_PYTHON ~/.virtualenvs/platform/bin/python
