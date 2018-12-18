@@ -20,7 +20,7 @@ Options:
 
 import docopt
 
-from backup_twitter import setup_api, TwitterCredentials
+from birdsite import setup_api, TwitterCredentials
 
 
 if __name__ == '__main__':
