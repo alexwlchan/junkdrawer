@@ -128,7 +128,9 @@ if __name__ == '__main__':
                 API_URL + "/users/lookup.json",
                 data={"user_id": ",".join(unique_user_ids)}
             )
-            users_by_id.update({u["id_str"]: u for u in resp.json()})
+            for u in resp.json():
+                del u["status"]
+                users_by_id[u["id_str"]] = u
 
         # Now go through the collection of DMs again, this time turning the conversation
         # ID into a human-readable string and adding user info into the DM body.
