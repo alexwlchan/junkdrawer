@@ -32,28 +32,32 @@ def create_session(credentials):
     return sess
 
 
+def enrich_dm(event, apps):
+    assert event["type"] == "message_create"
+
+    # For now, assume a conversation is between two people, and then we'll
+    # create a "conversation ID" by concatenating the sender/recipient.
+    sender_id = event["message_create"]["sender_id"]
+    recipient_id = event["message_create"]["target"]["recipient_id"]
+    user_ids = [sender_id, recipient_id]
+
+    # Denormalise the app data into the individual messages
+    try:
+        event["message_create"]["_source_app"] = (
+            apps[event["message_create"]["source_app_id"]]
+        )
+    except KeyError:
+        pass
+
+    return {
+        "user_ids": user_ids,
+        "metadata": event
+    }
+
+
 def dms_for_saving(response_data):
     for direct_message in response_data["events"]:
-        assert direct_message["type"] == "message_create"
-
-        # For now, assume a conversation is between two people, and then we'll
-        # create a "conversation ID" by concatenating the sender/recipient.
-        sender_id = direct_message["message_create"]["sender_id"]
-        recipient_id = direct_message["message_create"]["target"]["recipient_id"]
-        user_ids = [sender_id, recipient_id]
-
-        # Denormalise the app data into the individual messages
-        try:
-            direct_message["message_create"]["_source_app"] = (
-                response_data["apps"][direct_message["message_create"]["source_app_id"]]
-            )
-        except KeyError:
-            pass
-
-        yield {
-            "user_ids": user_ids,
-            "metadata": direct_message
-        }
+        yield enrich_dm(direct_message, apps=response_data["apps"])
 
 
 def flatten(iterable):
@@ -63,7 +67,7 @@ def flatten(iterable):
 
 
 def save_individual_dm(dm_user_ids, dm_metadata, users_by_id):
-    users = [users_by_id[i] for i in dm_data["user_ids"]]
+    users = [users_by_id[i] for i in dm_user_ids]
 
     # Discard me!
     conversation_id = "__".join(sorted(
