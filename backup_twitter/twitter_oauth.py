@@ -133,6 +133,24 @@ class TwitterSession:
     def lookup_user(self, user_id):
         return self.user_info.lookup_user(user_id=user_id)
 
+    def lookup_status(self, tweet_id):
+        params = {
+            "id": tweet_id,
+            "include_entities": True,
+            "trim_user": False,
+            "include_ext_alt_text": True,
+            "tweet_mode": "extended"
+        }
+        resp = self.oauth_session.get(API_URL + "/statuses/lookup.json", params=params)
+        matching = [t for t in resp.json() if t["id_str"] == tweet_id]
+
+        if len(matching) == 1:
+            return matching[0]
+        elif not matching:
+            raise Exception(f"Unable to fetch tweet with ID {tweet_id}?")
+        else:
+            raise Exception("What happened? Multiple matching tweets! {resp!r}")
+
     def _cursored_response(self, path, initial_params):
         params = copy.deepcopy(initial_params)
         while True:
@@ -244,6 +262,8 @@ def save_tweet(tweet, dirname):
     os.makedirs(tmp_path, exist_ok=True)
     with open(os.path.join(tmp_path, "info.json"), "w") as outfile:
         outfile.write(json.dumps(tweet))
+
+    download_profile_image(tweet["user"])
 
     try:
         extended_entities = tweet["extended_entities"]
