@@ -57,13 +57,16 @@ class UserInfo:
                 del u["status"]
             except KeyError:
                 pass
-            self._download_profile_image(
-                screen_name=u["screen_name"],
-                profile_image_url=u["profile_image_url_https"]
-            )
+            self._download_profile_image(u)
             self.cache[u["id_str"]] = u
 
-    def _download_profile_image(self, screen_name, profile_image_url):
+    def _download_profile_image(self, user_object):
+        self._download_profile_image_raw(
+            screen_name=user_object["screen_name"],
+            profile_image_url=user_object["profile_image_url_https"]
+        )
+
+    def _download_profile_image_raw(self, screen_name, profile_image_url):
         out_dir = os.path.join(BACKUP_DIR_PROFILE_IMAGES, screen_name)
         os.makedirs(out_dir, exist_ok=True)
         out_path = os.path.join(
