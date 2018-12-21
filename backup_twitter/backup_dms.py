@@ -7,29 +7,9 @@ import os
 from requests_oauthlib import OAuth1Session
 
 from birdsite import TwitterCredentials
-
-
-API_URL = "https://api.twitter.com/1.1"
+from twitter_oauth import API_URL, UserInfo, create_session
 
 BACKUP_DIR = os.path.join(os.environ["HOME"], "Dropbox", "twitter", "direct_messages")
-
-
-def create_session(credentials):
-    sess = OAuth1Session(
-        client_key=credentials.consumer_key,
-        client_secret=credentials.consumer_secret,
-        resource_owner_key=credentials.access_token,
-        resource_owner_secret=credentials.access_token_secret
-    )
-
-    # Raise an exception on any responses that don't return a 200 OK.
-
-    def raise_for_status(resp, *args, **kwargs):
-        resp.raise_for_status()
-
-    sess.hooks["response"].append(raise_for_status)
-
-    return sess
 
 
 def enrich_dm(event, apps):
@@ -66,22 +46,22 @@ def flatten(iterable):
             yield item
 
 
-def save_individual_dm(dm_user_ids, dm_metadata, users_by_id):
-    users = [users_by_id[i] for i in dm_user_ids]
+def save_individual_dm(dm_user_ids, dm_metadata, user_info):
+    users = user_info.lookup_users(dm_user_ids)
 
     # Discard me!
     conversation_id = "__".join(sorted(
-        u["screen_name"] for u in users if u["screen_name"] != "alexwlchan"
+        u["screen_name"] for u in users.values() if u["screen_name"] != "alexwlchan"
     ))
 
     out_dir = os.path.join(BACKUP_DIR, conversation_id)
     os.makedirs(out_dir, exist_ok=True)
 
     sender_id = dm_metadata["message_create"]["sender_id"]
-    dm_metadata["message_create"]["_sender"] = users_by_id[sender_id]
+    dm_metadata["message_create"]["_sender"] = user_info.lookup_user(sender_id)
 
     recipient_id = dm_metadata["message_create"]["target"]["recipient_id"]
-    dm_metadata["message_create"]["target"]["_recipient"] = users_by_id[recipient_id]
+    dm_metadata["message_create"]["target"]["_recipient"] = user_info.lookup_user(recipient_id)
 
     dm_id = dm_metadata["id"]
 
@@ -124,7 +104,7 @@ if __name__ == '__main__':
 
     sess = create_session(credentials)
 
-    users_by_id = {}
+    user_info = UserInfo(sess=sess)
 
     for response_data in get_all_dms(sess):
         dms_to_save = list(dms_for_saving(response_data))
@@ -134,15 +114,11 @@ if __name__ == '__main__':
         unique_user_ids = set(
             uid
             for uid in flatten([dm["user_ids"] for dm in dms_to_save])
-            if uid not in users_by_id
         )
 
         # You can get up to 100 users from this API at once; I just don't want to deal
         # with batching requests unless I actually have to.
-        if unique_user_ids:
-            assert len(unique_user_ids) < 100
-            for u in lookup_users(sess, user_ids=unique_user_ids):
-                users_by_id[u["id_str"]] = u
+        assert len(unique_user_ids) < 100
 
         # Now go through the collection of DMs again, this time turning the conversation
         # ID into a human-readable string and adding user info into the DM body.
@@ -150,5 +126,5 @@ if __name__ == '__main__':
             save_individual_dm(
                 dm_user_ids=dm_data["user_ids"],
                 dm_metadata=dm_data["metadata"],
-                users_by_id=users_by_id
+                user_info=user_info
             )
