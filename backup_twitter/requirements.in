@@ -1,7 +1,2 @@
-attrs
 click
-docopt
-pyhcl
 requests_oauthlib
-tenacity
-tweepy

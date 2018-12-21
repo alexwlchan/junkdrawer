@@ -9,8 +9,6 @@ from urllib.request import urlretrieve
 
 from requests_oauthlib import OAuth1Session
 
-from birdsite import TwitterCredentials
-
 
 API_URL = "https://api.twitter.com/1.1"
 
@@ -21,10 +19,10 @@ BACKUP_DIR_DMS = os.path.join(BACKUP_DIR, "direct_messages")
 
 def create_session(credentials):
     sess = OAuth1Session(
-        client_key=credentials.consumer_key,
-        client_secret=credentials.consumer_secret,
-        resource_owner_key=credentials.access_token,
-        resource_owner_secret=credentials.access_token_secret
+        client_key=credentials["consumer_key"],
+        client_secret=credentials["consumer_secret"],
+        resource_owner_key=credentials["access_token"],
+        resource_owner_secret=credentials["access_token_secret"]
     )
 
     # Raise an exception on any responses that don't return a 200 OK.
@@ -45,8 +43,7 @@ class TwitterSession:
 
     @classmethod
     def from_credentials_path(cls, path):
-        credentials = TwitterCredentials.from_path("auth.json")
-
+        credentials = json.load(open(path))
         oauth_session = create_session(credentials)
         return cls(oauth_session)
 
