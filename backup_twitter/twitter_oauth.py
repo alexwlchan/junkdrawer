@@ -77,6 +77,19 @@ class TwitterSession:
 
                 yield event
 
+    def show_dm_event(self, event_id):
+        resp = self.oauth_session.get(
+            API_URL + "/direct_messages/events/show.json",
+            params={"id": event_id}
+        )
+
+        event = resp.json()["event"]
+        event["message_create"]["_source_app"] = (
+            resp.json()["apps"][event["message_create"]["source_app_id"]]
+        )
+
+        return event
+
     def lookup_users(self, user_ids):
         return self.user_info.lookup_users(user_ids=user_ids)
 
