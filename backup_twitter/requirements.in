@@ -1,5 +1,3 @@
-attrs
-docopt
-pyhcl
+click
+requests_oauthlib
 tenacity
-tweepy

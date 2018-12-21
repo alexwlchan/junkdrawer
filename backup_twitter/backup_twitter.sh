@@ -1,28 +1,32 @@
-#!/bin/bash
-
-set -o errexit
+#!/usr/bin/env bash
 
 source ~/.virtualenvs/twitter/bin/activate
 
+set -o errexit
+set -o nounset
+set -o verbose
+
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-echo ""
-echo "*** user_timeline"
-python $DIR/backup_twitter.py \
-  --credentials=$DIR/auth.json \
-  --dir=/Users/alexwlchan/Dropbox/twitter/user_timeline \
-  --method=user_timeline
+pushd "$DIR"
+  python backup_user_timeline.py
+  python backup_mentions.py
+  python backup_favorites.py
+  python $DIR/backup_dms.py
 
-echo ""
-echo "*** mentions"
-python $DIR/backup_twitter.py \
-  --credentials=$DIR/auth.json \
-  --dir=/Users/alexwlchan/Dropbox/twitter/mentions \
-  --method=mentions_timeline
+  osascript -e '
+    tell application "Things3"
+      repeat with todayToDo in to dos of list "Today"
+        if ((name of todayToDo) = "Run my tweet backup script") then
+          set status of todayToDo to completed
+        end if
+      end repeat
+    end tell
+  '
+popd
 
-echo ""
-echo "*** favorites"
-python $DIR/backup_twitter.py \
-  --credentials=$DIR/auth.json \
-  --dir=/Users/alexwlchan/Dropbox/twitter/favorites \
-  --method=favorites
+pushd ~/Documents/backups/twitter
+  find . -type d -empty
+  find . -type d -empty | wc -l
+  find . -type d -empty -delete
+popd
