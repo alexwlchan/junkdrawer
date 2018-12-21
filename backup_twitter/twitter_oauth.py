@@ -1,8 +1,10 @@
 # -*- encoding: utf-8
 
 import copy
+import json
 import os
 from urllib.error import HTTPError
+from urllib.parse import urlparse
 from urllib.request import urlretrieve
 
 from requests_oauthlib import OAuth1Session
@@ -90,6 +92,18 @@ class TwitterSession:
 
         return event
 
+    def list_favorites(self):
+        initial_params = {
+            "count": 200,
+            "include_entities": True,
+            "tweet_mode": "extended"
+        }
+        yield from self._tweet_id_response(
+            path="/favorites/list.json",
+            initial_params=initial_params
+        )
+
+
     def lookup_users(self, user_ids):
         return self.user_info.lookup_users(user_ids=user_ids)
 
@@ -105,6 +119,21 @@ class TwitterSession:
             try:
                 params["cursor"] = resp.json()["next_cursor"]
             except KeyError:
+                break
+
+    def _tweet_id_response(self, path, initial_params):
+        params = copy.deepcopy(initial_params)
+        while True:
+            resp = self.oauth_session.get(API_URL + path, params=params)
+            yield from resp.json()
+
+            for tweet in resp.json():
+                self.user_info.download_profile_image(tweet["user"])
+
+            try:
+                params["max_id"] = min(tweet["id"] for tweet in resp.json())
+            except ValueError:
+                # Empty response; nothing more to do
                 break
 
 
@@ -133,10 +162,10 @@ class UserInfo:
                 del u["status"]
             except KeyError:
                 pass
-            self._download_profile_image(u)
+            self.download_profile_image(u)
             self.cache[u["id_str"]] = u
 
-    def _download_profile_image(self, user_object):
+    def download_profile_image(self, user_object):
         self._download_profile_image_raw(
             screen_name=user_object["screen_name"],
             profile_image_url=user_object["profile_image_url_https"]
@@ -172,3 +201,36 @@ def atomic_urlretrieve(url, filename):
         raise
     else:
         os.rename(tmp_filename, filename)
+
+
+def save_tweet(tweet, dirname):
+    tweet_id = tweet["id_str"]
+    path = os.path.join(BACKUP_DIR, dirname, tweet_id[:2], tweet_id)
+
+    if os.path.exists(path):
+        return
+
+    tmp_path = path + ".tmp"
+
+    os.makedirs(tmp_path, exist_ok=True)
+    with open(os.path.join(tmp_path, "info.json"), "w") as outfile:
+        outfile.write(json.dumps(tweet))
+
+    try:
+        extended_entities = tweet["extended_entities"]
+    except KeyError:
+        extended_entities = tweet["entities"]
+
+    else:
+        media = extended_entities.pop("media")
+
+        for m in media:
+            url = m["media_url_https"]
+            filename = os.path.join(
+                tmp_path, os.path.basename(urlparse(url).path)
+            )
+            urlretrieve(url=url, filename=filename)
+
+            assert not extended_entities
+
+    os.rename(tmp_path, path)
