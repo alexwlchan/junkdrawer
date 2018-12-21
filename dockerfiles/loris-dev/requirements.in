@@ -14,5 +14,3 @@ cryptography >= 2.0.3
 
 # We use `attr.ib(converter=callable)` which was added in 17.4.0.
 attrs >= 17.4.0
-
-chardet == 2.0.1
