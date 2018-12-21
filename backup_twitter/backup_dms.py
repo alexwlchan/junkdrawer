@@ -4,8 +4,7 @@
 import json
 import os
 
-from birdsite import TwitterCredentials
-from twitter_oauth import BACKUP_DIR_DMS, TwitterSession, create_session
+from twitter_oauth import BACKUP_DIR_DMS, TwitterSession
 
 
 def save_individual_dm(event, sess):
@@ -35,10 +34,7 @@ def save_individual_dm(event, sess):
 
 
 if __name__ == '__main__':
-    credentials = TwitterCredentials.from_path("auth.json")
-
-    oauth_session = create_session(credentials)
-    sess = TwitterSession(oauth_session)
+    sess = TwitterSession.from_credentials_path("auth.json")
 
     for event in sess.list_dm_events():
         save_individual_dm(event=event, sess=sess)

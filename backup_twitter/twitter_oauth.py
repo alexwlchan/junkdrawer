@@ -7,6 +7,8 @@ from urllib.request import urlretrieve
 
 from requests_oauthlib import OAuth1Session
 
+from birdsite import TwitterCredentials
+
 
 API_URL = "https://api.twitter.com/1.1"
 
@@ -38,6 +40,13 @@ class TwitterSession:
     def __init__(self, oauth_session):
         self.oauth_session = oauth_session
         self.user_info = UserInfo(oauth_session)
+
+    @classmethod
+    def from_credentials_path(cls, path):
+        credentials = TwitterCredentials.from_path("auth.json")
+
+        oauth_session = create_session(credentials)
+        return cls(oauth_session)
 
     def list_dm_events(self):
         initial_params = {"count": 50}
