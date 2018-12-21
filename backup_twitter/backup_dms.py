@@ -5,7 +5,7 @@ import json
 import os
 
 from birdsite import TwitterCredentials
-from twitter_oauth import API_URL, BACKUP_DIR_DMS, TwitterSession, UserInfo, create_session
+from twitter_oauth import BACKUP_DIR_DMS, TwitterSession, UserInfo, create_session
 
 
 def enrich_dm(event, apps):
@@ -29,11 +29,6 @@ def enrich_dm(event, apps):
         "user_ids": user_ids,
         "metadata": event
     }
-
-
-def dms_for_saving(response_data):
-    for direct_message in response_data["events"]:
-        yield enrich_dm(direct_message, apps=response_data["apps"])
 
 
 def flatten(iterable):
@@ -68,31 +63,6 @@ def save_individual_dm(dm_user_ids, dm_metadata, user_info):
         print(dm_id)
         with open(out_path, "w") as outfile:
             outfile.write(json.dumps(dm_metadata))
-
-
-def get_all_dms(sess):
-    params = {"count": 50}
-    while True:
-        resp = sess.get(API_URL + "/direct_messages/events/list.json", params=params)
-        yield resp.json()
-
-        try:
-            params["cursor"] = resp.json()["next_cursor"]
-        except KeyError:
-            break
-
-
-def lookup_users(sess, user_ids):
-    resp = sess.post(
-        API_URL + "/users/lookup.json",
-        data={"user_id": ",".join(user_ids)}
-    )
-    for u in resp.json():
-        try:
-            del u["status"]
-        except KeyError:
-            pass
-        yield u
 
 
 if __name__ == '__main__':
