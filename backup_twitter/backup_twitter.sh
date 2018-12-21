@@ -26,3 +26,7 @@ python $DIR/backup_twitter.py \
   --credentials=$DIR/auth.json \
   --dir=/Users/alexwlchan/Dropbox/twitter/favorites \
   --method=favorites
+
+echo ""
+echo "*** direct messages"
+python $DIR/backup_dms.py
