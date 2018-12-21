@@ -106,6 +106,19 @@ def get_all_dms(sess):
             break
 
 
+def lookup_users(sess, user_ids):
+    resp = sess.post(
+        API_URL + "/users/lookup.json",
+        data={"user_id": ",".join(user_ids)}
+    )
+    for u in resp.json():
+        try:
+            del u["status"]
+        except KeyError:
+            pass
+        yield u
+
+
 if __name__ == '__main__':
     credentials = TwitterCredentials.from_path("auth.json")
 
@@ -128,12 +141,7 @@ if __name__ == '__main__':
         # with batching requests unless I actually have to.
         if unique_user_ids:
             assert len(unique_user_ids) < 100
-            resp = sess.post(
-                API_URL + "/users/lookup.json",
-                data={"user_id": ",".join(unique_user_ids)}
-            )
-            for u in resp.json():
-                del u["status"]
+            for u in lookup_users(unique_user_ids):
                 users_by_id[u["id_str"]] = u
 
         # Now go through the collection of DMs again, this time turning the conversation

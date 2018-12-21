@@ -26,16 +26,9 @@ if __name__ == '__main__':
         params={"id": direct_message_id}
     )
 
-    # data = resp.json()
-    # with open("dm_single.json", "w") as f:
-    #     json.dump(data, f)
-    #
-    # users_by_id = {}
-
-    data = json.load(open("dm_single.json"))
+    data = resp.json()
 
     enriched_direct_message = enrich_dm(data["event"], apps=data["apps"])
-    print(enriched_direct_message)
 
     user_resp = sess.post(
         API_URL + "/users/lookup.json",
