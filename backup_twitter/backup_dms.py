@@ -5,7 +5,7 @@ import json
 import os
 
 from birdsite import TwitterCredentials
-from twitter_oauth import API_URL, BACKUP_DIR_DMS, UserInfo, create_session
+from twitter_oauth import API_URL, BACKUP_DIR_DMS, TwitterSession, UserInfo, create_session
 
 
 def enrich_dm(event, apps):
@@ -98,29 +98,19 @@ def lookup_users(sess, user_ids):
 if __name__ == '__main__':
     credentials = TwitterCredentials.from_path("auth.json")
 
-    sess = create_session(credentials)
+    oauth_session = create_session(credentials)
+    sess = TwitterSession(oauth_session)
 
-    user_info = UserInfo(sess=sess)
+    user_info = UserInfo(oauth_session)
 
-    for response_data in get_all_dms(sess):
-        dms_to_save = list(dms_for_saving(response_data))
+    for event in sess.list_dm_events():
 
-        # Now we want to turn all the user IDs into user objects!
-        # First gather a list of all the user IDs.
-        unique_user_ids = set(
-            uid
-            for uid in flatten([dm["user_ids"] for dm in dms_to_save])
+        sender_id = event["message_create"]["sender_id"]
+        recipient_id = event["message_create"]["target"]["recipient_id"]
+        user_ids = [sender_id, recipient_id]
+
+        save_individual_dm(
+            dm_user_ids=user_ids,
+            dm_metadata=event,
+            user_info=user_info
         )
-
-        # You can get up to 100 users from this API at once; I just don't want to deal
-        # with batching requests unless I actually have to.
-        assert len(unique_user_ids) < 100
-
-        # Now go through the collection of DMs again, this time turning the conversation
-        # ID into a human-readable string and adding user info into the DM body.
-        for dm_data in dms_to_save:
-            save_individual_dm(
-                dm_user_ids=dm_data["user_ids"],
-                dm_metadata=dm_data["metadata"],
-                user_info=user_info
-            )

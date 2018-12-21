@@ -1,5 +1,6 @@
 # -*- encoding: utf-8
 
+import copy
 import os
 from urllib.error import HTTPError
 from urllib.request import urlretrieve
@@ -30,6 +31,42 @@ def create_session(credentials):
     sess.hooks["response"].append(raise_for_status)
 
     return sess
+
+
+class TwitterSession:
+
+    def __init__(self, oauth_session):
+        self.oauth_session = oauth_session
+        self.user_cache = {}
+
+    def list_dm_events(self):
+        initial_params = {"count": 50}
+        for resp in self._cursored_response(
+            path="/direct_messages/events/list.json",
+            initial_params=initial_params
+        ):
+            for event in resp["events"]:
+                # Denormalise the "source_app_id" field, which can only be
+                # retrieved if you also have the "apps" field from the response.
+                try:
+                    event["message_create"]["_source_app"] = (
+                        resp["apps"][event["message_create"]["source_app_id"]]
+                    )
+                except KeyError:
+                    pass
+
+                yield event
+
+    def _cursored_response(self, path, initial_params):
+        params = copy.deepcopy(initial_params)
+        while True:
+            resp = self.oauth_session.get(API_URL + path, params=params)
+            yield resp.json()
+
+            try:
+                params["cursor"] = resp.json()["next_cursor"]
+            except KeyError:
+                break
 
 
 class UserInfo:
