@@ -34,7 +34,7 @@ def save_individual_dm(event, sess):
 
 
 if __name__ == '__main__':
-    sess = TwitterSession.from_credentials_path("auth.json")
+    sess = TwitterSession()
 
     for event in sess.list_dm_events():
         save_individual_dm(event=event, sess=sess)

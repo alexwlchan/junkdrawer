@@ -9,7 +9,7 @@ def save_favorite(tweet):
 
 
 if __name__ == '__main__':
-    sess = TwitterSession.from_credentials_path("auth.json")
+    sess = TwitterSession()
 
     for tweet in sess.list_favorites():
         save_favorite(tweet)

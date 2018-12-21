@@ -13,7 +13,7 @@ if __name__ == '__main__':
     except IndexError:
         sys.exit(f"Usage: {__file__} <DM_ID>")
 
-    sess = TwitterSession.from_credentials_path("auth.json")
+    sess = TwitterSession()
     event = sess.show_dm_event(event_id=direct_message_id)
 
     save_individual_dm(event=event, sess=sess)

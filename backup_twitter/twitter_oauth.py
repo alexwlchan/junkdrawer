@@ -37,15 +37,14 @@ def create_session(credentials):
 
 class TwitterSession:
 
-    def __init__(self, oauth_session):
-        self.oauth_session = oauth_session
-        self.user_info = UserInfo(oauth_session)
-
-    @classmethod
-    def from_credentials_path(cls, path):
-        credentials = json.load(open(path))
-        oauth_session = create_session(credentials)
-        return cls(oauth_session)
+    def __init__(self):
+        credentials_path = os.path.join(
+            os.path.abspath(os.path.dirname(__file__)),
+            "auth.json"
+        )
+        credentials = json.load(open(credentials_path))
+        self.oauth_session = create_session(credentials)
+        self.user_info = UserInfo(self.oauth_session)
 
     def list_dm_events(self):
         initial_params = {"count": 50}
@@ -136,22 +135,18 @@ class TwitterSession:
             "include_entities": True,
             "trim_user": False,
             "include_ext_alt_text": True,
-            "tweet_mode": "extended"
+            "tweet_mode": "extended",
         }
-        resp = self.oauth_session.get(API_URL + "/statuses/lookup.json", params=params)
-        matching = [t for t in resp.json() if t["id_str"] == tweet_id]
-
-        if len(matching) == 1:
-            return matching[0]
-        elif not matching:
-            raise Exception(f"Unable to fetch tweet with ID {tweet_id}?")
-        else:
-            raise Exception("What happened? Multiple matching tweets! {resp!r}")
+        resp = self.oauth_session.get(
+            API_URL + "/statuses/show.json",
+            params=params, timeout=1)
+        assert resp.json()["id_str"] == tweet_id
+        return resp.json()
 
     def _cursored_response(self, path, initial_params):
         params = copy.deepcopy(initial_params)
         while True:
-            resp = self.oauth_session.get(API_URL + path, params=params)
+            resp = self.oauth_session.get(API_URL + path, params=params, timeout=5)
             yield resp.json()
 
             try:
@@ -163,7 +158,7 @@ class TwitterSession:
         params = copy.deepcopy(initial_params)
         while True:
             print(f"Making request to {path} with {params}")
-            resp = self.oauth_session.get(API_URL + path, params=params)
+            resp = self.oauth_session.get(API_URL + path, params=params, timeout=5)
             yield from resp.json()
 
             for tweet in resp.json():

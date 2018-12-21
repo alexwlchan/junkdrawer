@@ -32,7 +32,7 @@ def save_single_tweet(tweet_id, url, dirname):
 
 def save_single_tweet_by_id(tweet_id, dirname):
     print(f"Saving {tweet_id} to {dirname}")
-    sess = TwitterSession.from_credentials_path("auth.json")
+    sess = TwitterSession()
     tweet = sess.lookup_status(tweet_id)
     save_tweet(tweet, dirname=dirname)
 
