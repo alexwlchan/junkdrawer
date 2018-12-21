@@ -8,6 +8,7 @@ from urllib.parse import urlparse
 from urllib.request import urlretrieve
 
 from requests_oauthlib import OAuth1Session
+import tenacity
 
 
 API_URL = "https://api.twitter.com/1.1"
@@ -143,6 +144,7 @@ class TwitterSession:
         assert resp.json()["id_str"] == tweet_id
         return resp.json()
 
+    @tenacity.retry(wait=tenacity.wait_exponential(multiplier=1, max=60))
     def _cursored_response(self, path, initial_params):
         params = copy.deepcopy(initial_params)
         while True:
@@ -154,6 +156,7 @@ class TwitterSession:
             except KeyError:
                 break
 
+    @tenacity.retry(wait=tenacity.wait_exponential(multiplier=1, max=60))
     def _tweet_id_response(self, path, initial_params):
         params = copy.deepcopy(initial_params)
         while True:
