@@ -141,7 +141,7 @@ if __name__ == '__main__':
         # with batching requests unless I actually have to.
         if unique_user_ids:
             assert len(unique_user_ids) < 100
-            for u in lookup_users(unique_user_ids):
+            for u in lookup_users(sess, user_ids=unique_user_ids):
                 users_by_id[u["id_str"]] = u
 
         # Now go through the collection of DMs again, this time turning the conversation
