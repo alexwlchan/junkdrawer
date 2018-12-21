@@ -103,6 +103,29 @@ class TwitterSession:
             initial_params=initial_params
         )
 
+    def mentions_timeline(self):
+        initial_params = {
+            "count": 200,
+            "include_entities": True,
+            "tweet_mode": "extended"
+        }
+        yield from self._tweet_id_response(
+            path="/statuses/mentions_timeline.json",
+            initial_params=initial_params
+        )
+
+    def user_timeline(self):
+        initial_params = {
+            "count": 200,
+            "exclude_replies": False,
+            "include_rts": True,
+            "tweet_mode": "extended",
+            "include_entities": True,
+        }
+        yield from self._tweet_id_response(
+            path="/statuses/user_timeline.json",
+            initial_params=initial_params
+        )
 
     def lookup_users(self, user_ids):
         return self.user_info.lookup_users(user_ids=user_ids)
@@ -124,11 +147,12 @@ class TwitterSession:
     def _tweet_id_response(self, path, initial_params):
         params = copy.deepcopy(initial_params)
         while True:
+            print(f"Making request to {path} with {params}")
             resp = self.oauth_session.get(API_URL + path, params=params)
             yield from resp.json()
 
             for tweet in resp.json():
-                self.user_info.download_profile_image(tweet["user"])
+                download_profile_image(tweet["user"])
 
             try:
                 params["max_id"] = min(tweet["id"] for tweet in resp.json())
@@ -162,31 +186,36 @@ class UserInfo:
                 del u["status"]
             except KeyError:
                 pass
-            self.download_profile_image(u)
+            download_profile_image(u)
             self.cache[u["id_str"]] = u
 
-    def download_profile_image(self, user_object):
-        self._download_profile_image_raw(
-            screen_name=user_object["screen_name"],
-            profile_image_url=user_object["profile_image_url_https"]
-        )
 
-    def _download_profile_image_raw(self, screen_name, profile_image_url):
-        out_dir = os.path.join(BACKUP_DIR_PROFILE_IMAGES, screen_name)
-        os.makedirs(out_dir, exist_ok=True)
-        out_path = os.path.join(
-            out_dir,
-            os.path.basename(profile_image_url).replace("_normal", ""))
+def download_profile_image(user_object):
+    _download_profile_image_raw(
+        screen_name=user_object["screen_name"],
+        profile_image_url=user_object["profile_image_url_https"]
+    )
 
-        if os.path.exists(out_path):
-            return
+def _download_profile_image_raw(screen_name, profile_image_url):
+    out_dir = os.path.join(
+        BACKUP_DIR_PROFILE_IMAGES,
+        screen_name[0].lower(),
+        screen_name
+    )
+    os.makedirs(out_dir, exist_ok=True)
+    out_path = os.path.join(
+        out_dir,
+        os.path.basename(profile_image_url).replace("_normal", ""))
 
-        try:
-            atomic_urlretrieve(
-                url=profile_image_url.replace("_normal", "_400x400"),
-                filename=out_path)
-        except HTTPError:
-            atomic_urlretrieve(url=profile_image_url, filename=out_path)
+    if os.path.exists(out_path):
+        return
+
+    try:
+        atomic_urlretrieve(
+            url=profile_image_url.replace("_normal", "_400x400"),
+            filename=out_path)
+    except HTTPError:
+        atomic_urlretrieve(url=profile_image_url, filename=out_path)
 
 
 def atomic_urlretrieve(url, filename):
