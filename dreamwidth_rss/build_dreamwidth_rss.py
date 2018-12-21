@@ -70,7 +70,7 @@ assert 'Welcome back to Dreamwidth!' in resp.text
 
 # Okay, now get the reading page.  This should contain the most recent
 # 1000 entries from the last 14 days, which is plenty.
-resp = sess.get(f'https://{username}.dreamwidth.org/read')
+resp = sess.get('https://%s.dreamwidth.org/read' % username)
 assert "You're viewing your Reading Page." in resp.text
 
 reading_soup = bs4.BeautifulSoup(resp.text, 'html.parser')
@@ -86,9 +86,9 @@ entry_wrappers = entries.findAll('div', attrs={'class': 'entry-wrapper'})
 # stuff you get from notification emails.
 #
 feed = feedgenerator.Rss201rev2Feed(
-    title="alexwlchan's Dreamwidth reading page",
-    link='https://alexwlchan.dreamwidth.org/',
-    description="Entries on alexwlchan's reading page",
+    title="%s's Dreamwidth reading page" % username,
+    link='https://%s.dreamwidth.org/' % username,
+    description="Entries on %s's reading page" % username,
     language='en'
 )
 
