@@ -24,3 +24,9 @@ pushd "$DIR"
     end tell
   '
 popd
+
+pushd ~/Documents/backups/twitter
+  find . -type d -empty
+  find . -type d -empty | wc -l
+  find . -type d -empty -delete
+popd

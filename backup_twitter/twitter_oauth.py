@@ -156,19 +156,23 @@ class TwitterSession:
             except KeyError:
                 break
 
-    @tenacity.retry(wait=tenacity.wait_exponential(multiplier=1, max=60))
     def _tweet_id_response(self, path, initial_params):
         params = copy.deepcopy(initial_params)
         while True:
             print(f"Making request to {path} with {params}")
-            resp = self.oauth_session.get(API_URL + path, params=params, timeout=5)
+
+            @tenacity.retry(wait=tenacity.wait_exponential(multiplier=1, max=60))
+            def get():
+                return self.oauth_session.get(API_URL + path, params=params, timeout=5)
+
+            resp = get()
             yield from resp.json()
 
             for tweet in resp.json():
                 download_profile_image(tweet["user"])
 
             try:
-                params["max_id"] = min(tweet["id"] for tweet in resp.json())
+                params["max_id"] = min(tweet["id"] for tweet in resp.json()) - 1
             except ValueError:
                 # Empty response; nothing more to do
                 break
@@ -228,7 +232,10 @@ def _download_profile_image_raw(screen_name, profile_image_url):
             url=profile_image_url.replace("_normal", "_400x400"),
             filename=out_path)
     except HTTPError:
-        atomic_urlretrieve(url=profile_image_url, filename=out_path)
+        try:
+            atomic_urlretrieve(url=profile_image_url, filename=out_path)
+        except HTTPError:
+            pass
 
 
 def atomic_urlretrieve(url, filename):
