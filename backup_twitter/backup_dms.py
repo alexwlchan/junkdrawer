@@ -5,9 +5,7 @@ import json
 import os
 
 from birdsite import TwitterCredentials
-from twitter_oauth import API_URL, UserInfo, create_session
-
-BACKUP_DIR = os.path.join(os.environ["HOME"], "Dropbox", "twitter", "direct_messages")
+from twitter_oauth import API_URL, BACKUP_DIR_DMS, UserInfo, create_session
 
 
 def enrich_dm(event, apps):
@@ -52,7 +50,7 @@ def save_individual_dm(dm_user_ids, dm_metadata, user_info):
         u["screen_name"] for u in users.values() if u["screen_name"] != "alexwlchan"
     ))
 
-    out_dir = os.path.join(BACKUP_DIR, conversation_id)
+    out_dir = os.path.join(BACKUP_DIR_DMS, conversation_id)
     os.makedirs(out_dir, exist_ok=True)
 
     sender_id = dm_metadata["message_create"]["sender_id"]

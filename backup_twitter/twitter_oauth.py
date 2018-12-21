@@ -1,9 +1,17 @@
 # -*- encoding: utf-8
 
+import os
+from urllib.error import HTTPError
+from urllib.request import urlretrieve
+
 from requests_oauthlib import OAuth1Session
 
 
 API_URL = "https://api.twitter.com/1.1"
+
+BACKUP_DIR = os.path.join(os.environ["HOME"], "Documents", "backups", "twitter")
+BACKUP_DIR_PROFILE_IMAGES = os.path.join(BACKUP_DIR, "profile_images")
+BACKUP_DIR_DMS = os.path.join(BACKUP_DIR, "direct_messages")
 
 
 def create_session(credentials):
@@ -36,7 +44,6 @@ class UserInfo:
             self._api_lookup(missing)
         return {uid: self.cache[uid] for uid in user_ids}
 
-
     def lookup_user(self, user_id):
         return self.lookup_users(user_ids=[user_id])[user_id]
 
@@ -50,4 +57,39 @@ class UserInfo:
                 del u["status"]
             except KeyError:
                 pass
+            self._download_profile_image(
+                screen_name=u["screen_name"],
+                profile_image_url=u["profile_image_url_https"]
+            )
             self.cache[u["id_str"]] = u
+
+    def _download_profile_image(self, screen_name, profile_image_url):
+        out_dir = os.path.join(BACKUP_DIR_PROFILE_IMAGES, screen_name)
+        os.makedirs(out_dir, exist_ok=True)
+        out_path = os.path.join(
+            out_dir,
+            os.path.basename(profile_image_url).replace("_normal", ""))
+
+        if os.path.exists(out_path):
+            return
+
+        try:
+            atomic_urlretrieve(
+                url=profile_image_url.replace("_normal", "_400x400"),
+                filename=out_path)
+        except HTTPError:
+            atomic_urlretrieve(url=profile_image_url, filename=out_path)
+
+
+def atomic_urlretrieve(url, filename):
+    tmp_filename = filename + ".tmp"
+    try:
+        urlretrieve(url, tmp_filename)
+    except HTTPError:
+        try:
+            os.unlink(tmp_filename)
+        except FileNotFoundError:
+            pass
+        raise
+    else:
+        os.rename(tmp_filename, filename)
