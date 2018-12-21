@@ -37,7 +37,7 @@ class TwitterSession:
 
     def __init__(self, oauth_session):
         self.oauth_session = oauth_session
-        self.user_cache = {}
+        self.user_info = UserInfo(oauth_session)
 
     def list_dm_events(self):
         initial_params = {"count": 50}
@@ -46,6 +46,7 @@ class TwitterSession:
             initial_params=initial_params
         ):
             for event in resp["events"]:
+
                 # Denormalise the "source_app_id" field, which can only be
                 # retrieved if you also have the "apps" field from the response.
                 try:
@@ -55,7 +56,23 @@ class TwitterSession:
                 except KeyError:
                     pass
 
+                # Denormalise the sender/recipient information, where you normally
+                # just get their ID.
+                event["message_create"]["_sender"] = self.user_info.lookup_user(
+                    event["message_create"]["sender_id"]
+                )
+
+                event["message_create"]["target"]["_recipient"] = self.user_info.lookup_user(
+                    event["message_create"]["target"]["recipient_id"]
+                )
+
                 yield event
+
+    def lookup_users(self, user_ids):
+        return self.user_info.lookup_users(user_ids=user_ids)
+
+    def lookup_user(self, user_id):
+        return self.user_info.lookup_user(user_id=user_id)
 
     def _cursored_response(self, path, initial_params):
         params = copy.deepcopy(initial_params)
@@ -71,21 +88,21 @@ class TwitterSession:
 
 class UserInfo:
 
-    def __init__(self, sess):
-        self.sess = sess
+    def __init__(self, oauth_session):
+        self.oauth_session = oauth_session
         self.cache = {}
 
     def lookup_users(self, user_ids):
         missing = [uid for uid in user_ids if uid not in self.cache]
         if missing:
-            self._api_lookup(missing)
+            self._lookup_api_user(missing)
         return {uid: self.cache[uid] for uid in user_ids}
 
     def lookup_user(self, user_id):
         return self.lookup_users(user_ids=[user_id])[user_id]
 
-    def _api_lookup(self, user_ids):
-        resp = self.sess.post(
+    def _lookup_api_user(self, user_ids):
+        resp = self.oauth_session.post(
             API_URL + "/users/lookup.json",
             data={"user_id": ",".join(user_ids)}
         )
