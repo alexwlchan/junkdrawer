@@ -1,14 +1,11 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8
 
-import json
-import os
 import sys
 
-from backup_dms import (
-    API_URL, BACKUP_DIR, create_session, enrich_dm, save_individual_dm
-)
+from backup_dms import enrich_dm, save_individual_dm
 from birdsite import TwitterCredentials
+from twitter_oauth import API_URL, UserInfo, create_session
 
 
 if __name__ == '__main__':
@@ -20,6 +17,7 @@ if __name__ == '__main__':
     credentials = TwitterCredentials.from_path("auth.json")
 
     sess = create_session(credentials)
+    user_info = UserInfo(sess=sess)
 
     resp = sess.get(
         API_URL + "/direct_messages/events/show.json",
@@ -30,18 +28,8 @@ if __name__ == '__main__':
 
     enriched_direct_message = enrich_dm(data["event"], apps=data["apps"])
 
-    user_resp = sess.post(
-        API_URL + "/users/lookup.json",
-        data={"user_id": ",".join(enriched_direct_message["user_ids"])}
-    )
-
-    users_by_id = {}
-    for u in user_resp.json():
-        del u["status"]
-        users_by_id[u["id_str"]] = u
-
     save_individual_dm(
         dm_user_ids=enriched_direct_message["user_ids"],
         dm_metadata=enriched_direct_message["metadata"],
-        users_by_id=users_by_id
+        user_info=user_info
     )

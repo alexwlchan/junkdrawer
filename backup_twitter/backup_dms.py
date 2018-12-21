@@ -4,8 +4,6 @@
 import json
 import os
 
-from requests_oauthlib import OAuth1Session
-
 from birdsite import TwitterCredentials
 from twitter_oauth import API_URL, UserInfo, create_session
 
