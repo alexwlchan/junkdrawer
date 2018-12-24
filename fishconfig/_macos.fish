@@ -5,6 +5,8 @@
 # Provide a convenient alias for the front URL
 alias furl="~/.cargo/bin/safari url"
 
+alias ghurl="~/.virtualenvs/platform/bin/python ~/repos/junkdrawer/github_permalink.py (furl)"
+
 
 # Dump the complete list of Safari URLs
 function safari-dump
