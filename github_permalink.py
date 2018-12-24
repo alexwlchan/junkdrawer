@@ -1,5 +1,18 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8
+"""
+Given a URL to a file on GitHub, e.g.
+
+    https://github.com/alexwlchan/junkdrawer/blob/master/github_permalink.py
+
+rewrite that into a URL that refers to a commit -- specifically, the last
+commit that changed this file.  Ensures that the content/line references in
+a link don't change later.
+
+This API doesn't require auth for public repos (yay!), but it might hit
+rate limits.  If you get 403 errors, that's probably why.
+
+"""
 
 import sys
 from urllib.parse import urlparse, urlunparse
@@ -25,7 +38,12 @@ if __name__ == '__main__':
         params={"sha": ref, "path": path},
         headers={"Accept": "application/vnd.github.v3+json"}
     )
-    resp.raise_for_status()
+
+    try:
+        resp.raise_for_status()
+    except Exception:
+        print(resp.json())
+        raise
 
     commits = resp.json()
     assert len(commits) > 1
