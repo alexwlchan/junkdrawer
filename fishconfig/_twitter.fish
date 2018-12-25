@@ -24,3 +24,12 @@ end
 function backup_twitter
   bash $BACKUP_TWITTER/backup_twitter.sh
 end
+
+
+function rollup_thread --argument-names url
+  if test -z "$url"
+    set url (furl)
+  end
+
+  eval $TW_PYTHON "$BACKUP_TWITTER/rollup_thread.py" "$url"
+end
