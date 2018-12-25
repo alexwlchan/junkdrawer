@@ -1,5 +1,14 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8
+"""
+This allows me to save the contents of a thread to a local backup.
+The script
+
+*   Takes complete backups of all the tweets in the thread to a single
+    ".twitter" directory
+*   Creates a Markdown file that summarises the text of the thread
+
+"""
 
 import datetime as dt
 import json
