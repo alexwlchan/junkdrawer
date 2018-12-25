@@ -41,7 +41,7 @@ if __name__ == '__main__':
 
         tweet_id = in_reply_to_status_id_str
 
-    out_path = f"thread_{username}_{tweet_id}.txt"
+    out_path = f"thread_{username}_{tweet_id}.md"
 
     now = dt.datetime.now()
 
@@ -61,9 +61,8 @@ if __name__ == '__main__':
 
     with open(out_path, "w") as outfile:
         outfile.write("\n".join([
-            f"Twitter thread saved from {url}",
-            f"Retrieved {now}",
-            "",
+            f'url: "{url}"',
+            f'retrieved: "{now}"',
             "---\n",
             "",
         ]))
