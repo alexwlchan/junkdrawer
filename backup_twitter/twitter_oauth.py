@@ -13,9 +13,7 @@ import tenacity
 
 API_URL = "https://api.twitter.com/1.1"
 
-BACKUP_DIR = os.path.join(os.environ["HOME"], "Documents", "backups", "twitter")
-BACKUP_DIR_PROFILE_IMAGES = os.path.join(BACKUP_DIR, "profile_images")
-BACKUP_DIR_DMS = os.path.join(BACKUP_DIR, "direct_messages")
+DEFAULT_BACKUP_ROOT = os.path.join(os.environ["HOME"], "Documents", "backups", "twitter")
 
 
 def create_session(credentials):
@@ -38,7 +36,7 @@ def create_session(credentials):
 
 class TwitterSession:
 
-    def __init__(self):
+    def __init__(self, backup_root=DEFAULT_BACKUP_ROOT):
         credentials_path = os.path.join(
             os.path.abspath(os.path.dirname(__file__)),
             "auth.json"
@@ -46,6 +44,7 @@ class TwitterSession:
         credentials = json.load(open(credentials_path))
         self.oauth_session = create_session(credentials)
         self.user_info = UserInfo(self.oauth_session)
+        self.backup_root = backup_root
 
     def list_dm_events(self):
         initial_params = {"count": 50}
@@ -125,10 +124,16 @@ class TwitterSession:
         )
 
     def lookup_users(self, user_ids):
-        return self.user_info.lookup_users(user_ids=user_ids)
+        return self.user_info.lookup_users(
+            user_ids=user_ids,
+            backup_root=self.backup_root
+        )
 
     def lookup_user(self, user_id):
-        return self.user_info.lookup_user(user_id=user_id)
+        return self.user_info.lookup_user(
+            user_id=user_id,
+            backup_root=self.backup_root
+        )
 
     def lookup_status(self, tweet_id):
         params = {
@@ -169,7 +174,7 @@ class TwitterSession:
             yield from resp.json()
 
             for tweet in resp.json():
-                download_profile_image(tweet["user"])
+                download_profile_image(tweet["user"], backup_root=self.backup_root)
 
             try:
                 params["max_id"] = min(tweet["id"] for tweet in resp.json()) - 1
@@ -184,16 +189,19 @@ class UserInfo:
         self.oauth_session = oauth_session
         self.cache = {}
 
-    def lookup_users(self, user_ids):
+    def lookup_users(self, user_ids, backup_root):
         missing = [uid for uid in user_ids if uid not in self.cache]
         if missing:
-            self._lookup_api_user(missing)
+            self._lookup_api_user(missing, backup_root=backup_root)
         return {uid: self.cache[uid] for uid in user_ids}
 
-    def lookup_user(self, user_id):
-        return self.lookup_users(user_ids=[user_id])[user_id]
+    def lookup_user(self, user_id, backup_root):
+        return self.lookup_users(
+            user_ids=[user_id],
+            backup_root=backup_root
+        )[user_id]
 
-    def _lookup_api_user(self, user_ids):
+    def _lookup_api_user(self, user_ids, backup_root):
         resp = self.oauth_session.post(
             API_URL + "/users/lookup.json",
             data={"user_id": ",".join(user_ids)}
@@ -203,19 +211,22 @@ class UserInfo:
                 del u["status"]
             except KeyError:
                 pass
-            download_profile_image(u)
+            download_profile_image(u, backup_root=backup_root)
             self.cache[u["id_str"]] = u
 
 
-def download_profile_image(user_object):
+def download_profile_image(user_object, *, backup_root):
     _download_profile_image_raw(
         screen_name=user_object["screen_name"],
-        profile_image_url=user_object["profile_image_url_https"]
+        profile_image_url=user_object["profile_image_url_https"],
+        backup_root=backup_root
     )
 
-def _download_profile_image_raw(screen_name, profile_image_url):
+
+def _download_profile_image_raw(screen_name, profile_image_url, backup_root):
     out_dir = os.path.join(
-        BACKUP_DIR_PROFILE_IMAGES,
+        backup_root,
+        "profile_images",
         screen_name[0].lower(),
         screen_name
     )
@@ -252,9 +263,9 @@ def atomic_urlretrieve(url, filename):
         os.rename(tmp_filename, filename)
 
 
-def save_tweet(tweet, dirname):
+def save_tweet(tweet, *, backup_root=DEFAULT_BACKUP_ROOT, dirname):
     tweet_id = tweet["id_str"]
-    path = os.path.join(BACKUP_DIR, dirname, tweet_id[:2], tweet_id)
+    path = os.path.join(backup_root, dirname, tweet_id[:2], tweet_id)
 
     if os.path.exists(path):
         return
@@ -265,7 +276,7 @@ def save_tweet(tweet, dirname):
     with open(os.path.join(tmp_path, "info.json"), "w") as outfile:
         outfile.write(json.dumps(tweet))
 
-    download_profile_image(tweet["user"])
+    download_profile_image(tweet["user"], backup_root=backup_root)
 
     try:
         extended_entities = tweet["extended_entities"]
