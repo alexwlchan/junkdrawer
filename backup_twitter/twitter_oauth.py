@@ -252,9 +252,9 @@ def atomic_urlretrieve(url, filename):
         os.rename(tmp_filename, filename)
 
 
-def save_tweet(tweet, backup_dir):
+def save_tweet(tweet, *, backup_root=DEFAULT_BACKUP_ROOT, dirname):
     tweet_id = tweet["id_str"]
-    path = os.path.join(backup_dir, tweet_id[:2], tweet_id)
+    path = os.path.join(backup_root, dirname, tweet_id[:2], tweet_id)
 
     if os.path.exists(path):
         return
