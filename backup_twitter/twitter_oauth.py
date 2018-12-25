@@ -13,9 +13,9 @@ import tenacity
 
 API_URL = "https://api.twitter.com/1.1"
 
-BACKUP_DIR = os.path.join(os.environ["HOME"], "Documents", "backups", "twitter")
-BACKUP_DIR_PROFILE_IMAGES = os.path.join(BACKUP_DIR, "profile_images")
-BACKUP_DIR_DMS = os.path.join(BACKUP_DIR, "direct_messages")
+BACKUP_ROOT = os.path.join(os.environ["HOME"], "Documents", "backups", "twitter")
+BACKUP_ROOT_PROFILE_IMAGES = os.path.join(BACKUP_ROOT, "profile_images")
+BACKUP_ROOT_DMS = os.path.join(BACKUP_ROOT, "direct_messages")
 
 
 def create_session(credentials):
@@ -215,7 +215,7 @@ def download_profile_image(user_object):
 
 def _download_profile_image_raw(screen_name, profile_image_url):
     out_dir = os.path.join(
-        BACKUP_DIR_PROFILE_IMAGES,
+        BACKUP_ROOT_PROFILE_IMAGES,
         screen_name[0].lower(),
         screen_name
     )

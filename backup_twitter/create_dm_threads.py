@@ -14,7 +14,7 @@ if __name__ == '__main__':
     try:
         dm_backup_dir = sys.argv[1]
     except IndexError:
-        sys.exit(f"Usage: {__file__} <DM_BACKUP_DIR>")
+        sys.exit(f"Usage: {__file__} <DM_BACKUP_ROOT>")
 
     dm_backup_dir = os.path.abspath(dm_backup_dir)
 
