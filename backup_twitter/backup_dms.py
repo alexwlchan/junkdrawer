@@ -4,7 +4,7 @@
 import json
 import os
 
-from twitter_oauth import DEFAULT_BACKUP_ROOT_DMS, TwitterSession
+from twitter_oauth import DEFAULT_BACKUP_ROOT, TwitterSession
 
 
 def save_individual_dm(event, sess):
@@ -19,7 +19,7 @@ def save_individual_dm(event, sess):
         u["screen_name"] for u in users.values() if u["screen_name"] != "alexwlchan"
     ))
 
-    out_dir = os.path.join(DEFAULT_BACKUP_ROOT_DMS, conversation_id)
+    out_dir = os.path.join(DEFAULT_BACKUP_ROOT, "direct_messages", conversation_id)
     os.makedirs(out_dir, exist_ok=True)
 
     dm_id = event["id"]

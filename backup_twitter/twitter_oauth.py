@@ -15,7 +15,6 @@ API_URL = "https://api.twitter.com/1.1"
 
 DEFAULT_BACKUP_ROOT = os.path.join(os.environ["HOME"], "Documents", "backups", "twitter")
 DEFAULT_BACKUP_ROOT_PROFILE_IMAGES = os.path.join(DEFAULT_BACKUP_ROOT, "profile_images")
-DEFAULT_BACKUP_ROOT_DMS = os.path.join(DEFAULT_BACKUP_ROOT, "direct_messages")
 
 
 def create_session(credentials):
