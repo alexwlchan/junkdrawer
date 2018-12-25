@@ -5,7 +5,7 @@ import os
 
 import click
 
-from twitter_oauth import BACKUP_ROOT, TwitterSession, save_tweet
+from twitter_oauth import DEFAULT_BACKUP_ROOT, TwitterSession, save_tweet
 
 
 @click.command()
@@ -36,7 +36,7 @@ def save_single_tweet_by_id(tweet_id, dirname):
     print(f"Saving {tweet_id} to {dirname}")
     sess = TwitterSession()
     tweet = sess.lookup_status(tweet_id)
-    save_tweet(tweet, backup_dir=os.path.join(BACKUP_ROOT, dirname))
+    save_tweet(tweet, backup_dir=os.path.join(DEFAULT_BACKUP_ROOT, dirname))
 
 
 if __name__ == '__main__':
