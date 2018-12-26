@@ -79,6 +79,12 @@ if __name__ == '__main__':
         for tweet in thread:
             screen_name = tweet["user"]["screen_name"]
             text = tweet["full_text"]
+
+            # Render URLs as their raw form and not the t.co link in the
+            # Markdown thread.
+            for u in tweet.get("entities", {}).get("urls", []):
+                text = text.replace(u["url"], "<%s>" % u["expanded_url"])
+
             outfile.write(f"@{screen_name}: {text}\n\n")
 
     print(out_path)
