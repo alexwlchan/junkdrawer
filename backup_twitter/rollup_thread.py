@@ -39,8 +39,17 @@ if __name__ == '__main__':
     thread = []
     while True:
         print(f"Saving {tweet_id}")
-        tweet = sess.lookup_status(tweet_id)
-        save_tweet(tweet, backup_root=BACKUP_ROOT, dirname="threads")
+
+        # If I've already saved the thread and want to just rebuild the
+        # thread file, this saves me some network calls.
+        try:
+            path = os.path.join(
+                BACKUP_ROOT, "threads", tweet_id[:2], tweet_id, "info.json"
+            )
+            tweet = json.load(open(path))
+        except FileNotFoundError:
+            tweet = sess.lookup_status(tweet_id)
+            save_tweet(tweet, backup_root=BACKUP_ROOT, dirname="threads")
 
         thread.insert(0, tweet)
 
