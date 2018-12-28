@@ -1,6 +1,7 @@
 # -*- encoding: utf-8
 
 import copy
+import datetime as dt
 import json
 import os
 from urllib.error import HTTPError
@@ -149,6 +150,30 @@ class TwitterSession:
         assert resp.json()["id_str"] == tweet_id
         return resp.json()
 
+    def list_followers(self):
+        initial_params = {
+            "count": 200,
+            "skip_status": True,
+            "include_user_entities": True,
+        }
+        for resp in self._cursored_response(
+            path="/followers/list.json",
+            initial_params=initial_params
+        ):
+            yield from resp["users"]
+
+    def list_friends(self):
+        initial_params = {
+            "count": 200,
+            "skip_status": True,
+            "include_user_entities": True,
+        }
+        for resp in self._cursored_response(
+            path="/friends/list.json",
+            initial_params=initial_params
+        ):
+            yield from resp["users"]
+
     @tenacity.retry(wait=tenacity.wait_exponential(multiplier=1, max=60))
     def _cursored_response(self, path, initial_params):
         params = copy.deepcopy(initial_params)
@@ -157,9 +182,18 @@ class TwitterSession:
             yield resp.json()
 
             try:
-                params["cursor"] = resp.json()["next_cursor"]
+                next_cursor = resp.json()["next_cursor"]
+
+                # You will know that you have requested the last available
+                # page of results when the API responds with a next_cursor = 0.
+                # https://developer.twitter.com/en/docs/basics/cursoring
+                if next_cursor == 0:
+                    break
+
             except KeyError:
                 break
+
+            params["cursor"] = next_cursor
 
     def _tweet_id_response(self, path, initial_params):
         params = copy.deepcopy(initial_params)
@@ -215,7 +249,7 @@ class UserInfo:
             self.cache[u["id_str"]] = u
 
 
-def download_profile_image(user_object, *, backup_root):
+def download_profile_image(user_object, *, backup_root=DEFAULT_BACKUP_ROOT):
     _download_profile_image_raw(
         screen_name=user_object["screen_name"],
         profile_image_url=user_object["profile_image_url_https"],
@@ -296,3 +330,16 @@ def save_tweet(tweet, *, backup_root=DEFAULT_BACKUP_ROOT, dirname):
             assert not extended_entities
 
     os.rename(tmp_path, path)
+
+
+def save_user_info(users, *, dirname):
+    out_dir = os.path.join(DEFAULT_BACKUP_ROOT, dirname)
+    os.makedirs(out_dir, exist_ok=True)
+
+    now = dt.datetime.now().strftime("%Y-%m-%d__%H-%M-%S")
+    out_path = os.path.join(out_dir, now + ".txt")
+    with open(out_path, "w") as outfile:
+        for u in users:
+            print(f"Saving {u['screen_name']}")
+            outfile.write(json.dumps(u) + "\n")
+            download_profile_image(u)
