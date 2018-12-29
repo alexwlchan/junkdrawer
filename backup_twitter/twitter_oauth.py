@@ -44,7 +44,10 @@ class TwitterSession:
         )
         credentials = json.load(open(credentials_path))
         self.oauth_session = create_session(credentials)
-        self.user_info = UserInfo(self.oauth_session)
+        self.user_info = UserInfo(
+            oauth_session=self.oauth_session,
+            backup_root=backup_root
+        )
         self.backup_root = backup_root
 
     def list_dm_events(self):
@@ -125,16 +128,10 @@ class TwitterSession:
         )
 
     def lookup_users(self, user_ids):
-        return self.user_info.lookup_users(
-            user_ids=user_ids,
-            backup_root=self.backup_root
-        )
+        return self.user_info.lookup_users(user_ids=user_ids)
 
     def lookup_user(self, user_id):
-        return self.user_info.lookup_user(
-            user_id=user_id,
-            backup_root=self.backup_root
-        )
+        return self.user_info.lookup_user(user_id=user_id)
 
     def lookup_status(self, tweet_id):
         params = {
@@ -219,23 +216,21 @@ class TwitterSession:
 
 class UserInfo:
 
-    def __init__(self, oauth_session):
+    def __init__(self, oauth_session, backup_root):
         self.oauth_session = oauth_session
+        self.backup_root = backup_root
         self.cache = {}
 
-    def lookup_users(self, user_ids, backup_root):
+    def lookup_users(self, user_ids):
         missing = [uid for uid in user_ids if uid not in self.cache]
         if missing:
-            self._lookup_api_user(missing, backup_root=backup_root)
+            self._lookup_api_user(missing)
         return {uid: self.cache[uid] for uid in user_ids}
 
-    def lookup_user(self, user_id, backup_root):
-        return self.lookup_users(
-            user_ids=[user_id],
-            backup_root=backup_root
-        )[user_id]
+    def lookup_user(self, user_id):
+        return self.lookup_users(user_ids=[user_id])[user_id]
 
-    def _lookup_api_user(self, user_ids, backup_root):
+    def _lookup_api_user(self, user_ids):
         resp = self.oauth_session.post(
             API_URL + "/users/lookup.json",
             data={"user_id": ",".join(user_ids)}
@@ -245,7 +240,7 @@ class UserInfo:
                 del u["status"]
             except KeyError:
                 pass
-            download_profile_image(u, backup_root=backup_root)
+            download_profile_image(u, backup_root=self.backup_root)
             self.cache[u["id_str"]] = u
 
 
