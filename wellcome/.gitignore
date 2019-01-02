@@ -1,3 +1,4 @@
 *.txt
 *.json
 *.json.gz
+*.csv
