@@ -33,6 +33,12 @@ if __name__ == '__main__':
 
     _, owner, repo, _, ref, path = parts.path.split("/", maxsplit=5)
 
+    # Workaround for artefactual/archivematica, who use slashes in their
+    # release tags.
+    if ref == "stable" and path.startswith("1.8.x/"):
+        ref = "stable/1.8.x"
+        _, path = path.split("/", maxsplit=1)
+
     resp = requests.get(
         f"https://api.github.com/repos/{owner}/{repo}/commits",
         params={"sha": ref, "path": path},
