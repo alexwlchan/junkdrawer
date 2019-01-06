@@ -336,5 +336,5 @@ def save_user_info(users, *, dirname):
     with open(out_path, "w") as outfile:
         for u in users:
             print(f"Saving {u['screen_name']}")
-            outfile.write(json.dumps(u) + "\n")
+            outfile.write(json.dumps(u, indent=2, sort_keys=True) + "\n")
             download_profile_image(u)
