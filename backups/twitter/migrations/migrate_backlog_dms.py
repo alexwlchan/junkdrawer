@@ -22,13 +22,12 @@ import os
 import bs4
 import requests
 
-from backup_dms import create_session, lookup_users
-from birdsite import TwitterCredentials
+import sys; sys.path.append("..")
+
+from twitter_oauth import TwitterSession, DEFAULT_BACKUP_ROOT
 
 
-credentials = TwitterCredentials.from_path("auth.json")
-
-sess = create_session(credentials)
+sess = TwitterSession()
 
 users_by_id = {}
 
@@ -63,7 +62,7 @@ for f in os.listdir("backlog"):
 
     for p in participants:
         if p not in users_by_id:
-            user_data = list(lookup_users(sess, user_ids=[p]))[0]
+            user_data = sess.lookup_users(user_ids=[p])[p]
             users_by_id[user_data["id_str"]] = user_data
 
     other_user = [p for p in participants if users_by_id[p]["screen_name"] != "alexwlchan"][0]
@@ -140,7 +139,7 @@ for f in os.listdir("backlog"):
         }
 
         out_path = os.path.join(
-            os.environ["HOME"], "Dropbox", "twitter", "direct_messages", other_screen_name, dm_id + ".json"
+            DEFAULT_BACKUP_ROOT, "direct_messages", other_screen_name, dm_id + ".json"
         )
 
         os.makedirs(os.path.dirname(out_path), exist_ok=True)
