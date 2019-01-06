@@ -13,7 +13,7 @@ from save_cache_ids import CACHE_ID_PATH
 
 
 def wget(*args):
-    subprocess.check_call(["wget"] + list(args), stdout=subprocess.DEVNULL)
+    subprocess.call(["wget"] + list(args), stdout=subprocess.DEVNULL)
 
 
 @click.command()

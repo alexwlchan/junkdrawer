@@ -21,8 +21,10 @@ def save_all_bookmarks(username, password):
     )
     resp.raise_for_status()
 
+    json_string = json.dumps(resp.json(), indent=2, sort_keys=True)
+
     with open(os.path.join(BACKUP_ROOT, "bookmarks.json"), "w") as outfile:
-        outfile.write(resp.text)
+        outfile.write(json_string)
 
 
 if __name__ == "__main__":

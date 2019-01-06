@@ -30,7 +30,7 @@ def save_individual_dm(event, sess):
     else:
         print(dm_id)
         with open(out_path, "w") as outfile:
-            outfile.write(json.dumps(event))
+            outfile.write(json.dumps(event, indent=2, sort_keys=True))
 
 
 if __name__ == '__main__':
