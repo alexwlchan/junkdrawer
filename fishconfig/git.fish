@@ -3,6 +3,9 @@
 alias gcb="git rev-parse --abbrev-ref HEAD"
 
 
+alias groot="cd (git rev-parse --show-toplevel)"
+
+
 # Open the frontmost repository in GitHub.  Useful for switching to open
 # pull requests, issues, etc.
 function gh-open
