@@ -60,3 +60,10 @@ alias ds_tunnel "$PLATFORM_PYTHON ~/repos/platform/data_science/scripts/create_t
 
 
 alias issue_workflow_credentials "$PLATFORM_PYTHON $ROOT/aws/issue_temporary_credentials.py --account_id=299497370133 --role_name=platform-team-assume-role --account_name=wellcomedigitalworkflow"
+
+
+function amssh
+  ssh -t -i ~/.ssh/wellcomedigitalworkflow \
+    ec2-user@ec2-34-242-7-110.eu-west-1.compute.amazonaws.com \
+      ssh -t -i wellcomedigitalworkflow "$argv[1]" sudo su
+end
