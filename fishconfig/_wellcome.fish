@@ -59,7 +59,7 @@ alias ds_stop "$PLATFORM_PYTHON ~/repos/platform/data_science/scripts/toggle_asg
 alias ds_tunnel "$PLATFORM_PYTHON ~/repos/platform/data_science/scripts/create_tunnel_to_asg.py"
 
 
-alias issue_workflow_credentials "$PLATFORM_PYTHON $ROOT/aws/issue_temporary_credentials.py --account_id=299497370133 --role_name=platform-team-assume-role --account_name=wellcomedigitalworkflow"
+alias issue_workflow_credentials "$PLATFORM_PYTHON $ROOT/aws/issue_temporary_credentials.py --account_id=299497370133 --role_name=platform-team-assume-role --profile_name=wellcomedigitalworkflow"
 
 
 function amssh
