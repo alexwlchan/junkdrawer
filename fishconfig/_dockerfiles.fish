@@ -133,3 +133,15 @@ function wget
   __build_docker_image wget
   docker run --rm --volume (pwd):/data --workdir /data alexwlchan/wget $argv
 end
+
+
+function woff2_compress
+  __build_docker_image woff2
+  docker run --rm --volume (pwd):/data --workdir /data alexwlchan/woff2 /woff2/woff2_compress $argv
+end
+
+
+function woff2_decompress
+  __build_docker_image woff2
+  docker run --rm --volume (pwd):/data --workdir /data alexwlchan/woff2 /woff2/woff2_decompress $argv
+end
