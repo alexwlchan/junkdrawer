@@ -1,4 +1,4 @@
-set -x BACKUP_TWITTER $DIR/../backup_twitter
+set -x BACKUP_TWITTER $DIR/../backups/twitter
 
 set TW_PYTHON /Users/alexwlchan/.virtualenvs/twitter/bin/python
 
