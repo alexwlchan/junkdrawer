@@ -39,9 +39,19 @@ if __name__ == '__main__':
         ref = "stable/1.8.x"
         _, path = path.split("/", maxsplit=1)
 
+    access_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "token.txt")
+    params = {"sha": ref, "path": path}
+
+    try:
+        access_token = open(access_path).read().strip()
+    except OSError:
+        pass
+    else:
+        params["access_token"] = access_token
+
     resp = requests.get(
         f"https://api.github.com/repos/{owner}/{repo}/commits",
-        params={"sha": ref, "path": path},
+        params=params,
         headers={"Accept": "application/vnd.github.v3+json"}
     )
 
