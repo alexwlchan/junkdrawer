@@ -13,4 +13,4 @@ if __name__ == "__main__":
         sys.exit("Usage: %s <PATH>" % __file__)
 
     md_src = open(path).read()
-    print("".join(markdown2.markdown(md_src).splitlines()))
+    print(" ".join(markdown2.markdown(md_src).splitlines()).replace("</p>  <p>", "</p><p>"))
