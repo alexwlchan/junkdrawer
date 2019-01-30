@@ -71,7 +71,7 @@ def draw_ascii_chart(data):
         else:
             count_label = "%2dm" % minutes
 
-        print(f'{label.rjust(longest_label_length + 1)} ▏ {count_label.rjust(7)} {bar}')
+        print(f'{label.ljust(longest_label_length + 1)}  {count_label.rjust(7)} {bar}')
 
 
 if __name__ == "__main__":
