@@ -1,5 +1,22 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8
+"""
+Convert a Markdown file into HTML suitable for use on Dreamwidth.
+
+Installation:
+
+1.  Copy the script
+2.  $ pip install markdown2
+
+Usage:
+
+    $ python markdownify.py <PATH>
+
+Notes:
+
+-   You can use @name in the Markdown file to get a <user> link.
+
+"""
 
 import re
 import sys
