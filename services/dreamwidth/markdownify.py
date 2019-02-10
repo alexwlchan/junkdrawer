@@ -35,7 +35,7 @@ import markdown2
 # The regex doesn't check first/last characters because it's my own fault if
 # I put that in a tag.
 #
-USER_TAG = re.compile(r"@(?P<name>[A-Za-z0-9-]{1,25})")
+USER_TAG = re.compile(r"@(?P<name>[A-Za-z0-9-_]{1,25})")
 
 
 if __name__ == "__main__":
