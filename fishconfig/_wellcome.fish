@@ -50,6 +50,16 @@ alias ec2ssh "ssh -i ~/.ssh/wellcomedigitalplatform"
 
 alias ec2scp "scp -i ~/.ssh/wellcomedigitalplatform"
 
+function wrt
+  docker run \
+    --env AWS_PROFILE="$AWS_PROFILE" \
+    --env AWS_SDK_LOAD_CONFIG=1 \
+    --volume ~/.aws:/root/.aws \
+    --volume (git rev-parse --show-toplevel) \
+    --interactive --tty --rm \
+    wellcome/release_tooling:60 $argv
+end
+
 
 # Aliases for the data science ASG
 set -x PLATFORM_PYTHON ~/.virtualenvs/platform/bin/python
