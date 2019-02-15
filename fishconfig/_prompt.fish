@@ -23,7 +23,7 @@ function _display_hostname
   if test (sysctl hw.model 2>/dev/null | grep iMac)
     printf "🖥️ "
   else if test (sysctl hw.model 2>/dev/null | grep MacBook)
-    printf "💻 "
+    printf "💻"
   else if test (sysctl kernel.osrelease 2>/dev/null | grep linode)
     printf "☁️ "
   else
@@ -59,6 +59,12 @@ function fish_prompt
 
   # Add information about the current VCS
   parse_git_branch
+
+  if set -q AWS_PROFILE
+    if test -n "$AWS_PROFILE"
+      echo -n -s (set_color yellow) " [👤 $AWS_PROFILE]"
+    end
+  end
 
   # Finally, print the shell prompt.  We have a slightly different prompt
   # for root users.
