@@ -38,22 +38,15 @@ import markdown2
 USER_TAG = re.compile(r"@(?P<name>[A-Za-z0-9-_]{1,25})")
 
 
-if __name__ == "__main__":
-    try:
-        path = sys.argv[1]
-    except IndexError:
-        sys.exit("Usage: %s <PATH>" % __file__)
-
-    md_src = open(path).read()
-
+def md_to_dreamwidth_html(md_src):
     # Convert the Markdown to HTML
-    html = markdown2.markdown(md_src)
+    html = markdown2.markdown(md_src, extras=["smarty-pants"])
 
     # The HTML includes linebreaks, which the Dreamwidth editor interprets as
     # "add a linebreak to the post".  Ditch those by compressing all the newlines.
     # Because I use semantic linebreaks, add a space between lines --
     # just not a newline.
-    no_newlines_html = " ".join(markdown2.markdown(md_src).splitlines())
+    no_newlines_html = " ".join(html.splitlines())
 
     # Close up opening/closing <p> tags
     compact_html = no_newlines_html.replace("</p>  <p>", "</p><p>")
@@ -61,4 +54,14 @@ if __name__ == "__main__":
     # Render any "@name" as <user> tags
     with_name_tags_html = USER_TAG.sub(r'<user name="\g<name>">', compact_html)
 
-    print(with_name_tags_html)
+    return with_name_tags_html
+
+
+if __name__ == "__main__":
+    try:
+        path = sys.argv[1]
+    except IndexError:
+        sys.exit("Usage: %s <PATH>" % __file__)
+
+    md_src = open(path).read()
+    print(md_to_dreamwidth_html(md_src))

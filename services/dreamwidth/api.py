@@ -5,6 +5,8 @@ Dreamwidth API wrapper class.
 Useful links:
     - https://dw-dev-training.dreamwidth.org/58924.html?thread=383532
     - https://github.com/ziarkaen/dreamwidth-gsoc/blob/2f73355b60d59288bc78671cebe901879121fe8a/dreamwidth-library/dreamwidth2.py
+    - http://wiki.dwscoalition.org/wiki/index.php/XML-RPC_Protocol
+    - https://www.livejournal.com/doc/server/ljp.csp.xml-rpc.protocol.html
 
 """
 
@@ -85,6 +87,9 @@ class DreamwidthAPI:
                 set(event["logtime"] for event in resp["events"])
             )
             data["beforedate"] = sorted_logtimes[1]
+
+    def get_custom_access_groups(self):
+        return self.call_endpoint("gettrustgroups")["trustgroups"]
 
 
 class BinaryEncoder(json.JSONEncoder):
