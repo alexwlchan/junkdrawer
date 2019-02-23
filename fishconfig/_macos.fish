@@ -41,3 +41,7 @@ function scramble_mac_address
     sudo ifconfig en0 ether (openssl rand -hex 6 | sed 's/\(..\)/\1:/g; s/./0/2; s/.$//')
     networksetup -detectnewhardware
 end
+
+
+alias correspondence="~/.virtualenvs/docstore/bin/python ~/repos/docstore/bin/index_document.py --port=8072 --cleanup"
+alias manual="~/.virtualenvs/docstore/bin/python ~/repos/docstore/bin/index_document.py --port=8082 --cleanup"
