@@ -12,7 +12,11 @@ Useful links:
 
 import hashlib
 import json
-from xmlrpc.client import Binary, ServerProxy
+
+try:
+    from xmlrpclib import Binary, ServerProxy
+except ImportError:  # Python 3
+    from xmlrpc.client import Binary, ServerProxy
 
 
 def md5(s):
