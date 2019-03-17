@@ -4,8 +4,6 @@
 Usage: build_reading_page_rss.py --username=<USERNAME> --password=<PASSWORD>
 """
 
-import datetime as dt
-import re
 import sys
 
 import bs4
@@ -13,19 +11,7 @@ import click
 import feedgenerator
 
 from _api import DreamwidthSession
-
-
-def parse_date(date_s, time_s):
-    amended_date_s = re.sub(
-        r'(1st|2nd|3rd|\dth)',
-        lambda m: m.group()[:-2],
-        date_s
-    )
-
-    return dt.datetime.strptime(
-        amended_date_s + ' ' + time_s,
-        '%b. %d, %Y %H:%M %p'
-    )
+from _helpers import parse_date
 
 
 @click.command()
