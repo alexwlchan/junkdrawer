@@ -4,6 +4,8 @@
 #
 #    pip-compile 
 #
+atomicwrites==1.3.0       # via pytest
+attrs==19.1.0             # via pytest
 beautifulsoup4==4.7.1     # via bs4
 bs4==0.0.1
 certifi==2019.3.9         # via requests
@@ -11,8 +13,12 @@ chardet==3.0.4            # via requests
 click==7.0
 feedgenerator==1.9
 idna==2.8                 # via requests
+more-itertools==6.0.0     # via pytest
+pluggy==0.9.0             # via pytest
+py==1.8.0                 # via pytest
+pytest==4.3.1
 pytz==2018.9              # via feedgenerator
 requests==2.21.0
-six==1.12.0               # via feedgenerator
+six==1.12.0               # via feedgenerator, pytest
 soupsieve==1.8            # via beautifulsoup4
 urllib3==1.24.1           # via requests

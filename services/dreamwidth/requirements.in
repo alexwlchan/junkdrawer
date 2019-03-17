@@ -2,3 +2,4 @@ bs4
 click
 feedgenerator
 requests
+pytest
