@@ -4,14 +4,28 @@
 Usage: build_reading_page_rss.py --username=<USERNAME> --password=<PASSWORD>
 """
 
+import datetime as dt
+import re
 import sys
 
 import bs4
 import click
 import feedgenerator
-import maya
 
 from _api import DreamwidthSession
+
+
+def parse_date(date_s, time_s):
+    amended_date_s = re.sub(
+        r'(1st|2nd|3rd|\dth)',
+        lambda m: m.group()[:-2],
+        date_s
+    )
+
+    return dt.datetime.strptime(
+        amended_date_s + ' ' + time_s,
+        '%b. %d, %Y %H:%M %p'
+    )
 
 
 @click.command()
@@ -52,7 +66,7 @@ def build_reading_page_rss(username, password):
         datetime_span = e.find('span', attrs={'class': 'datetime'})
         date_span = datetime_span.find('span', attrs={'class': 'date'}).text
         time_span = datetime_span.find('span', attrs={'class': 'time'}).text
-        pubdate = maya.parse(date_span + ' ' + time_span)
+        pubdate = parse_date(date_span, time_span)
 
         poster = e.find('span', attrs={'class': 'poster'}).text
 
@@ -61,8 +75,7 @@ def build_reading_page_rss(username, password):
                 li.find('a').text for li in
                 e.find('div', attrs={'class': 'tag'}).find('ul').findAll('li')
             ]
-            description = 'This post is tagged with %s' % ', '.join(
-                repr(t) for t in tags)
+            description = 'This post is tagged with %s' % ', '.join(tags)
         except AttributeError:
             tags = []
             description = '(This post is untagged)'
