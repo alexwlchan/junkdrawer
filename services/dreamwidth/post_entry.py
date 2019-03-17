@@ -8,7 +8,7 @@ import webbrowser
 
 import click
 
-from api import DreamwidthAPI
+from _api import DreamwidthAPI
 from markdownify import md_to_dreamwidth_html
 
 
