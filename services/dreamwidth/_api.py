@@ -18,6 +18,9 @@ try:
 except ImportError:  # Python 3
     from xmlrpc.client import Binary, ServerProxy
 
+import bs4
+import requests
+
 
 def md5(s):
     h = hashlib.md5()
@@ -101,3 +104,51 @@ class BinaryEncoder(json.JSONEncoder):
         if isinstance(obj, Binary):
             return obj.data.decode("utf8")
         return super().default(obj)
+
+
+class DreamwidthSession:
+    def __init__(self, username, password):
+        self.sess = requests.Session()
+
+        # First we have to log in to Dreamwidth.  This is a bit more complicated
+        # than a standard username/password form.
+        #
+        # Possibly because the LiveJournal/Dreamwidth codebase predates widespread
+        # adoption/support for HTTPS, the login page doesn't just send an encrypted
+        # username/password.  Instead, the login page includes an auth and a challenge.
+        #
+        # The challenge is prepended to an MD5 hash of the password, all of which is
+        # in turn MD5-hashed.  The resulting string is sent to the server, and the
+        # plaintext password omitted.
+        #
+        # You can see the browser-side implementation in question in login.js:
+        # https://github.com/dreamwidth/dw-free/blob/3467339cd823c6d71b8a235bf76409d5dab93b85/htdocs/js/login.js
+        #
+        # This bit definitely works, but it's probably fragile.
+        resp = self.sess.get('https://www.dreamwidth.org/login')
+        login_soup = bs4.BeautifulSoup(resp.text, 'html.parser')
+        lj_form_auth = login_soup.find(
+            'input', attrs={'name': 'lj_form_auth'}).attrs['value']
+        chal = login_soup.find('input', attrs={'name': 'chal'}).attrs['value']
+
+        response_field = md5(chal + md5(password))
+
+        resp = self.sess.post(
+            'https://www.dreamwidth.org/login',
+            data={
+                'user': username,
+                'password': '',
+                'lj_form_auth': lj_form_auth,
+                'chal': chal,
+                'action:login': 'Log in',
+                'response': response_field,
+            }
+        )
+        resp.raise_for_status()
+
+        # Dreamwidth always returns an HTTP 200, even if login fails.  This is a
+        # better way to check if login succeeded.
+        assert 'Welcome back to Dreamwidth!' in resp.text
+
+    def get(self, *args, **kwargs):
+        return self.sess.get(*args, **kwargs)
