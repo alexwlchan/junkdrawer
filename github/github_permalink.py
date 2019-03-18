@@ -63,7 +63,7 @@ if __name__ == '__main__':
         raise
 
     commits = resp.json()
-    assert len(commits) > 1
+    assert len(commits) >= 1
 
     sha = commits[0]["sha"]
 
