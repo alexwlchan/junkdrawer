@@ -26,6 +26,9 @@ fileType         = source.python
 [ *.ini ]
 fileType         = source.ini
 
+[ *.sbt ]
+fileType         = source.scala
+
 [ *.svg ]
 fileType         = text.xml
 
@@ -55,6 +58,9 @@ fileType         = source.scala
 
 [ *.py.tpl ]
 fileType         = source.python
+
+[ *.Makefile ]
+fileType         = source.makefile
 
 [ Jenkinsfile ]
 fileType         = source.groovy
