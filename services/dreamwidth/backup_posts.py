@@ -11,7 +11,7 @@ import json
 import os
 import sys
 
-from api import BinaryEncoder, DreamwidthAPI
+from _api import BinaryEncoder, DreamwidthAPI
 
 
 if __name__ == "__main__":

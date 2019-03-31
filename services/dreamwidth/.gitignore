@@ -1,3 +1,5 @@
 backup_dreamwidth.sh
 *.md
 *.json
+*.html
+*.txt
