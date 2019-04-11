@@ -42,3 +42,7 @@ if __name__ == '__main__':
             )
 
             assert resp.json()["result_code"] == "done", resp.text
+
+        tags = b["tags"].split()
+        if "!fic" in tags and not any(t.startswith("wc:") for t in tags):
+            print(f"WARNING: {b['href']} is a fic with no word count")
