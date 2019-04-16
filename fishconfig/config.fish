@@ -18,6 +18,8 @@ end
 # Add Cargo install path
 append_dir_to_path ~/.cargo/bin
 
+append_dir_to_path "$DIR/pathscripts"
+
 # A useful alias for quickly tallying a set of data
 alias tally "sort | uniq -c | sort"
 
