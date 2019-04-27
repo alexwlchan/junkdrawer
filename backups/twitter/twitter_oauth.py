@@ -171,11 +171,26 @@ class TwitterSession:
         ):
             yield from resp["users"]
 
+    def search(self, query, **kwargs):
+        initial_params = {
+            "q": query,
+            "count": 100,
+            **kwargs
+        }
+        for resp in self._cursored_response(
+            path="/search/tweets.json",
+            initial_params=initial_params
+        ):
+            yield from resp["statuses"]
+
     @tenacity.retry(wait=tenacity.wait_exponential(multiplier=1, max=60))
+    def _oauth_get(self, *args, **kwargs):
+        return self.oauth_session.get(*args, **kwargs)
+
     def _cursored_response(self, path, initial_params):
         params = copy.deepcopy(initial_params)
         while True:
-            resp = self.oauth_session.get(API_URL + path, params=params, timeout=5)
+            resp = self._oauth_get(API_URL + path, params=params, timeout=5)
             yield resp.json()
 
             try:
@@ -197,11 +212,7 @@ class TwitterSession:
         while True:
             print(f"Making request to {path} with {params}")
 
-            @tenacity.retry(wait=tenacity.wait_exponential(multiplier=1, max=60))
-            def get():
-                return self.oauth_session.get(API_URL + path, params=params, timeout=5)
-
-            resp = get()
+            resp = self._oauth_get(API_URL + path, params=params, timeout=5)
             yield from resp.json()
 
             for tweet in resp.json():
