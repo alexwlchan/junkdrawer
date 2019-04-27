@@ -1,0 +1,34 @@
+#!/usr/bin/env python3
+# -*- encoding: utf-8
+
+import os
+import subprocess
+
+ROOT = subprocess.check_output([
+    "git", "rev-parse", "--show-toplevel"]).strip().decode("utf-8")
+
+refs = os.listdir(os.path.join(ROOT, ".git/refs/remotes/origin"))
+
+if "HEAD" in refs:
+    main_branch = open(
+        os.path.join(ROOT, ".git/refs/remotes/origin", "HEAD")).read().split("/")[-1].strip()
+elif "development" in refs:
+    main_branch = "development"
+else:
+    main_branch = "master"
+
+branches_to_delete = [
+    b.strip().decode("utf-8")
+    for b in subprocess.check_output(
+        ["git", "branch", "--merged", main_branch]).splitlines()
+]
+
+for branch in branches_to_delete:
+    if branch == main_branch:
+        continue
+
+    # This is the branch we're currently on!
+    if branch.startswith("* "):
+        continue
+
+    subprocess.check_call(["git", "branch", "--delete", branch])
