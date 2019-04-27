@@ -74,7 +74,7 @@ eval (python3 -m virtualfish auto_activation) >> /dev/null 2>&1 &
 ###############################################################################
 
 . $DIR/_prompt.fish
-. $DIR/git.fish
+. $DIR/_git.fish
 . $DIR/_docker.fish
 . $DIR/_dockerfiles.fish
 . $DIR/_imdown.fish
