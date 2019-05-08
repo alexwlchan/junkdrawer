@@ -356,7 +356,10 @@ def update_index(tweet, root):
 
 
 def summarise_tweet(tweet):
-    text = tweet["text"]
+    try:
+        text = tweet["full_text"]
+    except KeyError:
+        text = tweet["text"]
 
     for url in tweet.get("entities", {}).get("urls", []):
         text = text.replace(url["url"], "%s [%s]" % (url["expanded_url"], url["url"]))
