@@ -337,6 +337,42 @@ def save_tweet(tweet, *, backup_root=DEFAULT_BACKUP_ROOT, dirname):
 
     os.rename(tmp_path, path)
 
+    # Save a summary of the tweet info
+    update_index(tweet, root=backup_root)
+
+
+def update_index(tweet, root):
+    index_path = os.path.join(root, "summary.json")
+
+    try:
+        index = json.load(open(index_path))
+    except FileNotFoundError:
+        index = {}
+
+    index[tweet["id_str"]] = summarise_tweet(tweet)
+
+    json_str = json.dumps(index, indent=2, sort_keys=True)
+    open(index_path, "w").write(json_str)
+
+
+def summarise_tweet(tweet):
+    text = tweet["text"]
+
+    for url in tweet.get("entities", {}).get("urls", []):
+        text = text.replace(url["url"], "%s [%s]" % (url["expanded_url"], url["url"]))
+
+    for media in tweet.get("entities", {}).get("media", []):
+        text = text.replace(
+            media["url"],
+            "%s [%s]" % (media["media_url_https"], media["url"])
+        )
+
+    return {
+        "text": text,
+        "username": tweet["user"]["name"],
+        "screen_name": tweet["user"]["screen_name"],
+    }
+
 
 def save_user_info(users, *, dirname):
     out_dir = os.path.join(DEFAULT_BACKUP_ROOT, dirname)
