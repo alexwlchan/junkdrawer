@@ -338,7 +338,7 @@ def save_tweet(tweet, *, backup_root=DEFAULT_BACKUP_ROOT, dirname):
     os.rename(tmp_path, path)
 
     # Save a summary of the tweet info
-    update_index(tweet, root=backup_root)
+    update_index(tweet, root=os.path.join(backup_root, dirname))
 
 
 def update_index(tweet, root):
