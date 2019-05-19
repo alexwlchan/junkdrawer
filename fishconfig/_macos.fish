@@ -5,16 +5,6 @@
 # Provide a convenient alias for the front URL
 alias furl="~/.cargo/bin/safari url"
 
-alias ghurl="~/.virtualenvs/platform/bin/python ~/repos/junkdrawer/github_permalink.py (furl)"
-
-
-# Dump the complete list of Safari URLs
-function safari-dump
-  set ds (date +'%Y-%m-%d_%H-%M')
-  ~/.cargo/bin/safari urls-all > ~/Desktop/safari_$ds.txt
-  echo ~/Desktop/safari_$ds.txt
-end
-
 
 # Open the current working directory as a Git repository in GitUp
 function gup
@@ -41,7 +31,3 @@ function scramble_mac_address
     sudo ifconfig en0 ether (openssl rand -hex 6 | sed 's/\(..\)/\1:/g; s/./0/2; s/.$//')
     networksetup -detectnewhardware
 end
-
-
-alias correspondence="~/.virtualenvs/docstore/bin/python ~/repos/docstore/bin/index_document.py --port=8072 --cleanup"
-alias manual="~/.virtualenvs/docstore/bin/python ~/repos/docstore/bin/index_document.py --port=8082 --cleanup"
