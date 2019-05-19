@@ -1,0 +1,18 @@
+#!/usr/bin/env python
+# -*- encoding: utf-8
+
+import os
+import shutil
+
+has_changes = True
+
+while has_changes:
+
+    # Reset for the start of the new cycle
+    has_changes = False
+
+    for root, dirnames, filenames in os.walk("."):
+        if not dirnames and (filenames == [".DS_Store"] or not filenames):
+            print(root)
+            shutil.rmtree(root)
+            has_changes = True
