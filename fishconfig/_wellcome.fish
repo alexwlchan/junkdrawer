@@ -27,7 +27,8 @@ function wrt
     --env AWS_PROFILE="$AWS_PROFILE" \
     --env AWS_SDK_LOAD_CONFIG=1 \
     --volume ~/.aws:/root/.aws \
-    --volume (git rev-parse --show-toplevel) \
+    --volume (git rev-parse --show-toplevel):(git rev-parse --show-toplevel) \
+    --workdir (git rev-parse --show-toplevel) \
     --interactive --tty --rm \
     wellcome/release_tooling:60 $argv
 end
