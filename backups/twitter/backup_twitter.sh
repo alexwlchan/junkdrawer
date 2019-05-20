@@ -15,6 +15,7 @@ pushd "$DIR"
   python $DIR/backup_dms.py
   python save_followers.py
   python save_friends.py
+  python backup_referrers.py
 
   osascript -e '
     tell application "Things3"
