@@ -1,5 +1,15 @@
 #!/usr/bin/env python3
 # -*- encoding: utf-8
+"""
+Batch convert Acorn images to PNG files.
+
+Example usage:
+
+    $ convert_acorn_to_png ~/Desktop/*.acorn
+
+will create a PNG file on the Desktop for every Acorn file in the Desktop.
+
+"""
 
 import glob
 import pathlib
@@ -28,5 +38,5 @@ for path in get_paths(patterns):
     print(f"Converting {acorn_path} to {png_path}...")
 
     subprocess.check_call([
-        "export_acorn_file", acorn_path.resolve(), png_path.resolve()
+        "convert_acorn", acorn_path.resolve(), png_path.resolve()
     ])
