@@ -172,16 +172,31 @@ class TwitterSession:
             yield from resp["users"]
 
     def search(self, query, **kwargs):
-        initial_params = {
+        params = {
             "q": query,
             "count": 100,
             **kwargs
         }
-        for resp in self._cursored_response(
-            path="/search/tweets.json",
-            initial_params=initial_params
-        ):
-            yield from resp["statuses"]
+
+        while True:
+            print(f"Making request to /search/tweets.json with {params}")
+
+            resp = self._oauth_get(
+                API_URL + "/search/tweets.json",
+                params=params,
+                timeout=5
+            )
+
+            for tweet in resp.json()["statuses"]:
+                download_profile_image(tweet["user"], backup_root=self.backup_root)
+                yield tweet
+
+            try:
+                params["max_id"] = min(
+                    tweet["id"] for tweet in resp.json()["statuses"]) - 1
+            except ValueError:
+                # Empty response; nothing more to do
+                break
 
     @tenacity.retry(wait=tenacity.wait_exponential(multiplier=1, max=60))
     def _oauth_get(self, *args, **kwargs):
@@ -314,7 +329,7 @@ def save_tweet(tweet, *, backup_root=DEFAULT_BACKUP_ROOT, dirname):
 
     os.makedirs(tmp_path, exist_ok=True)
     with open(os.path.join(tmp_path, "info.json"), "w") as outfile:
-        outfile.write(json.dumps(tweet))
+        outfile.write(json.dumps(tweet, indent=2, sort_keys=True))
 
     download_profile_image(tweet["user"], backup_root=backup_root)
 
