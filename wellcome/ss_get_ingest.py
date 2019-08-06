@@ -7,6 +7,7 @@ import os
 import sys
 
 import daiquiri
+import termcolor
 from wellcome_storage_service import IngestNotFound, StorageServiceClient
 
 
@@ -59,7 +60,32 @@ if __name__ == "__main__":
             logging.debug("Not found in %s API", name)
         else:
             logging.debug("Found ingest in %s API:", name)
-            print(json.dumps(ingest, indent=2, sort_keys=True))
+
+            print("Source:      s3://%s/%s" % (
+                ingest["sourceLocation"]["bucket"],
+                ingest["sourceLocation"]["path"],
+            ))
+            print("Space:       %s" % ingest["space"]["id"])
+            print("External ID: %s" % ingest["bag"]["info"]["externalIdentifier"])
+            print("")
+
+            print("Events:")
+
+            for event in ingest["events"]:
+                print(" * %s" % event["description"])
+
+            print("")
+
+            status = ingest["status"]["id"]
+            colour = {
+                "accepted": "yellow",
+                "processing": "yellow",
+                "succeeded": "green",
+                "failed": "red",
+            }[status]
+
+            print("Status: %s" % termcolor.colored(status, colour))
+
             sys.exit(0)
 
     logging.error("Could not find %s in either API!", ingest_id)
