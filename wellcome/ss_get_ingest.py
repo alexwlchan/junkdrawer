@@ -66,6 +66,12 @@ if __name__ == "__main__":
     ))
     print("space:\t\t%s" % ingest["space"]["id"])
     print("external ID:\t%s" % ingest["bag"]["info"]["externalIdentifier"])
+
+    try:
+        print("version:\t%s" % ingest["bag"]["info"]["version"])
+    except KeyError:
+        pass
+
     print("")
 
     print("events:", end="")
