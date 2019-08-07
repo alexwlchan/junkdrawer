@@ -55,18 +55,23 @@ if __name__ == "__main__":
 
     ingest = lookup_ingest(ingest_id)
 
-    print("Source:      s3://%s/%s" % (
+    fieldname_width = 12
+
+    api_variant = "prod" if ".api." in ingest["@context"] else "staging"
+    print("api:\t\t%s" % api_variant)
+
+    print("source:\t\ts3://%s/%s" % (
         ingest["sourceLocation"]["bucket"],
         ingest["sourceLocation"]["path"],
     ))
-    print("Space:       %s" % ingest["space"]["id"])
-    print("External ID: %s" % ingest["bag"]["info"]["externalIdentifier"])
+    print("space:\t\t%s" % ingest["space"]["id"])
+    print("external ID:\t%s" % ingest["bag"]["info"]["externalIdentifier"])
     print("")
 
-    print("Events:")
+    print("events:", end="")
 
     for event in ingest["events"]:
-        print(" * %s" % event["description"])
+        print("\t\t%s" % event["description"])
 
     print("")
 
@@ -78,6 +83,6 @@ if __name__ == "__main__":
         "failed": "red",
     }[status]
 
-    print("Status: %s" % termcolor.colored(status, colour))
+    print("status:\t\t%s" % termcolor.colored(status.upper(), colour))
 
     sys.exit(0)
