@@ -1,29 +1,28 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8
+"""
+Start an ingest.  Usage:
 
+    python ss_start_ingest.py <FILENAME>
+
+The script will look in wc-storage-staging-bagger-drop and wc-storage-bagger-drop
+to find the file, and automatically send it to the correct API.
+
+"""
+
+import getpass
 import json
-import logging
 import os
 import re
 import sys
 
 import boto3
 from botocore.exceptions import ClientError
-import daiquiri
-from wellcome_storage_service import StorageServiceClient
+
+from ss_ingests import get_logger, get_storage_client
 
 
-daiquiri.setup(
-    level=logging.INFO,
-    outputs=[
-        daiquiri.output.Stream(formatter=daiquiri.formatter.ColorFormatter(
-            fmt="%(asctime)s.%(msecs)03d %(color)s[%(levelname)s] %(message)s%(color_stop)s",
-            datefmt="%H:%M:%S"
-        ))
-    ]
-)
-
-logger = daiquiri.getLogger(__name__)
+logger = get_logger(__name__)
 
 
 def get_s3_resource(role_arn):
@@ -109,25 +108,23 @@ if __name__ == "__main__":
         external_identifier = ext_id_match.group(0)
         logger.info("Detected external identifier as %s", external_identifier)
 
-    host = "api" if api == "prod" else "api-stage"
-    api_url = f"https://{host}.wellcomecollection.org/storage/v1"
-
     creds_path = os.path.join(
         os.environ["HOME"], ".wellcome-storage", "oauth-credentials.json"
     )
     oauth_creds = json.load(open(creds_path))
 
-    sess = StorageServiceClient(
-        api_url=api_url,
-        client_id=oauth_creds["client_id"],
-        client_secret=oauth_creds["client_secret"],
-        token_url=oauth_creds["token_url"],
-    )
+    space_id = "-".join([getpass.getuser(), "testing"])
+    logger.info("Using storage space %s", space_id)
 
     logger.info("Making request to storage service")
 
-    location = sess.create_s3_ingest(
-        space_id="alex-testing",
+    host = "api" if api == "prod" else "api-stage"
+    api_url = f"https://{host}.wellcomecollection.org/storage/v1"
+
+    client = get_storage_client(api_url=api_url)
+
+    location = client.create_s3_ingest(
+        space_id=space_id,
         s3_bucket=buckets[api],
         s3_key=filename,
         external_identifier=external_identifier
@@ -136,4 +133,3 @@ if __name__ == "__main__":
     logger.info("Ingest created at URL %s", location)
     logger.info("Ingest has ID %s", location.split("/")[-1])
     logger.info("To look up the ingest:\n\n\tpython ss_get_ingest.py %s", location.split("/")[-1])
-
