@@ -64,3 +64,11 @@ if __name__ == "__main__":
             f"/ebooks/{mobi_filename}", f"/ebooks/{epub_filename}"
         ])
         print("*** Successfully converted to .epub")
+
+        check_call(["open", outdir])
+
+        title = input("What is the name of the book? ")
+        tags = input("How do you want to tag the book? ")
+        source_url = input("What is the source of the book? (optional) ")
+
+        # TODO: Upload to docstore
