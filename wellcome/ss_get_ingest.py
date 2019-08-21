@@ -9,6 +9,7 @@ The script will check both APIs for the ingest ID.
 
 """
 
+import datetime as dt
 import logging
 import sys
 
@@ -78,6 +79,23 @@ if __name__ == "__main__":
 
     for event in ingest["events"]:
         print("\t\t%s" % event["description"])
+
+    print("")
+    created_date = ingest["events"][-1]["createdDate"]
+
+    delta = dt.datetime.utcnow() - dt.datetime.strptime(
+        created_date,
+        "%Y-%m-%dT%H:%M:%S.%fZ"
+    )
+
+    if delta.seconds < 5:
+        print("last event:\t%s (just now)" % created_date)
+    elif 60 <= delta.seconds < 120:
+        print("last event:\t%s (1 minute ago)" % created_date)
+    elif delta.seconds < 60 * 60:
+        print("last event:\t%s (%d minutes ago)" % (created_date, int(delta.seconds / 60)))
+    else:
+        print("last event:\t%s"% created_date)
 
     print("")
 
