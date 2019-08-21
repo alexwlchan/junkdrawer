@@ -57,7 +57,7 @@ if __name__ == "__main__":
 
     fieldname_width = 12
 
-    api_variant = "prod" if ".api." in ingest["@context"] else "staging"
+    api_variant = "prod" if "api." in ingest["@context"] else "staging"
     print("api:\t\t%s" % api_variant)
 
     print("source:\t\ts3://%s/%s" % (
