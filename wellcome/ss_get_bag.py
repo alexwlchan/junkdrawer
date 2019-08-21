@@ -9,6 +9,7 @@ The script will check both APIs for the ingest ID.
 
 """
 
+import json
 import logging
 import pprint
 import sys
@@ -65,4 +66,4 @@ if __name__ == "__main__":
 
     bag = lookup_bag(space, external_identifier, version)
 
-    pprint.pprint(bag)
+    print(json.dumps(bag, indent=2, sort_keys=True))

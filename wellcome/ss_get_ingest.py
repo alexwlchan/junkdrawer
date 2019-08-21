@@ -109,4 +109,21 @@ if __name__ == "__main__":
 
     print("status:\t\t%s" % termcolor.colored(status.upper(), colour))
 
+    if status == "succeeded":
+        print("")
+        print("To look up the bag:")
+        print("")
+
+        try:
+            print("    python ss_get_bag.py %s %s %s" % (
+                ingest["space"]["id"],
+                ingest["bag"]["info"]["externalIdentifier"],
+                ingest["bag"]["info"]["version"]
+            ))
+        except KeyError:
+            print("    python ss_get_bag.py %s %s" % (
+                ingest["space"]["id"],
+                ingest["bag"]["info"]["externalIdentifier"]
+            ))
+
     sys.exit(0)
