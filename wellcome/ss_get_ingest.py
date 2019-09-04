@@ -13,6 +13,7 @@ import datetime as dt
 import logging
 import sys
 
+import pytz
 import termcolor
 from wellcome_storage_service import IngestNotFound
 
@@ -48,6 +49,17 @@ def lookup_ingest(ingest_id):
     sys.exit(1)
 
 
+def pprint_date(ds):
+    # Get the UTC offset for the current system
+    UTC_OFFSET_TIMEDELTA = dt.datetime.utcnow() - dt.datetime.now()
+
+    dt_obj = dt.datetime.strptime(ds, "%Y-%m-%dT%H:%M:%S.%fZ") + UTC_OFFSET_TIMEDELTA
+    if dt_obj.date() == dt.datetime.now().date():
+        return dt_obj.strftime("today @ %H:%M:%S")
+    else:
+        return dt_obj.strftime("%Y-%m-%d @ %H:%M:%S")
+
+
 if __name__ == "__main__":
     try:
         ingest_id = sys.argv[1]
@@ -78,24 +90,35 @@ if __name__ == "__main__":
     print("events:", end="")
 
     for event in ingest["events"]:
-        print("\t\t%s" % event["description"])
+        if "--timestamps" in sys.argv:
+            print("\t\t%s (%s)" % (
+                event["description"], pprint_date(event["createdDate"])))
+        else:
+            print("\t\t%s" % event["description"])
 
     print("")
-    created_date = ingest["events"][-1]["createdDate"]
+    try:
+        last_event_date = ingest["events"][-1]["createdDate"]
+    except IndexError:
+        last_event_date = ingest["createdDate"]
 
     delta = dt.datetime.utcnow() - dt.datetime.strptime(
-        created_date,
+        last_event_date,
         "%Y-%m-%dT%H:%M:%S.%fZ"
     )
 
-    if delta.seconds < 5:
-        print("last event:\t%s (just now)" % created_date)
-    elif 60 <= delta.seconds < 120:
-        print("last event:\t%s (1 minute ago)" % created_date)
-    elif delta.seconds < 60 * 60:
-        print("last event:\t%s (%d minutes ago)" % (created_date, int(delta.seconds / 60)))
-    else:
-        print("last event:\t%s"% created_date)
+    print("started at:\t%s" % pprint_date(ingest["createdDate"]))
+
+    if ingest["events"]:
+        last_event_date = pprint_date(last_event_date)
+        if delta.seconds < 5:
+            print("last event:\t%s (just now)" % last_event_date)
+        elif 60 <= delta.seconds < 120:
+            print("last event:\t%s (1 minute ago)" % last_event_date)
+        elif delta.seconds < 60 * 60:
+            print("last event:\t%s (%d minutes ago)" % (last_event_date, int(delta.seconds / 60)))
+        else:
+            print("last event:\t%s"% last_event_date)
 
     print("")
 
