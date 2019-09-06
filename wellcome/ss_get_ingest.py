@@ -56,6 +56,8 @@ def pprint_date(ds):
     dt_obj = dt.datetime.strptime(ds, "%Y-%m-%dT%H:%M:%S.%fZ") + UTC_OFFSET_TIMEDELTA
     if dt_obj.date() == dt.datetime.now().date():
         return dt_obj.strftime("today @ %H:%M:%S")
+    elif (dt_obj - dt.timedelta(days=1)).date() == dt.datetime.now().date():
+        return dt_obj.strftime("yesterday @ %H:%M:%S")
     else:
         return dt_obj.strftime("%Y-%m-%d @ %H:%M:%S")
 

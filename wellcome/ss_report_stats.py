@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8
 
+import datetime as dt
+
 import boto3
 import termcolor
 
@@ -34,7 +36,7 @@ def draw_chart(data):
             "Accepted": "yellow",
             "Failed": "red",
             "Completed": "green",
-            "Processing": "yellow",
+            "Processing": "blue",
         }[label]
 
         if count == 0:
@@ -58,12 +60,67 @@ data = {
 dynamodb = boto3.client("dynamodb")
 paginator = dynamodb.get_paginator("scan")
 
+failed = {}
+processing = {}
+
+NOW = dt.datetime.now()
+
 for page in paginator.paginate(TableName="storage-ingests"):
     for item in page["Items"]:
         status = item["payload"]["M"]["status"]["S"]
+
+        try:
+            last_event = max(
+                event["M"]["createdDate"]["N"]
+                for event in item["payload"]["M"]["events"]["L"]
+            )
+        except KeyError:
+            last_event = item["payload"]["M"]["createdDate"]["N"]
+
+        last_event = NOW - dt.datetime.fromtimestamp(int(last_event) / 1000)
+
+        ingest_id = item["id"]["S"]
+
         if status == "Failed":
-            print(item["id"]["S"])
+            failed[ingest_id] = last_event
+        if status == "Processing":
+            processing[ingest_id] = last_event
+
         data[status] += 1
+
+
+
+def to_s(last_event):
+    if last_event.days > 0:
+        return "%dd %ds" % (last_event.days, last_event.seconds)
+    else:
+        return "%ds" % (last_event.seconds)
+
+from pprint import pprint
+
+
+if failed:
+    print("== failed ==")
+    print(
+        "\n".join(
+            "%s ~> %s" % (k, to_s(v))
+            for k, v
+            in sorted(failed.items(), key=lambda t: t[1])
+        )
+    )
+    print("== failed ==")
+    print("")
+if processing:
+    print("== processing ==")
+    print(
+        "\n".join(
+            "%s ~> %s" % (k, to_s(v))
+            for k, v
+            in sorted(processing.items(), key=lambda t: t[1])
+        )
+    )
+    print("== processing ==")
+    print("")
 
 
 if all(v == 0 for v in data.values()):
