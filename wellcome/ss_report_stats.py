@@ -44,7 +44,7 @@ def draw_chart(data):
 
         print(
             termcolor.colored(
-                f'{label.ljust(longest_label_length).lower()}  {count:#4d} {bar}',
+                f'{label.ljust(longest_label_length).lower()}  {count:#6d} {bar}',
                 color
             )
         )
@@ -92,7 +92,12 @@ for page in paginator.paginate(TableName="storage-ingests"):
 
 def to_s(last_event):
     if last_event.days > 0:
-        return "%dd %ds" % (last_event.days, last_event.seconds)
+        if last_event.seconds > 3600:
+            return "%dd %dh" % (last_event.days, last_event.seconds / 3600)
+        else:
+            return "%dd" % last_event.days
+    elif last_event.seconds > 3600:
+        return "%dh %dm" % (last_event.seconds // 3600, last_event.seconds % 3600 // 60)
     else:
         return "%ds" % (last_event.seconds)
 
