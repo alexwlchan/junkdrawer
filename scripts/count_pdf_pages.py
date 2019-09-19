@@ -44,7 +44,7 @@ def draw_bar_chart(data):
         # If the bar is empty, add a left one-eighth block
         bar = bar or  '▏'
 
-        print(f'{label.rjust(longest_label_length)} ▏ {count:#4d} {bar}')
+        print(f'{label.rjust(longest_label_length)} ▏ {count:#5d} {bar}')
 
 
 def get_pdfs(search_root):
@@ -86,7 +86,7 @@ if __name__ == "__main__":
 
     draw_bar_chart(sorted(counts.items()))
     print("─" * 40)
-    print(f"TOTAL      ▏ {sum(counts.values()):#4d}")
+    print(f"TOTAL      ▏ {sum(counts.values()):#5d}")
 
     with open("_pdf_cache.json", "w") as f:
         f.write(json.dumps(CACHE))
