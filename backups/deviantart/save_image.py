@@ -111,8 +111,6 @@ def get_page_state(canonical_url):
     return json.loads(json.loads(json_string))
 
 
-
-
 if __name__ == "__main__":
     try:
         url = sys.argv[1]
@@ -127,6 +125,7 @@ if __name__ == "__main__":
     page_state = get_page_state(canonical_url)
 
     if backup_dir.exists():
+        print("Already saved!")
         sys.exit(0)
 
     oembed_data = get_oembed_data(canonical_url)
