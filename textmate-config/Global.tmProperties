@@ -65,6 +65,9 @@ fileType         = source.makefile
 [ Jenkinsfile ]
 fileType         = source.groovy
 
+[ *.svg.template ]
+fileType         = text.xml
+
 [ managed_schema ]
 fileType         = text.xml
 
