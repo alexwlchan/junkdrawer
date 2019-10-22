@@ -13,8 +13,7 @@ configobj==5.0.0
 cryptography==2.4.2
 idna==2.8                 # via cryptography, requests
 netaddr==0.7.19
-olefile==0.46             # via pillow
-pillow==4.3.0
+pillow==6.2.0
 pycparser==2.19           # via cffi
 pyjwt==1.7.1
 requests==2.21.0
