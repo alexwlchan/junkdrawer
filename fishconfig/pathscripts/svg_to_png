@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+set -o errexit
+set -o nounset
+
+SVG_PATH="$1"
+DENSITY="${2:-600}"
+
+if ! [[ "$SVG_PATH" =~ ^.*\.svg ]]
+then
+  echo "Not an SVG? $SVG_PATH"
+  exit 1
+fi
+
+PNG_PATH="${SVG_PATH/svg/png}"
+
+convert -background none -density "$DENSITY" "$SVG_PATH" "$PNG_PATH"
+echo "$PNG_PATH"
