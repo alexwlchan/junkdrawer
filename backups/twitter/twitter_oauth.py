@@ -175,6 +175,7 @@ class TwitterSession:
         params = {
             "q": query,
             "count": 100,
+            "tweet_mode": "extended",
             **kwargs
         }
 
