@@ -13,3 +13,5 @@ Then I don't need to file a bug report, but I keep the project around anyway.
 ## Bugs filed from these examples:
 
 *   [rack-test/rack-test#241](https://github.com/rack-test/rack-test/issues/241) – Possible bug with rack/test's handling of String response bodies
+
+*   [algesten/ureq#23](https://github.com/algesten/ureq/issues/23) – I can't send cookies with Agent::set_cookie()
