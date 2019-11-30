@@ -65,7 +65,7 @@ def save_archive_copies(username, password):
     print(len(cache_ids))
 
     with open(CACHE_ID_PATH, "w") as outfile:
-        outfile.write(json.dumps(cache_ids))
+        outfile.write(json.dumps(cache_ids, indent=2, sort_keys=True))
 
 
 if __name__ == "__main__":
