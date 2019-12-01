@@ -100,6 +100,10 @@ def _create_tv_show_row(tv_show):
     }
 
 
+def _is_movie_bundle(itunes_entry):
+    return itunes_entry.get("collectionType") == "Movie Bundle"
+
+
 if __name__ == "__main__":
     try:
         path = sys.argv[1]
@@ -121,7 +125,7 @@ if __name__ == "__main__":
         for itunes_entry in tqdm.tqdm(itunes_movies, total=total):
             if _is_movie(itunes_entry):
                 row = _create_movie_row(itunes_entry)
-            elif _is_tv_show(itunes_entry):
+            elif _is_tv_show(itunes_entry) or _is_movie_bundle(itunes_entry):
                 row = _create_tv_show_row(itunes_entry)
             else:
                 pprint.pprint(itunes_entry)
