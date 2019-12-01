@@ -2,12 +2,32 @@
 # -*- encoding: utf-8
 """
 Build a spreadsheet of iTunes movies and their HD rental/purchase prices.
+
+When there's something I think I might like to watch, I save the iTunes URL
+to a text file.  This script turns that into a spreadsheet showing me the
+rental/purchase prices of everything I've saved.  Something like:
+
+    id	        | title	                | rental price  | purchase price
+    ------------+-----------------------+---------------+----------------
+    966073356	| John Wick	            | 3.49	        | 7.99
+    1203098946	| John Wick: Chapter 2	| 3.49	        | 7.99
+    1462496695	| John Wick: Chapter 3  | 4.99	        | 13.99
+
+This gives me a mini "shopping list" next time I have money to spend
+on entertainment.
+
+There is a wish list feature built into iTunes, but this lets me manage
+the list with a text file instead.
+
+Plus it was a chance to experiment with the iTunes API!
+
 """
 
 import csv
 import json
 import os
 import pprint
+import sys
 
 import hyperlink
 import tqdm
@@ -48,14 +68,17 @@ def _create_movie_row(movie):
         except KeyError:
             rental_price = ""
 
-    itunes_url = hyperlink.URL.from_text(movie["collectionViewUrl"])
+    try:
+        itunes_url = hyperlink.URL.from_text(movie["collectionViewUrl"])
+    except KeyError:
+        itunes_url = hyperlink.URL.from_text(movie["trackViewUrl"])
     itunes_url = itunes_url.remove("uo")
 
     return {
         "id": movie["trackId"],
         "title": movie["trackName"],
         "rental price": rental_price,
-        "buy price": movie["trackHdPrice"],
+        "purchase price": movie["trackHdPrice"],
         "URL": str(itunes_url)
     }
 
@@ -72,22 +95,26 @@ def _create_tv_show_row(tv_show):
         "id": tv_show["collectionId"],
         "title": tv_show["collectionName"],
         "rental price": "",
-        "buy price": tv_show["collectionHdPrice"],
+        "purchase price": tv_show["collectionHdPrice"],
         "URL": str(itunes_url)
     }
 
 
-
 if __name__ == "__main__":
+    try:
+        path = sys.argv[1]
+    except IndexError:
+        sys.exit(f"Usage: {__file__} <MOVIES_TXT>")
+
     http = urllib3.PoolManager()
 
-    movie_ids = get_itunes_movie_ids("movies.txt")
+    movie_ids = get_itunes_movie_ids(path)
     itunes_movies = get_itunes_data(movie_ids)
 
-    total = len([line for line in open("movies.txt") if line.startswith("http")])
+    total = len([line for line in open(path) if line.startswith("http")])
 
     with open("itunes.csv", "w") as csvfile:
-        fieldnames = ["id", "title", "rental price", "buy price", "URL"]
+        fieldnames = ["id", "title", "rental price", "purchase price", "URL"]
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
 
