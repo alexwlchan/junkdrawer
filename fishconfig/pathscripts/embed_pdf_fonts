@@ -8,6 +8,9 @@ This is useful for embedding fonts in PDFs, which aren't supplied by all systems
 e.g. when you download PDFs from Workday at Wellcome, they don't embed their fonts.
 This can cause issues with thumbnails in docstore, see
 https://github.com/alexwlchan/docstore/issues/125
+
+Based on code from https://discussions.apple.com/thread/7244245
+
 """
 
 import filecmp
