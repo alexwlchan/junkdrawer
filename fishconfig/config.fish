@@ -40,24 +40,20 @@ function get_travis_logs
     ~/.virtualenvs/platform/bin/python $ROOT/services/travis/get_travis_logs.py (furl) --token=(cat $ROOT/travis_token.txt)
 end
 
-function tfdiff
-    python3 $ROOT/tfdiff.py (pbpaste)
-end
-
 # Get the last screenshot I took.
 #
 # Note that Mojave changed the format of the filenames: previously they
 # were "Screen Shot <date>", now they're "Screenshot <date>".
 #
 function last_screenshot
-  find ~/Desktop -name 'Screen Shot*' | tail -n 1
+  find ~/Desktop -name 'Screenshot*' | tail -n 1
 end
 
 # Adjust the border on the last screenshot I took
 function reborder_last_screenshot
   pushd ~/Desktop
     python3 $ROOT/reborder.py (basename (last_screenshot)) $argv[1]
-    find ~/Desktop -name 'Screen Shot*reborder.png' -print0 -o -name 'Screenshot*reborder.png' -print0 | xargs -0 stat -f '%m %N' | sort -rn | head -1 | cut -f2- -d" "
+    find ~/Desktop -name 'Screenshot*reborder.png' -print0 | xargs -0 stat -f '%m %N' | sort -rn | head -1 | cut -f2- -d" "
   popd
 end
 
@@ -75,13 +71,10 @@ eval (python3 -m virtualfish auto_activation) >> /dev/null 2>&1 &
 
 . $DIR/_prompt.fish
 . $DIR/_git.fish
-. $DIR/_docker.fish
 . $DIR/_dockerfiles.fish
 . $DIR/_imdown.fish
 . $DIR/_twitter.fish
 . $DIR/_wellcome.fish
-
-. $DIR/_aws.fish
 
 # Load macOS-specific utilities
 if [ (uname -s) = "Darwin" ]

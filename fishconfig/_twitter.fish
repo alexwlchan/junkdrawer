@@ -21,6 +21,15 @@ function selfie --argument-names url
 end
 
 
+function trans-happy --argument-names url
+  if test -z "$url"
+    set url (furl)
+  end
+
+  eval $TW_PYTHON "$BACKUP_TWITTER/backup_single_tweet.py" --dirname=trans-happy --url="$url"
+end
+
+
 function backup_twitter
   bash $BACKUP_TWITTER/backup_twitter.sh
 end

@@ -103,11 +103,6 @@ function youtude_dl_mp3
 end
 
 
-function jq
-  docker run --rm --interactive giantswarm/tiny-tools jq $argv
-end
-
-
 function aws
   set -q AWS_PROFILE; or set AWS_PROFILE default
   docker run --rm --interactive --tty \
