@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8
 
+import csv
+import datetime as dt
 import getpass
+import os
 import sys
 
 import bs4
@@ -29,6 +32,7 @@ def login_to_trustnet(sess, *, username, password):
         data={
             "name": username,
             "pass": password,
+            "persistent_login": "1",
             "form_build_id": form_build_id,
             "form_id": "user_login",
             "op": "Log in",
@@ -74,6 +78,8 @@ def get_email_address(sess, user_link):
 
 
 if __name__ == "__main__":
+    GROUP_ID = "13207"
+
     username = getpass.getuser()
     print(f"Logging in as {username}", file=sys.stderr)
     password = getpass.getpass()
@@ -83,8 +89,8 @@ if __name__ == "__main__":
 
     login_to_trustnet(sess, username=username, password=password)
 
-    resp_members = sess.get("https://trustnet.wellcome.ac.uk/members-listing/13207")
-    resp_followers = sess.get("https://trustnet.wellcome.ac.uk/node/13207/followers")
+    resp_members = sess.get(f"https://trustnet.wellcome.ac.uk/members-listing/{GROUP_ID}")
+    resp_followers = sess.get(f"https://trustnet.wellcome.ac.uk/node/{GROUP_ID}/followers")
 
     all_users = set()
 
@@ -95,5 +101,25 @@ if __name__ == "__main__":
     #     all_users.add(follower)
 
     email_addresses = set()
-    for user_link, name in tqdm.tqdm(all_users):
-        print(",".join([user_link, name, get_email_address(sess, user_link)]))
+
+    date_string = dt.datetime.now().strftime("%Y-%m-%d_%H-%M")
+    out_path = f"members_{GROUP_ID}_{date_string}.csv"
+
+    with open(out_path + ".tmp", "w") as csvfile:
+        fieldnames = ["link", "name", "email_address"]
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+        writer.writeheader()
+
+        for user_link, name in tqdm.tqdm(all_users):
+            row = {
+                # TODO: Use hyperlink for this
+                "link": ("https://trustnet.wellcome.ac.uk/" + user_link).replace("//", "/"),
+
+                "name": name,
+                "email_address": get_email_address(sess, user_link),
+            }
+
+            writer.writerow(row)
+
+    os.rename(out_path + ".tmp", out_path)
