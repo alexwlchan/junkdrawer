@@ -93,16 +93,6 @@ function optipng
 end
 
 
-function youtube-dl
-  __call_docker_image youtube_dl $argv
-end
-
-
-function youtude_dl_mp3
-  __call_docker_image youtube_dl --extract-audio --audio-format=mp3 $argv
-end
-
-
 function aws
   set -q AWS_PROFILE; or set AWS_PROFILE default
   docker run --rm --interactive --tty \
