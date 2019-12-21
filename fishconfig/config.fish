@@ -18,6 +18,8 @@ end
 # Add Cargo install path
 append_dir_to_path ~/.cargo/bin
 
+append_dir_to_path ~/Library/Python/3.7/bin
+
 append_dir_to_path "$DIR/pathscripts"
 
 # A useful alias for quickly tallying a set of data
