@@ -15,10 +15,13 @@ from tag_counts import get_pinboard_tag
 
 
 if __name__ == "__main__":
-    ao3_url = subprocess.check_output([
-        "osascript", "-e",
-        'tell application "Safari" to get URL of document 2'
-    ]).decode("utf8").strip()
+    ao3_url = (
+        subprocess.check_output(
+            ["osascript", "-e", 'tell application "Safari" to get URL of document 2']
+        )
+        .decode("utf8")
+        .strip()
+    )
 
     filename, _ = urlretrieve(ao3_url)
     html = open(filename).read()

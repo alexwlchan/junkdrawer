@@ -13,12 +13,14 @@ def cleanup_blockquote_whitespace(description):
     Remove any leading/trailing whitespace from <blockquote> tags.
     """
     if (
-        ("<blockquote>\n" in description) or
-        ("\n</blockquote>" in description) or
-        ("<blockquote>\r\n" in description) or
-        ("\r\n</blockquote>" in description)
+        ("<blockquote>\n" in description)
+        or ("\n</blockquote>" in description)
+        or ("<blockquote>\r\n" in description)
+        or ("\r\n</blockquote>" in description)
     ):
-        return BLOCKQUOTE_WHITESPACE_RE.sub(r"\g<opening_tag>\g<closing_tag>", description)
+        return BLOCKQUOTE_WHITESPACE_RE.sub(
+            r"\g<opening_tag>\g<closing_tag>", description
+        )
     else:
         return description
 
@@ -33,8 +35,16 @@ def apply_markdown_blockquotes(description):
     lines = description.splitlines()
     for i, line in enumerate(lines):
         if line.lstrip().startswith(">"):
-            inner_line = line.lstrip('>').strip()
+            inner_line = line.lstrip(">").strip()
             lines[i] = f"<blockquote>{inner_line}</blockquote>"
 
     new_description = "\n".join(lines)
     return CONTINUOUS_BLOCKQUOTE_RE.sub(r"\g<whitespace>", new_description)
+
+
+def fix_encoding(description):
+    """
+    Replace the character Õ with ’, which is almost always a sign of an encoding
+    error somewhere in the bookmark saving process.
+    """
+    return description.replace("Õ", "’")

@@ -11,14 +11,18 @@ import sys
 import daiquiri
 
 from pinboard import create_session
-from text_transforms import apply_markdown_blockquotes, cleanup_blockquote_whitespace
+from text_transforms import (
+    apply_markdown_blockquotes,
+    cleanup_blockquote_whitespace,
+    fix_encoding,
+)
 
 daiquiri.setup(level=logging.INFO)
 
 logger = daiquiri.getLogger(__name__)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     try:
         api_key = sys.argv[1]
     except IndexError:
@@ -34,6 +38,7 @@ if __name__ == '__main__':
 
         b["extended"] = apply_markdown_blockquotes(b["extended"])
         b["extended"] = cleanup_blockquote_whitespace(b["extended"])
+        b["extended"] = fix_encoding(b["extended"])
 
         tags = b["tags"].split()
         if "!fic" in tags and not any(t.startswith("wc:") for t in tags):
@@ -46,9 +51,6 @@ if __name__ == '__main__':
             # this as a bookmark.
             b["url"] = b.pop("href")
 
-            resp = sess.get(
-                "https://api.pinboard.in/v1/posts/add",
-                params=b
-            )
+            resp = sess.get("https://api.pinboard.in/v1/posts/add", params=b)
 
             assert resp.json()["result_code"] == "done", resp.text

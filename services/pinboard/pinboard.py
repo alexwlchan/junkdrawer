@@ -9,10 +9,7 @@ class PinboardAuth(AuthBase):
         self.api_key = api_key
 
     def __call__(self, req):
-        req.prepare_url(req.url, params={
-            "auth_token": self.api_key,
-            "format": "json"
-        })
+        req.prepare_url(req.url, params={"auth_token": self.api_key, "format": "json"})
         return req
 
 
