@@ -27,6 +27,8 @@
 //      the menu bar item
 //        Tools > Macros > setColoursToCellValues
 //
+// See the macro in action: https://twitter.com/alexwlchan/status/1211790869097046016
+//
 
 function setColoursToCellValues() {
   var sheet = SpreadsheetApp.getActiveSpreadsheet();
