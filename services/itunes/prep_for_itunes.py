@@ -1,38 +1,25 @@
 #!/usr/bin/env python
-# -*- encoding: utf-8
+"""
+Given a folder full of MP3 files, add the metadata for the matching tracks
+in iTunes.
+"""
 
 import glob
 import json
 import os
+import random
 import subprocess
 import sys
 import webbrowser
 
 import eyed3
 import hyperlink
-import inquirer
 import urllib3
 
 
-if __name__ == "__main__":
-    front_url = subprocess.check_output([
-        "osascript", "-e",
-        """
-        tell application "Safari" to get URL of document 1
-        """
-    ]).decode("utf8").strip()
-
-    url = hyperlink.URL.from_text(front_url)
-    if url.host != "music.apple.com":
-        sys.exit(f"Not an iTunes URL: {url}")
-
-    print(f"*** Looking up URL {url}")
-
-    album_id = url.path[-1]
-
+def get_itunes_metadata(album_id):
     http = urllib3.PoolManager()
 
-    print("*** Fetching metadata from iTunes API")
     lookup_url = f"https://itunes.apple.com/lookup?id={album_id}&entity=song"
     resp = http.request("GET", lookup_url)
 
@@ -49,67 +36,103 @@ if __name__ == "__main__":
     album = album_types[0]
 
     tracks = [r for r in results if r["wrapperType"] == "track"]
-    assert len(tracks) == album["trackCount"]
-    print("*** Identified album and tracks")
 
-    print(f"*** Track names:")
-    print("\n".join(sorted(t["trackName"] for t in tracks)))
+    return (album, tracks)
 
-    track_matches = {}
 
-    for f in sorted(glob.glob("*.mp3")):
+def match_filenames_to_tracks(*, filenames, tracks):
+    """
+    Given a list of filenames and the track entries from the iTunes API, try
+    to build a 1-to-1 mapping between the filenames and the iTunes tracks.
+    """
+    attempt_count = 0
+    ambiguous_filenames = []
+    mapping = {}
+
+    while True:
+        # If there's nothing left to match, then we're done
+        if not filenames and not ambiguous_filenames:
+            break
+        elif not filenames and ambiguous_filenames:
+            filenames = ambiguous_filenames
+            ambiguous_filenames = []
+            attempt_count += 1
+
+            if attempt_count > 3:
+                sys.exit(f"Unable to find matching track for files: {filenames}")
+
+        # Pick a filename, and see if there's an unambiguously matching track.
+        # If so, we can add it straight to the mapping.
+        selected_filename = random.choice(filenames)
+
         matching_tracks = [
-            t for t in tracks if t["trackName"].lower() in f.lower()
+            tr for tr in tracks if tr["trackName"].lower() in selected_filename.lower()
         ]
 
-        if len(matching_tracks) != 1:
-            choices = {
-                t["trackName"]: t
-                for t in matching_tracks
-            }
-
-            # If there are no matching tracks, anything left might be a candidate
-            if not choices:
-                choices = {t["trackName"]: t for t in tracks}
-
-            questions = [
-                inquirer.List(
-                    "track",
-                    message=f"Which track is {f!r}?",
-                    choices=choices.keys()
-                )
-            ]
-
-            answers = inquirer.prompt(questions)
-
-            track_matches[f] = choices[answers["track"]]
+        if len(matching_tracks) == 1:
+            track = matching_tracks[0]
+            mapping[selected_filename] = track
+            filenames.remove(selected_filename)
+            tracks.remove(track)
+        elif len(matching_tracks) == 0:
+            sys.exit(f"Unable to find matching track for file: {selected_filename}")
         else:
-            track_matches[f] = matching_tracks[0]
+            # If the filename is ambiguous, add it to the list of ambiguous
+            # filenames.  Hope that after we've checked the other files, at least
+            # one of the tracks it matches against will have been removed.
+            ambiguous_filenames.append(selected_filename)
+            filenames.remove(selected_filename)
 
-        tracks.remove(track_matches[f])
+    return mapping
+
+
+if __name__ == "__main__":
+    front_url = (
+        subprocess.check_output(
+            [
+                "osascript",
+                "-e",
+                """
+        tell application "Safari" to get URL of document 1
+        """,
+            ]
+        )
+        .decode("utf8")
+        .strip()
+    )
+
+    url = hyperlink.URL.from_text(front_url)
+    if url.host != "music.apple.com":
+        sys.exit(f"Not an iTunes URL: {url}")
+
+    print("*** Fetching metadata from iTunes API")
+    album_id = url.path[-1]
+    album, tracks = get_itunes_metadata(album_id=album_id)
+
+    print("*** Identified album and tracks")
+
+    print("*** Matching filenames to tracks")
+    mapping = match_filenames_to_tracks(
+        filenames=list(glob.glob("*.mp3")), tracks=tracks
+    )
 
     print(f"*** Matched every file to a track")
-
-    for f in sorted(glob.glob("*.mp3")):
-        matching_track = track_matches[f]
-
-        audiofile = eyed3.load(f)
-        audiofile.tag.artist = matching_track["artistName"]
+    for filename, track in mapping.items():
+        audiofile = eyed3.load(filename)
+        audiofile.tag.artist = track["artistName"]
         audiofile.tag.album = album["collectionName"]
         audiofile.tag.album_artist = album["artistName"]
-        audiofile.tag.title = matching_track["trackName"]
-        audiofile.tag.track_num = (matching_track["trackNumber"], album["trackCount"])
+        audiofile.tag.title = track["trackName"]
+        audiofile.tag.track_num = (track["trackNumber"], album["trackCount"])
         audiofile.tag.genre = album["primaryGenreName"]
-        # audiofile.tag.best_release_date = matching_track["releaseDate"].split("-")[0]
         audiofile.tag.save()
 
-        os.rename(f, matching_track["trackName"].replace("/", "_") + ".mp3")
+        os.rename(filename, track["trackName"].replace("/", "_") + ".mp3")
 
     artwork_url = album["artworkUrl100"].replace("100x100", "400x400")
     print(f"*** Artwork URL: {artwork_url}")
     webbrowser.open(artwork_url)
 
-    print(f"*** Track count: {album['trackCount']}")
     print(f"*** Release year: {album['releaseDate'].split('-')[0]}")
 
     os.system("open *.mp3")
