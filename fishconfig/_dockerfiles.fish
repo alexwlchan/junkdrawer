@@ -33,10 +33,6 @@ function __call_docker_image
 end
 
 
-function cloc
-  __call_docker_image cloc $argv
-end
-
 function convert
   __call_docker_image imagemagick convert $argv
 end
