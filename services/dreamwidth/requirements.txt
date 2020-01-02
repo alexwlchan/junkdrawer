@@ -21,4 +21,4 @@ pytz==2018.9              # via feedgenerator
 requests==2.21.0
 six==1.12.0               # via feedgenerator, pytest
 soupsieve==1.8            # via beautifulsoup4
-urllib3==1.24.1           # via requests
+urllib3==1.24.2           # via requests
