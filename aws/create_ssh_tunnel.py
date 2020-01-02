@@ -91,6 +91,20 @@ def get_instances(ec2):
             yield from res["Instances"]
 
 
+def get_running_instances(instances, *, prefix):
+    for ec2_inst in instances:
+        name_tag = next(t for t in ec2_inst["Tags"] if t["Key"] == "Name")
+        name = name_tag["Value"]
+
+        if not name.startswith(ec2_instance_prefix):
+            continue
+
+        if ec2_inst["State"]["Name"] == "terminated":
+            continue
+
+        yield (name, ec2_inst)
+
+
 if __name__ == "__main__":
     ip_address = get_my_ip() + "/32"
     print(f"*** The current IP address is {ip_address}")
@@ -143,31 +157,41 @@ if __name__ == "__main__":
     bastion_host = None
     instances = []
 
+
+
+
+
+
+
     print("*** Looking up EC2 instances")
-    for ec2_instance in get_instances(ec2):
-        name_tag = next(t for t in ec2_instance["Tags"] if t["Key"] == "Name")
-        name = name_tag["Value"]
+    ec2_instances = get_instances(ec2)
+    running_instances = list(
+        get_running_instances(ec2_instances, prefix=ec2_instance_prefix)
+    )
 
-        if not name.startswith(ec2_instance_prefix):
-            continue
+    bastion_host = next(
+        ec2_inst
+        for name, ec2_inst in running_instances
+        if name.endswith("-bastion")
+    )
 
-        if name.endswith("-bastion"):
-            assert bastion_host is None
-            bastion_host = ec2_instance
-        else:
-            instances.append(ec2_instance)
+    container_hosts = [
+        ec2_inst
+        for name, ec2_inst in running_instances
+        if not name.endswith("-bastion")
+    ]
 
     if bastion_host is None:
         print("*** Unable to find bastion host?")
     else:
         print("*** Found the bastion host!")
 
-    if not instances:
-        print("*** Unable to find any instances?")
-    elif len(instances) == 1:
-        print("*** Found 1 instance!")
+    if not container_hosts:
+        print("*** Unable to find any container hosts?")
+    elif len(container_hosts) == 1:
+        print("*** Found 1 container hosts!")
     else:
-        print(f"*** Found {len(instances)} instances!")
+        print(f"*** Found {len(container_hosts)} container hosts!")
 
     print("*** Copying the key to ~/.ssh/authorized_keys on the bastion host")
     key_name = bastion_host["KeyName"]
@@ -180,22 +204,22 @@ if __name__ == "__main__":
     ]
     subprocess.check_call(copy_cmd, stdout=subprocess.DEVNULL)
 
-    if len(instances) == 1:
-        instance_host = instances[0]["PublicDnsName"]
+    if len(container_hosts) == 1:
+        selected_host = container_hosts[0]["PublicDnsName"]
     else:
         questions = [
             inquirer.List(
                 "instance",
                 message="Which EC2 instance do you want to access?",
-                choices=[inst["PublicDnsName"] for inst in instances],
+                choices=[host["PublicDnsName"] for host in container_hosts],
             )
         ]
         answers = inquirer.prompt(questions)
-        instance_host = answers["instance"]
+        selected_host = answers["instance"]
 
-    print(f"*** SSH'ing into EC2 instance at {instance_host}")
+    print(f"*** SSH'ing into EC2 instance at {selected_host}")
     ssh_cmd = [
         "ssh", "-t", "-i", key_path, f"ec2-user@{bastion_dns}",
-        f"ssh -t -i ~/.ssh/{key_name} {instance_host}"
+        f"ssh -t -i ~/.ssh/{key_name} {selected_host}"
     ]
     subprocess.check_call(ssh_cmd)
