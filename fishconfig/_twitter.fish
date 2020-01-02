@@ -1,14 +1,9 @@
-set -x BACKUP_TWITTER $DIR/../backups/twitter
-
-set TW_PYTHON /Users/alexwlchan/.virtualenvs/twitter/bin/python
-
-
 function fave --argument-names url
   if test -z "$url"
     set url (furl)
   end
 
-  eval $TW_PYTHON "$BACKUP_TWITTER/backup_single_tweet.py" --dirname=favorites --url="$url"
+  python3 ~/repos/backup_twitter/scripts/save_single_tweet.py "$url" --dirname=likes
 end
 
 
@@ -17,7 +12,7 @@ function selfie --argument-names url
     set url (furl)
   end
 
-  eval $TW_PYTHON "$BACKUP_TWITTER/backup_single_tweet.py" --dirname=selfies --url="$url"
+  python3 ~/repos/backup_twitter/scripts/save_single_tweet.py "$url" --dirname=selfies
 end
 
 
@@ -26,19 +21,5 @@ function trans-happy --argument-names url
     set url (furl)
   end
 
-  eval $TW_PYTHON "$BACKUP_TWITTER/backup_single_tweet.py" --dirname=trans-happy --url="$url"
-end
-
-
-function backup_twitter
-  bash $BACKUP_TWITTER/backup_twitter.sh
-end
-
-
-function rollup_thread --argument-names url
-  if test -z "$url"
-    set url (furl)
-  end
-
-  eval $TW_PYTHON "$BACKUP_TWITTER/rollup_thread.py" "$url"
+  python3 ~/repos/backup_twitter/scripts/save_single_tweet.py "$url" --dirname=trans-happy
 end
