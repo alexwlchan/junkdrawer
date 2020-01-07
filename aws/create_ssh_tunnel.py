@@ -157,12 +157,6 @@ if __name__ == "__main__":
     bastion_host = None
     instances = []
 
-
-
-
-
-
-
     print("*** Looking up EC2 instances")
     ec2_instances = get_instances(ec2)
     running_instances = list(
