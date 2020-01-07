@@ -37,6 +37,7 @@ It saves me a small amount of fiddling inside the EC2 console.
 
 """
 
+import ipaddress
 import os
 import re
 import subprocess
@@ -106,7 +107,7 @@ def get_running_instances(instances, *, prefix):
 
 
 if __name__ == "__main__":
-    ip_address = get_my_ip() + "/32"
+    ip_address = get_my_ip()
     print(f"*** The current IP address is {ip_address}")
 
     questions = [
@@ -138,15 +139,19 @@ if __name__ == "__main__":
 
         permissions = sg["IpPermissions"]
 
-        new_rule = {
-            "CidrIp": ip_address,
-            "Description": "Alex working remotely",
-        }
+        existing_networks = [
+            ipaddress.ip_network(rng["CidrIp"]) for rng in permissions[0]["IpRanges"]
+        ]
 
-        if new_rule in permissions[0]["IpRanges"]:
+        if any(ipaddress.ip_address(ip_address) in net for net in existing_networks):
             print(f"*** Already authorised to SSH to {sg['GroupName']}")
         else:
             print(f"*** Adding this IP address to security group {sg['GroupName']}")
+            new_rule = {
+                "CidrIp": ip_address + "/32",
+                "Description": "Alex working remotely",
+            }
+
             permissions[0]["IpRanges"] = [new_rule]
 
             ec2.authorize_security_group_ingress(
