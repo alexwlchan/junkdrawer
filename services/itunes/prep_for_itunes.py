@@ -14,6 +14,7 @@ import webbrowser
 
 import eyed3
 import hyperlink
+import inquirer
 import urllib3
 
 
@@ -59,29 +60,49 @@ def match_filenames_to_tracks(*, filenames, tracks):
             attempt_count += 1
 
             if attempt_count > 3:
-                sys.exit(f"Unable to find matching track for files: {filenames}")
+                for f in filenames:
+                    available_tracks = {tr["trackName"]: tr for tr in tracks}
+                    questions = [
+                        inquirer.List(
+                            "track",
+                            message=f"What track is {f!r}?",
+                            choices=sorted(available_tracks.keys())
+                            + ["(none of the above)"],
+                        )
+                    ]
+                    answers = inquirer.prompt(questions)
 
-        # Pick a filename, and see if there's an unambiguously matching track.
-        # If so, we can add it straight to the mapping.
-        selected_filename = random.choice(filenames)
+                    track_name = answers["track"]
 
-        matching_tracks = [
-            tr for tr in tracks if tr["trackName"].lower() in selected_filename.lower()
-        ]
-
-        if len(matching_tracks) == 1:
-            track = matching_tracks[0]
-            mapping[selected_filename] = track
-            filenames.remove(selected_filename)
-            tracks.remove(track)
-        elif len(matching_tracks) == 0:
-            sys.exit(f"Unable to find matching track for file: {selected_filename}")
+                    if track_name == "(none of the above)":
+                        filenames.remove(f)
+                        continue
+                    else:
+                        selected_track = available_tracks[track_name]
+                        filenames.remove(f)
+                        mapping[f] = selected_track
         else:
-            # If the filename is ambiguous, add it to the list of ambiguous
-            # filenames.  Hope that after we've checked the other files, at least
-            # one of the tracks it matches against will have been removed.
-            ambiguous_filenames.append(selected_filename)
-            filenames.remove(selected_filename)
+            # Pick a filename, and see if there's an unambiguously matching track.
+            # If so, we can add it straight to the mapping.
+            selected_filename = random.choice(filenames)
+
+            matching_tracks = [
+                tr
+                for tr in tracks
+                if tr["trackName"].lower() in selected_filename.lower()
+            ]
+
+            if len(matching_tracks) == 1:
+                track = matching_tracks[0]
+                mapping[selected_filename] = track
+                filenames.remove(selected_filename)
+                tracks.remove(track)
+            else:
+                # If the filename is ambiguous, add it to the list of ambiguous
+                # filenames.  Hope that after we've checked the other files, at least
+                # one of the tracks it matches against will have been removed.
+                ambiguous_filenames.append(selected_filename)
+                filenames.remove(selected_filename)
 
     return mapping
 
