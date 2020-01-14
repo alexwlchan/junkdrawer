@@ -204,7 +204,7 @@ if __name__ == "__main__":
     subprocess.check_call(copy_cmd, stdout=subprocess.DEVNULL)
 
     if len(container_hosts) == 1:
-        selected_host = container_hosts[0]["PublicDnsName"]
+        selected_host = container_hosts[0]["PrivateDnsName"]
     else:
         questions = [
             inquirer.List(
