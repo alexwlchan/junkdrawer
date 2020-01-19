@@ -42,7 +42,7 @@ if __name__ == "__main__":
 
         tags = b["tags"].split()
         if "!fic" in tags and not any(t.startswith("wc:") for t in tags):
-            logger.warn("%s is a fic with no word count", b["href"])
+            logger.warning("%s is a fic with no word count", b["href"])
 
         if b != original_b:
             logger.info("Updating %s", b["href"])
