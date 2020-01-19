@@ -4,18 +4,13 @@
 import json
 import os
 import shutil
-import subprocess
 
 import click
 import tqdm
 
-from runner import process_concurrent
+from runner import process_concurrent, wget
 from save_bookmarks_list import BACKUP_ROOT
 from save_cache_ids import CACHE_ID_PATH
-
-
-def wget(*args):
-    subprocess.call(["wget"] + list(args), stdout=subprocess.DEVNULL)
 
 
 @click.command()
@@ -38,7 +33,7 @@ def save_archive_copies(username, password):
 
     for result in tqdm.tqdm(
         process_concurrent(download_archive, cache_ids.values()),
-        total=len(cache_ids.values())
+        total=len(cache_ids.values()),
     ):
         pass
 

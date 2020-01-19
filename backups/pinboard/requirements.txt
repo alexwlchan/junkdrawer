@@ -5,12 +5,21 @@
 #    pip-compile
 #
 beautifulsoup4==4.8.2
-certifi==2019.11.28       # via requests
-chardet==3.0.4            # via requests
+certifi==2019.11.28       # via httpx, requests
+chardet==3.0.4            # via httpx, requests
 click==7.0
-idna==2.8                 # via requests
+h11==0.9.0                # via httpx
+h2==3.1.1                 # via httpx
+hpack==3.0.0              # via h2
+hstspreload==2020.1.17    # via httpx
+httpx==0.11.1
+hyperframe==5.2.0         # via h2
+hyperlink==19.0.0
+idna==2.8                 # via httpx, hyperlink, requests
 requests==2.22.0
+rfc3986==1.3.2            # via httpx
+sniffio==1.1.0            # via httpx
 soupsieve==1.9.5          # via beautifulsoup4
 tqdm==4.41.1
 unidecode==1.1.1
-urllib3==1.25.7           # via requests
+urllib3==1.25.7           # via httpx, requests

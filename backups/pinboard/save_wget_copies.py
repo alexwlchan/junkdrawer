@@ -5,18 +5,12 @@ import json
 import os
 import re
 import shutil
-import subprocess
 
 import tqdm
 from unidecode import unidecode
 
-from runner import process_concurrent
+from runner import process_concurrent, wget
 from save_bookmarks_list import BACKUP_ROOT
-from save_cache_ids import CACHE_ID_PATH
-
-
-def wget(*args):
-    subprocess.call(["wget"] + list(args), stdout=subprocess.DEVNULL)
 
 
 def slugify(u):
@@ -33,24 +27,17 @@ def slugify(u):
 def save_wget_copies():
     all_bookmarks = json.load(open(os.path.join(BACKUP_ROOT, "bookmarks.json")))
 
-    urls = [
-        bookmark["href"]
-        for bookmark in all_bookmarks
-    ]
+    urls = [bookmark["href"] for bookmark in all_bookmarks]
 
     for result in tqdm.tqdm(
-        process_concurrent(save_wget_archive, urls),
-        total=len(all_bookmarks)
+        process_concurrent(save_wget_archive, urls), total=len(all_bookmarks)
     ):
         pass
 
 
 def save_wget_archive(url):
     download_id = slugify(
-        url
-        .replace("http://", "")
-        .replace("https://", "")
-        .replace("www.", "")
+        url.replace("http://", "").replace("https://", "").replace("www.", "")
     )
 
     download_dir = os.path.join(
@@ -80,7 +67,8 @@ def save_wget_archive(url):
         "robots=off",
         "--output-file",
         "-",
-        "-U", "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/533.20.25 (KHTML, like Gecko) Version/5.0.4 Safari/533.20.27",
+        "-U",
+        "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/533.20.25 (KHTML, like Gecko) Version/5.0.4 Safari/533.20.27",
         "--directory-prefix",
         tmp_dir,
         url,
