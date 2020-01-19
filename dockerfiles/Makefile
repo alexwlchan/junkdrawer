@@ -7,7 +7,6 @@ IMAGES = \
 	dos2unix \
 	ffmpeg \
 	gotutorial \
-	imagemagick \
 	lessc \
 	optipng \
 	primitive \
@@ -16,7 +15,6 @@ IMAGES = \
 	travis \
 	tree \
 	twine \
-	wget \
 	woff2 \
 	youtube_dl
 
