@@ -150,7 +150,7 @@ if __name__ == "__main__":
 
         os.rename(filename, track["trackName"].replace("/", "_") + ".mp3")
 
-    artwork_url = album["artworkUrl100"].replace("100x100", "400x400")
+    artwork_url = album["artworkUrl100"].replace("100x100", "600x600")
     print(f"*** Artwork URL: {artwork_url}")
     webbrowser.open(artwork_url)
 
