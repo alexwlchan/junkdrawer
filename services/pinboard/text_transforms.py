@@ -47,11 +47,14 @@ def fix_encoding(description):
     Replace the character Õ with ’, which is almost always a sign of an encoding
     error somewhere in the bookmark saving process.
     """
-    return (
+    description = (
         description.replace("Õ", "’")
-        .replace("Ò", "“")
-        .replace("Ó", "”")
         .replace("Ñ", "—")
         .replace("É", "…")
         .replace("Ð", "–")
     )
+
+    if description.count("Ò") == description.count("Ó"):
+        description = description.replace("Ò", "“").replace("Ó", "”")
+
+    return description
