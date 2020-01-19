@@ -29,7 +29,6 @@ def get_cache_ids(soup):
         yield (href, cache_id)
 
 
-
 @click.command()
 @click.option("--username", required=True)
 @click.option("--password", required=True)
@@ -38,8 +37,7 @@ def save_archive_copies(username, password):
     # Start by logging in to Pinboard, so we have the appropriate cookies.
     sess = requests.Session()
     resp = sess.post(
-        "https://pinboard.in/auth/",
-        data={"username": username, "password": password}
+        "https://pinboard.in/auth/", data={"username": username, "password": password}
     )
     resp.raise_for_status()
 

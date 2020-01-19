@@ -17,7 +17,7 @@ def save_all_bookmarks(username, password):
     resp = requests.get(
         "https://api.pinboard.in/v1/posts/all",
         params={"format": "json"},
-        auth=(username, password)
+        auth=(username, password),
     )
     resp.raise_for_status()
 
