@@ -7,10 +7,10 @@ import re
 import shutil
 import subprocess
 
-import click
 import tqdm
 from unidecode import unidecode
 
+from runner import process_concurrent
 from save_bookmarks_list import BACKUP_ROOT
 from save_cache_ids import CACHE_ID_PATH
 
@@ -30,51 +30,66 @@ def slugify(u):
     return a
 
 
-@click.command()
 def save_wget_copies():
     all_bookmarks = json.load(open(os.path.join(BACKUP_ROOT, "bookmarks.json")))
 
-    for bookmark in tqdm.tqdm(all_bookmarks):
-        download_id = slugify(
-            bookmark["href"]
-            .replace("http://", "")
-            .replace("https://", "")
-            .replace("www.", "")
-        )
+    urls = [
+        bookmark["href"]
+        for bookmark in all_bookmarks
+    ]
 
-        download_dir = os.path.join(
-            BACKUP_ROOT, "wget_archive", download_id[0], download_id
-        )
+    for result in tqdm.tqdm(
+        process_concurrent(save_wget_archive, urls),
+        total=len(all_bookmarks)
+    ):
+        pass
 
-        if os.path.isdir(download_dir):
-            continue
-        else:
-            os.makedirs(os.path.dirname(download_dir), exist_ok=True)
 
-        tmp_dir = download_dir + ".tmp"
+def save_wget_archive(url):
+    download_id = slugify(
+        url
+        .replace("http://", "")
+        .replace("https://", "")
+        .replace("www.", "")
+    )
 
-        try:
-            shutil.rmtree(tmp_dir)
-        except FileNotFoundError:
-            pass
+    download_dir = os.path.join(
+        BACKUP_ROOT, "wget_archive", download_id[0], download_id
+    )
 
-        wget(
-            "--adjust-extension",
-            "--span-hosts",
-            "--no-verbose",
-            "--convert-links",
-            "--page-requisites",
-            "--no-directories",
-            "-e",
-            "robots=off",
-            "--output-file",
-            "-",
-            "--directory-prefix",
-            tmp_dir,
-            bookmark["href"],
-        )
+    if os.path.isdir(download_dir):
+        return
+    else:
+        os.makedirs(os.path.dirname(download_dir), exist_ok=True)
 
+    tmp_dir = download_dir + ".tmp"
+
+    try:
+        shutil.rmtree(tmp_dir)
+    except FileNotFoundError:
+        pass
+
+    wget(
+        "--adjust-extension",
+        "--span-hosts",
+        "--no-verbose",
+        "--convert-links",
+        "--page-requisites",
+        "--no-directories",
+        "-e",
+        "robots=off",
+        "--output-file",
+        "-",
+        "-U", "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/533.20.25 (KHTML, like Gecko) Version/5.0.4 Safari/533.20.27",
+        "--directory-prefix",
+        tmp_dir,
+        url,
+    )
+
+    try:
         os.rename(tmp_dir, download_dir)
+    except FileNotFoundError:
+        pass
 
 
 if __name__ == "__main__":

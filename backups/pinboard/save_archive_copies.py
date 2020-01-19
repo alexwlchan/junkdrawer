@@ -9,6 +9,7 @@ import subprocess
 import click
 import tqdm
 
+from runner import process_concurrent
 from save_bookmarks_list import BACKUP_ROOT
 from save_cache_ids import CACHE_ID_PATH
 
@@ -34,39 +35,50 @@ def save_archive_copies(username, password):
     )
 
     cache_ids = json.load(open(CACHE_ID_PATH))
-    for c_id in tqdm.tqdm(cache_ids.values()):
-        cache_dir = os.path.join(BACKUP_ROOT, "archive", c_id[0], c_id)
-        if os.path.exists(cache_dir):
-            continue
 
-        tmp_dir = cache_dir + ".tmp"
+    for result in tqdm.tqdm(
+        process_concurrent(download_archive, cache_ids.values()),
+        total=len(cache_ids.values())
+    ):
+        pass
 
-        os.makedirs(os.path.dirname(cache_dir), exist_ok=True)
+    os.unlink("pinboard-cookies.txt")
 
-        try:
-            shutil.rmtree(tmp_dir)
-        except FileNotFoundError:
-            pass
 
-        wget(
-            "--adjust-extension",
-            "--span-hosts",
-            "--no-verbose",
-            "--convert-links",
-            "--page-requisites",
-            "--no-directories",
-            "-e",
-            "robots=off",
-            "--load-cookies",
-            "pinboard-cookies.txt",
-            "--output-file",
-            "-",
-            "--directory-prefix",
-            tmp_dir,
-            f"https://pinboard.in/cached/{c_id}/",
-        )
+def download_archive(cache_id):
+    cache_dir = os.path.join(BACKUP_ROOT, "archive", cache_id[0], cache_id)
 
-        os.rename(tmp_dir, cache_dir)
+    if os.path.isdir(cache_dir):
+        return
+
+    tmp_dir = cache_dir + ".tmp"
+
+    os.makedirs(os.path.dirname(cache_dir), exist_ok=True)
+
+    try:
+        shutil.rmtree(tmp_dir)
+    except FileNotFoundError:
+        pass
+
+    wget(
+        "--adjust-extension",
+        "--span-hosts",
+        "--no-verbose",
+        "--convert-links",
+        "--page-requisites",
+        "--no-directories",
+        "-e",
+        "robots=off",
+        "--load-cookies",
+        "pinboard-cookies.txt",
+        "--output-file",
+        "-",
+        "--directory-prefix",
+        tmp_dir,
+        f"https://pinboard.in/cached/{cache_id}/",
+    )
+
+    os.rename(tmp_dir, cache_dir)
 
 
 if __name__ == "__main__":
