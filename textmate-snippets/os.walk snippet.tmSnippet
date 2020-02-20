@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>content</key>
+	<string>for dirname, ${1:dirpath}, ${2:filenames} in os.walk(${3}):
+    ${4}</string>
+	<key>name</key>
+	<string>os.walk</string>
+	<key>scope</key>
+	<string>source.python</string>
+	<key>tabTrigger</key>
+	<string>owalk</string>
+	<key>uuid</key>
+	<string>B069AB5E-D793-4E05-A03D-43A7DCE10D91</string>
+</dict>
+</plist>

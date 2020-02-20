@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>content</key>
+	<string>@pytest.mark.parametrize("${1:args}", [${2:data}])</string>
+	<key>name</key>
+	<string>pytest parametrize</string>
+	<key>scope</key>
+	<string>source.python</string>
+	<key>tabTrigger</key>
+	<string>@param</string>
+	<key>uuid</key>
+	<string>EAC7D9C1-B1E7-491C-BB33-97FAE171DA14</string>
+</dict>
+</plist>
