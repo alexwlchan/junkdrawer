@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>content</key>
+	<string>with pytest.raises(${1:ExceptionClass})${2: as exc}:
+    ${3:pass}</string>
+	<key>name</key>
+	<string>with pytest.raises(...)</string>
+	<key>scope</key>
+	<string>source.python</string>
+	<key>tabTrigger</key>
+	<string>pyraise</string>
+	<key>uuid</key>
+	<string>7416106E-E532-42C2-92C0-D0F08C0277A8</string>
+</dict>
+</plist>
