@@ -33,7 +33,6 @@ function __call_docker_image
 end
 
 
-
 function dos2unix
   __call_docker_image dos2unix $argv
 end
@@ -81,22 +80,12 @@ function atool
 end
 
 
-function optipng
-  __call_docker_image optipng $argv
-end
-
-
 function twine
   __build_docker_image twine
   docker run --rm --interactive --tty \
     --volume (pwd):/data \
     --workdir /data \
     alexwlchan/twine $argv
-end
-
-function wget
-  __build_docker_image wget
-  docker run --rm --volume (pwd):/data --workdir /data alexwlchan/wget $argv
 end
 
 

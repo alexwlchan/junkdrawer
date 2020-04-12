@@ -8,7 +8,6 @@ IMAGES = \
 	ffmpeg \
 	gotutorial \
 	lessc \
-	optipng \
 	primitive \
 	sass \
 	tiny_elastic \
