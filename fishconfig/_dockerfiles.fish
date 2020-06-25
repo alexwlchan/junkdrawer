@@ -53,11 +53,6 @@ function sass
   __call_docker_image sass $argv
 end
 
-function tree
-  __build_docker_image tree
-  docker run --rm --interactive --tty --volume (pwd):/data alexwlchan/tree $argv
-end
-
 
 function travis
   __build_docker_image travis
@@ -77,15 +72,6 @@ end
 
 function atool
   __call_docker_image atool $argv
-end
-
-
-function twine
-  __build_docker_image twine
-  docker run --rm --interactive --tty \
-    --volume (pwd):/data \
-    --workdir /data \
-    alexwlchan/twine $argv
 end
 
 
