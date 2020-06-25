@@ -50,3 +50,21 @@ function backup_overcast
       end tell
     '
 end
+
+
+function nvalt_tags
+  grep --no-filename '^tags: ' *.md \
+    | cut -c 7- \
+    | tr ' ' '\n' \
+    | tr '@' ' ' \
+    | sort \
+    | uniq -c
+end
+
+
+function nvalt_lists
+  grep --no-filename '^list: ' *.md | \
+    cut -c 7- | \
+    sort | \
+    uniq -c
+end
