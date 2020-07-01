@@ -45,14 +45,13 @@ def get_canonical_url(url):
             seen_urls.add(url)
 
 
-def get_backup_dir(canonical_url):
+def get_backup_dir(canonical_url, oembed_data):
     page_url = hyperlink.URL.from_text(canonical_url)
 
-    artist = page_url.path[0]
-    deviantart_id = page_url.path[-1].split("-")[-1]
-    assert deviantart_id.isnumeric(), deviantart_id
+    artist = oembed_data["author_name"]
+    deviantart_slug = page_url.path[-1]
 
-    return BACKUP_ROOT / f"{artist}-{deviantart_id}"
+    return BACKUP_ROOT / artist / deviantart_slug
 
 
 def get_oembed_data(canonical_url):
@@ -119,7 +118,9 @@ if __name__ == "__main__":
 
     canonical_url = get_canonical_url(url)
 
-    backup_dir = get_backup_dir(canonical_url)
+    oembed_data = get_oembed_data(canonical_url)
+
+    backup_dir = get_backup_dir(canonical_url, oembed_data)
     backup_dir.parent.mkdir(exist_ok=True)
 
     page_state = get_page_state(canonical_url)
@@ -127,8 +128,6 @@ if __name__ == "__main__":
     if backup_dir.exists():
         print("Already saved!")
         sys.exit(0)
-
-    oembed_data = get_oembed_data(canonical_url)
 
     extended_deviation = page_state["@@entities"]["deviationExtended"]
     assert len(extended_deviation) == 1
