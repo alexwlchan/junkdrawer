@@ -13,7 +13,6 @@ IMAGES = \
 	tiny_elastic \
 	travis \
 	tree \
-	twine \
 	woff2 \
 	youtube_dl
 
