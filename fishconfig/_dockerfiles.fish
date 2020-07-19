@@ -80,15 +80,6 @@ function atool
 end
 
 
-function twine
-  __build_docker_image twine
-  docker run --rm --interactive --tty \
-    --volume (pwd):/data \
-    --workdir /data \
-    alexwlchan/twine $argv
-end
-
-
 function woff2_compress
   __build_docker_image woff2
   docker run --rm --volume (pwd):/data --workdir /data alexwlchan/woff2 /woff2/woff2_compress $argv
