@@ -22,5 +22,5 @@ function wrt
     --volume (git rev-parse --show-toplevel):(git rev-parse --show-toplevel) \
     --workdir (git rev-parse --show-toplevel) \
     --interactive --tty --rm \
-    wellcome/release_tooling:82 $argv
+    wellcome/release_tooling:135a $argv
 end

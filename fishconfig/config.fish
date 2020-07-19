@@ -19,6 +19,7 @@ end
 append_dir_to_path ~/.cargo/bin
 
 append_dir_to_path ~/Library/Python/3.7/bin
+append_dir_to_path ~/Library/Python/3.8/bin
 
 append_dir_to_path "$DIR/pathscripts"
 
@@ -64,7 +65,14 @@ end
 # virtualfish -- a fish wrapper for virtualenv
 # https://github.com/adambrenecki/virtualfish
 ###############################################################################
-eval (python3 -m virtualfish auto_activation) >> /dev/null 2>&1 &
+if test (sysctl hw.model 2>/dev/null | grep iMac)
+  set -g VIRTUALFISH_VERSION 2.3.0
+  set -g VIRTUALFISH_PYTHON_EXEC /usr/local/opt/python@3.8/bin/python3.8
+  source /Users/alexwlchan/Library/Python/3.8/lib/python/site-packages/virtualfish/virtual.fish
+  emit virtualfish_did_setup_plugins
+else
+  eval (python3 -m virtualfish auto_activation) >> /dev/null 2>&1 &
+end
 
 
 ###############################################################################
@@ -77,6 +85,7 @@ eval (python3 -m virtualfish auto_activation) >> /dev/null 2>&1 &
 . $DIR/_imdown.fish
 . $DIR/_twitter.fish
 . $DIR/_wellcome.fish
+. $DIR/_completions.fish
 
 # Load macOS-specific utilities
 if [ (uname -s) = "Darwin" ]
