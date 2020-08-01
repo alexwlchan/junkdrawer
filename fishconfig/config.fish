@@ -60,20 +60,20 @@ function reborder_last_screenshot
   popd
 end
 
+# Only keep a single copy of my ~/.terraform plugins, rather than one copy
+# per working directory
+# See https://www.terraform.io/docs/configuration/providers.html#provider-plugin-cache
+set -x TF_PLUGIN_CACHE_DIR ~/.terraform.d/plugin-cache
+
 
 ###############################################################################
 # virtualfish -- a fish wrapper for virtualenv
 # https://github.com/adambrenecki/virtualfish
 ###############################################################################
-if test (sysctl hw.model 2>/dev/null | grep iMac)
-  set -g VIRTUALFISH_VERSION 2.3.0
-  set -g VIRTUALFISH_PYTHON_EXEC /usr/local/opt/python@3.8/bin/python3.8
-  source /Users/alexwlchan/Library/Python/3.8/lib/python/site-packages/virtualfish/virtual.fish
-  emit virtualfish_did_setup_plugins
-else
-  eval (python3 -m virtualfish auto_activation) >> /dev/null 2>&1 &
-end
-
+set -g VIRTUALFISH_VERSION 2.3.0
+set -g VIRTUALFISH_PYTHON_EXEC /usr/local/opt/python@3.8/bin/python3.8
+source /Users/alexwlchan/Library/Python/3.8/lib/python/site-packages/virtualfish/virtual.fish
+emit virtualfish_did_setup_plugins
 
 ###############################################################################
 # Other fish config files
