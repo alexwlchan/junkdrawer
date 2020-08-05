@@ -53,7 +53,6 @@ if __name__ == "__main__":
 
     client = boto3.client("application-autoscaling")
 
-    from pprint import pprint
     for name, min_capacity in service_min_capacities.items():
         resp = client.describe_scalable_targets(
             ResourceIds=[f"service/{cluster_name}/{name}"],
@@ -62,8 +61,6 @@ if __name__ == "__main__":
         assert len(resp["ScalableTargets"]) == 1
 
         target = resp["ScalableTargets"][0]
-
-
 
         if target["MinCapacity"] == min_capacity and min_capacity == 0:
             print(f"Warming {termcolor.colored(name, 'yellow')} to min capacity {termcolor.colored(1, 'green')}")
@@ -75,26 +72,3 @@ if __name__ == "__main__":
         del target["CreationTime"]
 
         client.register_scalable_target(**target)
-
-        # pprint(resp)
-        # break
-
-    # print(service_names == set(service_min_capacities.keys()))
-
-    # scaling = boto3.client("application-autoscaling")
-
-    #
-    #
-    # pprint(cluster_name)
-    # pprint(service_names)
-    # pprint(service_min_capacities)
-    # # pprint(state_file)
-    #
-    #
-    # for name in service_names:
-    #     resp = ecs.describe_services(
-    #         cluster=cluster_name,
-    #         services=[name]
-    #     )
-    #     pprint(resp)
-    #     break
