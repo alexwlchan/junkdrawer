@@ -18,10 +18,10 @@ import inquirer
 import urllib3
 
 
-def get_itunes_metadata(album_id):
+def get_itunes_metadata(*, album_id, country_code):
     http = urllib3.PoolManager()
 
-    lookup_url = f"https://itunes.apple.com/lookup?id={album_id}&entity=song"
+    lookup_url = f"https://itunes.apple.com/lookup?id={album_id}&entity=song&country={country_code}"
     resp = http.request("GET", lookup_url)
 
     itunes_data = json.loads(resp.data)
@@ -33,7 +33,7 @@ def get_itunes_metadata(album_id):
         if r["wrapperType"] == "collection" and r["collectionType"] == "Album"
     ]
 
-    assert len(album_types) == 1, album_types
+    assert len(album_types) == 1, results
     album = album_types[0]
 
     tracks = [r for r in results if r["wrapperType"] == "track"]
@@ -127,8 +127,8 @@ if __name__ == "__main__":
         sys.exit(f"Not an iTunes URL: {url}")
 
     print("*** Fetching metadata from iTunes API")
-    album_id = url.path[-1]
-    album, tracks = get_itunes_metadata(album_id=album_id)
+    country_code, *_, album_id = url.path
+    album, tracks = get_itunes_metadata(album_id=album_id, country_code=country_code)
 
     print("*** Identified album and tracks")
 
