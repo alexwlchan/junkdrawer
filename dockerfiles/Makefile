@@ -3,7 +3,6 @@ DOCKERFILES = $(ROOT)/dockerfiles
 
 IMAGES = \
 	atool \
-	cloc \
 	dos2unix \
 	ffmpeg \
 	gotutorial \
@@ -13,8 +12,7 @@ IMAGES = \
 	tiny_elastic \
 	travis \
 	tree \
-	woff2 \
-	youtube_dl
+	woff2
 
 
 define __template
