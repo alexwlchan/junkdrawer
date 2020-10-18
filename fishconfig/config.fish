@@ -70,9 +70,9 @@ set -x TF_PLUGIN_CACHE_DIR ~/.terraform.d/plugin-cache
 # virtualfish -- a fish wrapper for virtualenv
 # https://github.com/adambrenecki/virtualfish
 ###############################################################################
-set -g VIRTUALFISH_VERSION 2.3.0
+set -g VIRTUALFISH_VERSION 2.4.0
 set -g VIRTUALFISH_PYTHON_EXEC /usr/local/opt/python@3.8/bin/python3.8
-source /Users/alexwlchan/Library/Python/3.8/lib/python/site-packages/virtualfish/virtual.fish
+source ~/Library/Python/3.8/lib/python/site-packages/virtualfish/virtual.fish
 emit virtualfish_did_setup_plugins
 
 ###############################################################################
