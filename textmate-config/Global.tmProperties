@@ -62,6 +62,9 @@ fileType         = source.python
 [ *.Makefile ]
 fileType         = source.makefile
 
+[ Dockerfile ]
+fileType         = source.dockerfile
+
 [ Jenkinsfile ]
 fileType         = source.groovy
 
