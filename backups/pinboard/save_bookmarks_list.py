@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8
 
+import datetime
 import json
 import os
 
@@ -28,6 +29,10 @@ def save_all_bookmarks(username, password):
 
     for root in BACKUP_ROOTS:
         os.makedirs(root, exist_ok=True)
+
+        with open(os.path.join(root, f"bookmarks.{datetime.date.today().strftime('%Y-%m-%d')}.json"), "w") as outfile:
+            outfile.write(json_string)
+
 
         with open(os.path.join(root, "bookmarks.json"), "w") as outfile:
             outfile.write(json_string)

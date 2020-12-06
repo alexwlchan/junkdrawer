@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8
 
+import datetime
 import json
 import os
 
@@ -8,7 +9,10 @@ import bs4
 import click
 import requests
 
-CACHE_ID_PATH = "/Volumes/Media (Sapphire)/backups/pinboard/cache_ids.json"
+CACHE_ID_PATHS = [
+    "/Volumes/Media (Sapphire)/backups/pinboard/cache_ids.json",
+    f"/Volumes/Media (Sapphire)/backups/pinboard/cache_ids.{datetime.date.today().strftime('%Y-%m-%d')}.json",
+]
 
 
 def get_cache_ids(soup):
@@ -60,8 +64,9 @@ def save_archive_copies(username, password):
 
     print(len(cache_ids))
 
-    with open(CACHE_ID_PATH, "w") as outfile:
-        outfile.write(json.dumps(cache_ids, indent=2, sort_keys=True))
+    for path in CACHE_ID_PATHS:
+        with open(path, "w") as outfile:
+            outfile.write(json.dumps(cache_ids, indent=2, sort_keys=True))
 
 
 if __name__ == "__main__":
