@@ -5,6 +5,7 @@ import json
 import os
 import re
 import shutil
+import tarfile
 
 import tqdm
 from unidecode import unidecode
@@ -44,10 +45,10 @@ def save_wget_archive(url):
         BACKUP_ROOT, "wget_archive", download_id[0], download_id
     )
 
-    if os.path.isdir(download_dir):
+    if os.path.exists(download_dir + ".tar.gz"):
         return
-    else:
-        os.makedirs(os.path.dirname(download_dir), exist_ok=True)
+
+    os.makedirs(os.path.dirname(download_dir), exist_ok=True)
 
     tmp_dir = download_dir + ".tmp"
 
@@ -74,10 +75,10 @@ def save_wget_archive(url):
         url,
     )
 
-    try:
-        os.rename(tmp_dir, download_dir)
-    except FileNotFoundError:
-        pass
+    with tarfile.open(download_dir + ".tar.gz", "w:gz") as tf:
+        tf.add(tmp_dir, arcname=download_id)
+    
+    shutil.rmtree(tmp_dir)
 
 
 if __name__ == "__main__":

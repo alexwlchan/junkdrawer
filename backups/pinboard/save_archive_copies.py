@@ -4,6 +4,7 @@
 import json
 import os
 import shutil
+import tarfile
 
 import click
 import tqdm
@@ -42,8 +43,8 @@ def save_archive_copies(username, password):
 
 def download_archive(cache_id):
     cache_dir = os.path.join(BACKUP_ROOT, "archive", cache_id[0], cache_id)
-
-    if os.path.isdir(cache_dir):
+    
+    if os.path.exists(cache_dir + ".tar.gz"):
         return
 
     tmp_dir = cache_dir + ".tmp"
@@ -73,7 +74,10 @@ def download_archive(cache_id):
         f"https://pinboard.in/cached/{cache_id}/",
     )
 
-    os.rename(tmp_dir, cache_dir)
+    with tarfile.open(cache_dir + ".tar.gz", "w:gz") as tf:
+        tf.add(tmp_dir, arcname=cache_id)
+    
+    shutil.rmtree(tmp_dir)
 
 
 if __name__ == "__main__":
