@@ -10,7 +10,8 @@ import click
 import tqdm
 
 from runner import process_concurrent, wget
-from save_cache_ids import CACHE_ID_PATH
+from save_cache_ids import CACHE_ID_PATHS
+CACHE_ID_PATH = CACHE_ID_PATHS[0]
 
 
 BACKUP_ROOT = "/Volumes/Media (Sapphire)/backups/pinboard"
