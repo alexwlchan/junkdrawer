@@ -10,8 +10,10 @@ import click
 import tqdm
 
 from runner import process_concurrent, wget
-from save_bookmarks_list import BACKUP_ROOT
 from save_cache_ids import CACHE_ID_PATH
+
+
+BACKUP_ROOT = "/Volumes/Media (Sapphire)/backups/pinboard"
 
 
 @click.command()

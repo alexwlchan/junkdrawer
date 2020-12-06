@@ -8,9 +8,7 @@ import bs4
 import click
 import requests
 
-from save_bookmarks_list import BACKUP_ROOT
-
-CACHE_ID_PATH = os.path.join(BACKUP_ROOT, "cache_ids.json")
+CACHE_ID_PATH = "/Volumes/Media (Sapphire)/backups/pinboard/cache_ids.json"
 
 
 def get_cache_ids(soup):
