@@ -11,7 +11,9 @@ import tqdm
 from unidecode import unidecode
 
 from runner import process_concurrent, wget
-from save_bookmarks_list import BACKUP_ROOT
+
+
+BACKUP_ROOT = "/Volumes/Media (Sapphire)/backups/pinboard"
 
 
 def slugify(u):

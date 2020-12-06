@@ -7,7 +7,10 @@ import os
 import click
 import requests
 
-BACKUP_ROOT = os.path.join(os.environ["HOME"], "Documents", "backups", "pinboard")
+BACKUP_ROOTS = [
+    os.path.join(os.environ["HOME"], "Documents", "backups", "pinboard"),
+    "/Volumes/Media (Sapphire)/backups/pinboard",
+]
 
 
 @click.command()
@@ -23,8 +26,11 @@ def save_all_bookmarks(username, password):
 
     json_string = json.dumps(resp.json(), indent=2, sort_keys=True)
 
-    with open(os.path.join(BACKUP_ROOT, "bookmarks.json"), "w") as outfile:
-        outfile.write(json_string)
+    for root in BACKUP_ROOTS:
+        os.makedirs(root, exist_ok=True)
+
+        with open(os.path.join(root, "bookmarks.json"), "w") as outfile:
+            outfile.write(json_string)
 
 
 if __name__ == "__main__":

@@ -5,16 +5,16 @@ import json
 import os
 import re
 import shutil
+import tarfile
 
 import hyperlink
 import tqdm
 from unidecode import unidecode
 
 from runner import process_concurrent, wget
-from save_bookmarks_list import BACKUP_ROOT
 
 
-EXPORT_ROOT = os.path.join(os.environ["HOME"], "Documents", "backups", "ao3")
+EXPORT_ROOT = "/Volumes/Media (Sapphire)/backups/ao3"
 
 
 def slugify(u):
@@ -29,7 +29,7 @@ def slugify(u):
 
 
 def save_ao3_exports():
-    all_bookmarks = json.load(open(os.path.join(BACKUP_ROOT, "bookmarks.json")))
+    all_bookmarks = json.load(open(os.path.join("/Volumes/Media (Sapphire)/backups/pinboard", "bookmarks.json")))
 
     bookmark_urls = [
         hyperlink.URL.from_text(bookmark["href"]) for bookmark in all_bookmarks
@@ -50,7 +50,10 @@ def save_ao3_exports():
 def save_ao3_id(ao3_id):
     download_dir = os.path.join(EXPORT_ROOT, ao3_id)
 
-    if os.path.isdir(download_dir):
+    if any(
+        name.startswith(f"{ao3_id}-") and name.endswith(".tar.gz")
+        for name in os.listdir(EXPORT_ROOT)
+    ):
         return
 
     tmp_dir = download_dir + ".tmp"
@@ -76,7 +79,12 @@ def save_ao3_id(ao3_id):
             f"https://archiveofourown.org/downloads/{ao3_id}/a.{ext}",
         )
 
-    os.rename(tmp_dir, download_dir)
+    title = os.listdir(tmp_dir)[0].rsplit(".")[0]
+
+    with tarfile.open(f"{download_dir}-{title}.tar.gz", "w:gz") as tf:
+        tf.add(tmp_dir, arcname=ao3_id)
+    
+    shutil.rmtree(tmp_dir)
 
 
 if __name__ == "__main__":
