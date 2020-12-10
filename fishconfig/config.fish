@@ -1,4 +1,4 @@
-set -x DIR ~/repos/junkdrawer
+set -x DIR ~/repos/junkdrawer/fishconfig
 set -x ROOT (dirname $DIR)
 
 
@@ -88,7 +88,6 @@ emit virtualfish_did_setup_plugins
 . $DIR/_imdown.fish
 . $DIR/_twitter.fish
 . $DIR/_wellcome.fish
-. $DIR/_completions.fish
 
 # Load macOS-specific utilities
 if [ (uname -s) = "Darwin" ]
