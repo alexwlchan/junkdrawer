@@ -1,4 +1,4 @@
-set -x DIR (dirname (status -f))
+set -x DIR ~/repos/junkdrawer
 set -x ROOT (dirname $DIR)
 
 
@@ -20,6 +20,7 @@ append_dir_to_path ~/.cargo/bin
 
 append_dir_to_path ~/Library/Python/3.7/bin
 append_dir_to_path ~/Library/Python/3.8/bin
+append_dir_to_path ~/Library/Python/3.9/bin
 
 append_dir_to_path ~/repos/ttml2srt
 
