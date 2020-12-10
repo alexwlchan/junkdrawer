@@ -54,7 +54,7 @@ if __name__ == "__main__":
         if "!fic" in tags and not any(t.startswith("wc:") for t in tags):
             logger.warning("%s is a fic with no word count", b["href"])
 
-        bad_word_count_tags = [t.startswith("wc:") and "-" in t for t in tags]
+        bad_word_count_tags = [t for t in tags if t.startswith("wc:") and "-" in t ]
         if bad_word_count_tags:
             sys.exit("Bad word count tags: %s" % ", ".join(bad_word_count_tags))
 
