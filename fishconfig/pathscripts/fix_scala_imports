@@ -59,8 +59,3 @@ for path in changed_files():
 
     with open(path, "w") as srcfile:
         srcfile.write("".join(src_lines))
-
-
-            # print(path)
-            # print(i, line)
-            # assert 0
