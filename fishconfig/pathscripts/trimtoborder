@@ -1,0 +1,33 @@
+#!/usr/bin/env python3
+
+import os
+import subprocess
+import sys
+import tempfile
+
+
+def convert(*cmd, **kwargs):
+    return subprocess.check_call(["convert"] + list(cmd), **kwargs)
+
+
+if __name__ == "__main__":
+    try:
+        in_file = sys.argv[1]
+    except IndexError:
+        sys.exit(f"Usage: {__file__} <INFILE>")
+
+    in_path = os.path.abspath(in_file)
+
+    in_dir = os.path.dirname(in_file)
+    in_name, in_ext = os.path.splitext(os.path.basename(in_file))
+
+    out_file = os.path.join(in_dir, in_name + "_trim" + in_ext)
+    out_path = os.path.abspath(out_file)
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        convert(in_path, "-trim", "trimmed.png", cwd=tmpdir)
+        convert("trimmed.png", "-shave", "5x5", "cropped.png", cwd=tmpdir)
+
+        os.rename(os.path.join(tmpdir, "cropped.png"), out_file)
+
+    print(out_path)

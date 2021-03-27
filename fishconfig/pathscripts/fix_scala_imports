@@ -4,58 +4,69 @@ import os
 import re
 import subprocess
 
+
+def git(*cmd):
+    return subprocess.check_output(["git"] + list(cmd)).decode("utf8").strip()
+
+
 def changed_files():
+    root = git("rev-parse", "--show-toplevel")
     for cmd in [
-        ["git", "diff", "--name-only"],
-        ["git", "diff", "--name-only", "--cached"],
+        ["diff", "--name-only"],
+        ["diff", "--name-only", "--cached"],
     ]:
-        yield from subprocess.check_output(cmd).decode("utf8").split()
+        for relpath in git(*cmd).split():
+            yield os.path.join(root, relpath)
 
 
-for path in changed_files():
-    print(f"Editing {path}")
-    try:
-        with open(path) as srcfile:
-            src_lines = list(srcfile)
-    except FileNotFoundError:
-        continue
+if __name__ == '__main__':
+    for path in changed_files():
+        print(f"Editing {path}")
+        try:
+            with open(path) as srcfile:
+                src_lines = list(srcfile)
+        except FileNotFoundError:
+            continue
 
-    while True:
-        has_edits = False
+        while True:
+            has_edits = False
 
-        for lineno, line in enumerate(src_lines):
-            if not line.startswith("import"):
-                continue
+            for lineno, line in enumerate(src_lines):
+                if not line.startswith("import"):
+                    continue
 
-            if len(line.strip()) <= 80:
-                continue
+                if len(line.strip()) <= 80:
+                    continue
 
-            if "{" not in line:
-                continue
+                if "{" not in line:
+                    continue
 
-            if line.strip().endswith("{"):
-                continue
+                if line.strip().endswith("{"):
+                    continue
 
-            m = re.match(r"^import (?P<package>[a-zA-Z0-9\._]+)\{(?P<imports>[a-zA-Z0-9, ]+)\}", line)
-            assert m is not None, (path, lineno, line)
+                m = re.match(r"^import (?P<package>[a-zA-Z0-9\._]+)\{(?P<imports>[a-zA-Z0-9, ]+)\}", line)
+                if m is None:
+                    print("???", line)
+                    continue
+                assert m is not None, (path, lineno, line)
 
-            package = m.groupdict()["package"]
-            imports = [im.strip() for im in m.groupdict()["imports"].split(",")]
+                package = m.groupdict()["package"]
+                imports = [im.strip() for im in m.groupdict()["imports"].split(",")]
 
-            src_lines[lineno] = f"import {package}{{\n"
-            for idx, im in enumerate(imports, start=1):
-                if idx == len(imports):
-                    src_lines.insert(lineno + idx, f"  {im}\n")
-                else:
-                    src_lines.insert(lineno + idx, f"  {im},\n")
+                src_lines[lineno] = f"import {package}{{\n"
+                for idx, im in enumerate(imports, start=1):
+                    if idx == len(imports):
+                        src_lines.insert(lineno + idx, f"  {im}\n")
+                    else:
+                        src_lines.insert(lineno + idx, f"  {im},\n")
 
-            src_lines.insert(lineno + len(imports) + 1, "}\n")
+                src_lines.insert(lineno + len(imports) + 1, "}\n")
 
-            has_edits = True
-            break
+                has_edits = True
+                break
 
-        if not has_edits:
-            break
+            if not has_edits:
+                break
 
-    with open(path, "w") as srcfile:
-        srcfile.write("".join(src_lines))
+        with open(path, "w") as srcfile:
+            srcfile.write("".join(src_lines))
