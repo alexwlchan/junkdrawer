@@ -1,0 +1,42 @@
+#!/usr/bin/env python3
+# Based on https://gis.stackexchange.com/q/231341/26054
+
+import datetime
+import sys
+
+import gpxpy
+import gpxpy.gpx
+import tqdm
+
+
+if __name__ == '__main__':
+    print("Apple Health routes/")
+    print("/Date   Time   Latitude   Longitude   Elevation")
+    for path in tqdm.tqdm(sys.argv[1:]):
+
+        with open(path) as infile:
+            gpx = gpxpy.parse(infile)
+
+        for track in gpx.tracks:
+            for segment in track.segments:
+                for point in segment.points:
+                    print(f"{point.time} {point.latitude} {point.longitude} {point.elevation}")
+
+        # print(path)
+
+# # Parsing an existing file:
+# # -------------------------
+# gpx_file = open(r'C:\Current.gpx', 'r')
+#
+# gpx = gpxpy.parse(gpx_file)
+# with open(r'r'C:\Projects\mytrack.txt', 'w') as f:
+#     f.write('bla bla')
+#     f.write('/\n')
+#     f.write('/Date   Time   Latitude   Longitude   Elevation\n')
+#
+#     for track in gpx.tracks:
+#         track.adjust_time(datetime.timedelta(hours=-6))
+#         for segment in track.segments:
+#             for point in segment.points:
+#                 newtime = point.time - datetime.timedelta(hours=6)
+#                 f.write('{0} {1} {2} {3}\n'.format(point.time,  point.latitude, point.longitude, point.elevation))
