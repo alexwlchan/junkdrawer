@@ -42,27 +42,6 @@ function reload_fish_config
   . ~/.config/fish/config.fish
 end
 
-function get_travis_logs
-    ~/.virtualenvs/platform/bin/python $ROOT/services/travis/get_travis_logs.py (furl) --token=(cat $ROOT/travis_token.txt)
-end
-
-# Get the last screenshot I took.
-#
-# Note that Mojave changed the format of the filenames: previously they
-# were "Screen Shot <date>", now they're "Screenshot <date>".
-#
-function last_screenshot
-  find ~/Desktop -name 'Screenshot*' | tail -n 1
-end
-
-# Adjust the border on the last screenshot I took
-function reborder_last_screenshot
-  pushd ~/Desktop
-    python3 $ROOT/reborder.py (basename (last_screenshot)) $argv[1]
-    find ~/Desktop -name 'Screenshot*reborder.png' -print0 | xargs -0 stat -f '%m %N' | sort -rn | head -1 | cut -f2- -d" "
-  popd
-end
-
 # Only keep a single copy of my ~/.terraform plugins, rather than one copy
 # per working directory
 # See https://www.terraform.io/docs/configuration/providers.html#provider-plugin-cache
@@ -70,26 +49,21 @@ set -x TF_PLUGIN_CACHE_DIR ~/.terraform.d/plugin-cache
 
 
 ###############################################################################
-# virtualfish -- a fish wrapper for virtualenv
-# https://github.com/adambrenecki/virtualfish
-###############################################################################
-set -g VIRTUALFISH_VERSION 2.4.0
-set -g VIRTUALFISH_PYTHON_EXEC /usr/local/opt/python@3.8/bin/python3.8
-source ~/Library/Python/3.8/lib/python/site-packages/virtualfish/virtual.fish
-emit virtualfish_did_setup_plugins
-
-###############################################################################
 # Other fish config files
 ###############################################################################
 
 . $DIR/_prompt.fish
 . $DIR/_git.fish
-. $DIR/_dockerfiles.fish
 . $DIR/_imdown.fish
 . $DIR/_twitter.fish
-. $DIR/_wellcome.fish
 
 # Load macOS-specific utilities
 if [ (uname -s) = "Darwin" ]
     . $DIR/_macos.fish
+end
+
+# This means NoMAD won't nag me as long as I have a Terminal
+# window open (which is basically always, haha)
+if [ (hostname) = "WTC02DT99KML7H" ]
+	bash $DIR/pathscripts/killall_nomad.sh &
 end

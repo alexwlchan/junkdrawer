@@ -32,21 +32,3 @@ function scramble_mac_address
     sudo ifconfig en0 ether (openssl rand -hex 6 | sed 's/\(..\)/\1:/g; s/./0/2; s/.$//')
     networksetup -detectnewhardware
 end
-
-
-function backup_overcast
-    set overcast_dir ~/Documents/backups/overcast
-    set opml_path "$overcast_dir"/overcast.(date +"%Y-%m-%d").opml.xml
-    mv ~/Desktop/overcast.opml.xml $opml_path
-    python3 ~/repos/overcast-downloader/download_overcast_podcasts.py --download_dir $overcast_dir/audiofiles $opml_path
-
-    osascript -e '
-      tell application "Things3"
-        repeat with todayToDo in to dos of list "Today"
-          if ((name of todayToDo) = "Download podcast episodes from Overcast") then
-            set status of todayToDo to completed
-          end if
-        end repeat
-      end tell
-    '
-end
