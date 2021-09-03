@@ -21,11 +21,12 @@ end
 
 function fish_prompt
   # Put a newline between new prompts for cleanliness, but not on the first run.
-  if test -f /tmp/$TERM_SESSION_ID
+  if test \( -f "/tmp/$TERM_SESSION_ID" -o -f "/tmp/$XDG_SESSION_ID" \)
     echo ''
   end
 
-  touch /tmp/$TERM_SESSION_ID
+  touch /tmp/$TERM_SESSION_ID 2>/dev/null
+  touch /tmp/$XDG_SESSION_ID 2>/dev/null
 
   if [ (prompt_pwd) = "~" ]
     echo '$ '
