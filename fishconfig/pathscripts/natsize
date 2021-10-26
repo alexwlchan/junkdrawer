@@ -1,0 +1,9 @@
+#!/usr/bin/env python3
+
+import sys
+
+import humanize
+
+
+if __name__ == '__main__':
+    print(humanize.naturalsize(int(sys.argv[1])))

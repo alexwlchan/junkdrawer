@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+set -o errexit
+set -o nounset
+
+youtube-dl --get-id "$1" \
+  | xargs -I '{}' -P 5 youtube-dl -x --audio-format=mp3 'https://youtube.com/watch?v={}'
