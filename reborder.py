@@ -12,6 +12,7 @@ new_name = os.path.splitext(filename)[0] + "_reborder" + os.path.splitext(filena
 
 subprocess.check_call([
     "convert",
+    "-background", "none",
     "-trim", filename, "-bordercolor", "white", "-border", f"{border}x{border}",
     new_name
 ])
