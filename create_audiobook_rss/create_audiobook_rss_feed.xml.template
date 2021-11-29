@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">
+  <channel>
+    <title>{{ book_title }}</title>
+    <language>en-gb</language>
+    <lastBuildDate>{{ now.strftime("%a, %d %b %Y %H:%M:%S GMT") }}</lastBuildDate>
+    <pubDate>{{ now.strftime("%a, %d %b %Y %H:%M:%S GMT") }}</pubDate>
+    <docs>http://blogs.law.harvard.edu/tech/rss</docs>
+    <itunes:explicit>no</itunes:explicit>
+    <itunes:author>{{ author }}</itunes:author>
+    <itunes:image href="https://alexwlchan.net/files/audiobooks/{{ audiobook_id }}/cover.jpg"/>
+
+    {% for ep in episodes %}
+    <item>
+      <title>{{ ep.title.lstrip("0") }}</title>
+      <enclosure url="https://alexwlchan.net/files/audiobooks/{{ audiobook_id }}/{{ ep.filename }}" length="{{ ep.length }}" type="audio/mpeg"/>
+      <pubDate>{{ ep.pub_date.strftime("%a, %d %b %Y 12:00 -0800") }}</pubDate>
+      <itunes:duration>{{ ep.duration | duration }}</itunes:duration>
+      <description><![CDATA[
+        {{- ep.cumulative_duration | duration }} |
+        {{- (ep.cumulative_duration / total_duration) | chart -}}
+        | {{ total_duration | duration -}}
+      ]]></description>
+    </item>
+    {% endfor %}
+
+  </channel>
+</rss>
