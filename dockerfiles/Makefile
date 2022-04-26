@@ -2,18 +2,8 @@ ROOT = $(shell git rev-parse --show-toplevel)
 DOCKERFILES = $(ROOT)/dockerfiles
 
 IMAGES = \
-	atool \
-	cloc \
-	dos2unix \
-	ffmpeg \
-	gotutorial \
-	lessc \
 	primitive \
-	sass \
-	tiny_elastic \
-	travis \
-	woff2 \
-	youtube_dl
+	tiny_elastic
 
 
 define __template
