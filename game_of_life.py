@@ -75,7 +75,8 @@ def print_grid(grid):
 
 
 while True:
-    C = random.choice(['🐞', '🍏', '🐱', '♠️', '💜', '💎', '🍊'])
+    # C = random.choice(['🐞', '🍏', '🐱', '♠️', '💜', '💎', '🍊'])
+    C = "X"
 
     grid = random_grid()
 

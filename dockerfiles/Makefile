@@ -1,6 +1,7 @@
 ROOT = $(shell git rev-parse --show-toplevel)
 DOCKERFILES = $(ROOT)/dockerfiles
 
+<<<<<<< Updated upstream
 IMAGES = \
 <<<<<<< HEAD
 	atool \
@@ -18,6 +19,9 @@ IMAGES = \
 	primitive \
 	tiny_elastic
 >>>>>>> 960d1f7ced4ea529789700c67450ed34fe944543
+=======
+IMAGES = primitive
+>>>>>>> Stashed changes
 
 
 define __template

@@ -9,7 +9,7 @@ import click
 import requests
 
 BACKUP_ROOTS = [
-    os.path.join(os.environ["HOME"], "Documents", "backups", "pinboard"),
+    # os.path.join(os.environ["HOME"], "Documents", "backups", "pinboard"),
     "/Volumes/Media (Sapphire)/backups/pinboard",
 ]
 

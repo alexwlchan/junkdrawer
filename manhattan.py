@@ -10,7 +10,7 @@ class CriticalityError(Exception):
 
 class DemonHemisphere:
     """
-    Do not create multiple instances on this class on adjacent lines.
+    Do not create multiple instances of this class on adjacent lines.
     """
     def __init__(self):
         frame = inspect.currentframe()

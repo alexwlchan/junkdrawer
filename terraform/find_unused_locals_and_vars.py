@@ -23,7 +23,12 @@ for root, _, filenames in os.walk("."):
         if not f.endswith(".tf"):
             continue
 
-        tf_data = hcl.load(open(os.path.join(root, f)))
+        # print(f)
+        try:
+            tf_data = hcl.load(open(os.path.join(root, f)))
+        except (ValueError, TypeError):
+            print("!!!", os.path.join(root, f))
+            continue
         for k in ("module", "resource", "terraform", "provider", "data"):
             try:
                 del tf_data[k]
@@ -47,6 +52,7 @@ for root, _, filenames in os.walk("."):
 
         contents = open(os.path.join(root, f)).read()
 
+        print(os.path.join(root, f))
         for varname in list(unseen_variables):
             if "var." + varname in contents:
                 unseen_variables.remove(varname)

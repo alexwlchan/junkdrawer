@@ -33,6 +33,12 @@ def get_itunes_metadata(*, album_id, country_code):
         if r["wrapperType"] == "collection" and r["collectionType"] == "Album"
     ]
 
+    if len(album_types) != 1:
+        print(f"Could not find album data in iTunes API:", file=sys.stderr)
+        print(json.dumps(itunes_data, indent=2, sort_keys=True), file=sys.stderr)
+        sys.exit(1)
+        
+
     assert len(album_types) == 1, results
     album = album_types[0]
 
@@ -128,6 +134,7 @@ if __name__ == "__main__":
 
     print("*** Fetching metadata from iTunes API")
     country_code, *_, album_id = url.path
+    print(country_code, album_id)
     album, tracks = get_itunes_metadata(album_id=album_id, country_code=country_code)
 
     print("*** Identified album and tracks")

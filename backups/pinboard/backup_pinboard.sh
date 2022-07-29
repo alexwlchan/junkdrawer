@@ -2,11 +2,12 @@
 
 set -o errexit
 set -o nounset
+set -o verbose
 
 USERNAME="alexwlchan"
 PASSWORD=$(keyring get pinboard password)
 
-mkdir -p ~/Documents/backups/pinboard
+# mkdir -p ~/Documents/backups/pinboard
 
 for script in save_bookmarks_list.py save_cache_ids.py save_archive_copies.py save_ao3_exports.py
 do

@@ -11,4 +11,5 @@ if __name__ == '__main__':
     except IndexError:
         k = 1
 
-    print("\n".join(random.choices(lines, k=k)))
+    random.shuffle(lines)
+    print("\n".join(lines[:k]))

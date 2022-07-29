@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-if [[ -f run_terraform.sh ]]
-then
-  ./run_terraform.sh plan -out=terraform.plan "$@"
-else
-  terraform plan -out=terraform.plan "$@"
-fi
