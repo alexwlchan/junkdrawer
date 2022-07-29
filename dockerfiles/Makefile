@@ -2,6 +2,7 @@ ROOT = $(shell git rev-parse --show-toplevel)
 DOCKERFILES = $(ROOT)/dockerfiles
 
 IMAGES = \
+<<<<<<< HEAD
 	atool \
 	dos2unix \
 	ffmpeg \
@@ -13,6 +14,10 @@ IMAGES = \
 	travis \
 	tree \
 	woff2
+=======
+	primitive \
+	tiny_elastic
+>>>>>>> 960d1f7ced4ea529789700c67450ed34fe944543
 
 
 define __template
